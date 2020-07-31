@@ -1,5 +1,5 @@
-CXX       := g++
-CXX_FLAGS := -std=c++17 -ggdb -Wall
+CXX       := /usr/bin/clang++-6.0
+CXX_FLAGS := -lSDL2 -lSDL2_ttf -lSDL2_image -std=c++17 -ggdb -Wall
 
 BIN     := bin
 SRC     := src

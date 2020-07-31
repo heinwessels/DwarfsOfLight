@@ -1,10 +1,11 @@
 #include "stdio.h"
 
-#include "Dwarf.hpp"
+#include "Application.hpp"
 
 int main (int argc, char* args[]) {
 
-    printf("Hello World!\n");
+    Application app;
 
-    Dwarf urist ();
+    app.run();
+
 }
