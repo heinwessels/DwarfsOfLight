@@ -4,6 +4,5 @@
 
 class MoveComponent : public Component{
 public:
-    MoveComponent () : Component () { }
-
+    MoveComponent () : Component(MoveComponentID) { }
 };

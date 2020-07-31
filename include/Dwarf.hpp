@@ -2,13 +2,13 @@
 
 #include <memory>
 
-#include "GameObject.hpp"
+#include "Entity.hpp"
 
 #include "Renderable.hpp"
 #include "MoveComponent.hpp"
 
-class Dwarf : public GameObject{
+class Dwarf : public Entity{
 
 public:
-    Dwarf(float x, float y, SDL_Texture* texture);
+    Dwarf(SDL_Texture* texture);
 };

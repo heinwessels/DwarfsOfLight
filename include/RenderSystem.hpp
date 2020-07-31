@@ -1,39 +1,24 @@
 #pragma once
 
 #include <stdio.h>
+#include <string>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "GameObject.hpp"
+#include "Game.hpp"
+#include "Renderer.hpp"
+#include "Entity.hpp"
+#include "System.hpp"
 
-class RenderSystem{
-    /*
-    This handles all things rendering. It's heavily based on this guide:
-    https://lazyfoo.net/tutorials/SDL/
-    */
+class RenderSystem : public System{
 
-
-    const char * m_fontPath = "fonts/Thintel.ttf";
-
-    SDL_Renderer* m_pSdlRenderer;
-    SDL_Window* m_pSdlWindow;
-    TTF_Font* m_pFont;
+    Renderer m_Renderer;
 
 public:
+    RenderSystem(Game &game, int width, int height);
+    SDL_Texture* load_texture(std::string path){return m_Renderer.load_texture(path);}
 
-    int width, height;
-
-    RenderSystem(int width, int height);
-
-    void clear_screen();
-    void show_screen();
-
-    void renderTextureToScreen(SDL_Texture *texture);
-    SDL_Texture* loadTexture( std::string path );
-
-private:
-
-    bool init_window();
+    virtual void update(float dT) override;
 };

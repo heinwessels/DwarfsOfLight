@@ -1,9 +1,9 @@
 #include "Dwarf.hpp"
 
-#include "RenderSystem.hpp"
+#include "MoveComponent.hpp"
+#include "Renderable.hpp"
 
-Dwarf::Dwarf(float x, float y, SDL_Texture* texture){
-
-    this->m_renderable = std::make_unique<Renderable>(texture);
-
+Dwarf::Dwarf(SDL_Texture* texture){
+    this->add_component(std::make_unique<MoveComponent>());
+    this->add_component(std::make_unique<Renderable>(texture));
 }

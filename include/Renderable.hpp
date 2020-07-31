@@ -9,8 +9,6 @@
 
 class Renderable : public Component{
 
-
-
 public:
     SDL_Texture* m_pTexture = nullptr;
     Renderable (SDL_Texture* texture);
