@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -26,6 +27,7 @@ public:
 
     void clear_screen();
     void show_screen();
+    std::vector<SDL_Event> get_input_events();
 
     void renderTextureToScreen(SDL_Texture *texture, int x, int y, int width, int height);
     SDL_Texture* load_texture( std::string path );

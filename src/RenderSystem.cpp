@@ -12,7 +12,7 @@ void RenderSystem::update(float dT){
 
     m_Renderer.clear_screen();
 
-    for(auto const entity : game.m_entities){
+    for(auto const entity : m_pgame.m_entities){
         if(has_valid_signature(*entity)){
 
             Renderable &renderable = static_cast<Renderable&>(entity->get_component(RenderComponentID));

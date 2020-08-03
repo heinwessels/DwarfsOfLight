@@ -13,6 +13,15 @@ void Renderer::clear_screen(){
 void Renderer::show_screen(){
     SDL_RenderPresent( m_pSdlRenderer );
 }
+std::vector<SDL_Event> Renderer::get_input_events(){
+    std::vector<SDL_Event> events;
+    SDL_GetKeyboardState(NULL);
+    SDL_Event event;
+    while(SDL_PollEvent(&event)){
+        events.push_back(event);
+    }
+    return events;
+}
 
 void Renderer::renderTextureToScreen(SDL_Texture *texture, int x, int y, int width, int height){
     SDL_Rect screen_location;

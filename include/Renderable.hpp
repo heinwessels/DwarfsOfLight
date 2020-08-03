@@ -13,4 +13,5 @@ public:
     float width = 0, height = 0;
     SDL_Texture* m_pTexture = nullptr;
     Renderable (SDL_Texture* texture, float width, float height);
+    // ~Renderable() { delete m_pTexture; } // TODO Why does it complain?
 };

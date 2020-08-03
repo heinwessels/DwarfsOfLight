@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdio.h>
+#include <vector>
 #include <string>
 
 #include <SDL2/SDL.h>
@@ -18,7 +18,8 @@ class RenderSystem : public System{
 
 public:
     RenderSystem(Game &game, int width, int height);
-    SDL_Texture* load_texture(std::string path){return m_Renderer.load_texture(path);}
+    SDL_Texture* load_texture(std::string path){ return m_Renderer.load_texture(path); }
+    std::vector<SDL_Event> get_input_events() { return m_Renderer.get_input_events(); }
 
     virtual void update(float dT) override;
 };

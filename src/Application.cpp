@@ -7,10 +7,10 @@ Application::Application()
 
 void Application::run(){
 
-    bool quit = false;
-    while(!quit){
+    bool nquit = true;
+    while(nquit){
 
-        m_game.step(0.0);
+        nquit = m_game.step(0.0);
 
     }
 }

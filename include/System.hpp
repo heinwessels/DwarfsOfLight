@@ -7,11 +7,11 @@ class Game;
 class System{
 
 protected:
-    Game &game;
+    Game &m_pgame;
     ComponentListSignature m_signature = 0;
 
 public:
-    System (Game &game) : game(game) { }
+    System (Game &game) : m_pgame(game) { }
     virtual void update(float dT) = 0;
     bool has_valid_signature(const Entity &entity){ return entity.contains_signature(m_signature); }
 };
