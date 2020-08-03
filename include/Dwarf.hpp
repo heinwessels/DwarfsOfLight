@@ -9,6 +9,10 @@
 
 class Dwarf : public Entity{
 
+private:
+    float width = 32;
+    float height = 32;
+
 public:
-    Dwarf(SDL_Texture* texture);
+    Dwarf(SDL_Texture* texture, float x, float y);
 };

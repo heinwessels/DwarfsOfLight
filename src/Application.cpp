@@ -3,7 +3,6 @@
 Application::Application()
     : m_game(Game())
 {
-
 }
 
 void Application::run(){

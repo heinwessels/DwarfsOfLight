@@ -10,6 +10,7 @@
 class Renderable : public Component{
 
 public:
+    float width = 0, height = 0;
     SDL_Texture* m_pTexture = nullptr;
-    Renderable (SDL_Texture* texture);
+    Renderable (SDL_Texture* texture, float width, float height);
 };

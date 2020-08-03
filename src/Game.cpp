@@ -5,7 +5,8 @@ Game::Game()
 {
 
     m_entities.push_back(new Dwarf(
-        m_renderSystem->load_texture("textures/dwarf.png")
+        m_renderSystem->load_texture("textures/dwarf.png"),
+        500, 500
     ));
 }
 

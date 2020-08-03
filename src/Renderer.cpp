@@ -14,8 +14,13 @@ void Renderer::show_screen(){
     SDL_RenderPresent( m_pSdlRenderer );
 }
 
-void Renderer::renderTextureToScreen(SDL_Texture *texture){
-    SDL_RenderCopy( m_pSdlRenderer, texture, NULL, NULL );
+void Renderer::renderTextureToScreen(SDL_Texture *texture, int x, int y, int width, int height){
+    SDL_Rect screen_location;
+    screen_location.x = x;
+    screen_location.y = y;
+    screen_location.w = width;
+    screen_location.h = height;
+    SDL_RenderCopy( m_pSdlRenderer, texture, NULL, &screen_location );
 }
 
 SDL_Texture* Renderer::load_texture(std::string path)

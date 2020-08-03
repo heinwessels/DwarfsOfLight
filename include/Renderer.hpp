@@ -27,7 +27,7 @@ public:
     void clear_screen();
     void show_screen();
 
-    void renderTextureToScreen(SDL_Texture *texture);
+    void renderTextureToScreen(SDL_Texture *texture, int x, int y, int width, int height);
     SDL_Texture* load_texture( std::string path );
 
 private:
