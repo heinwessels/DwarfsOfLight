@@ -7,10 +7,13 @@ Application::Application()
 
 void Application::run(){
 
+    float fps = 30.0;
+
     bool nquit = true;
     while(nquit){
 
-        nquit = m_game.step(0.0);
+        nquit = m_game.step(1.0/fps);
 
+        usleep(1.0/fps * 1000.0);
     }
 }

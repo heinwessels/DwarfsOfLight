@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unistd.h>
+
 #include "Game.hpp"
 
 class Application{

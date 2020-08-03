@@ -1,5 +1,6 @@
 #include "RenderSystem.hpp"
 #include "InputSystem.hpp"
+#include "MovementSystem.hpp"
 
 #pragma once
 
@@ -15,6 +16,7 @@ class Game{
 
     RenderSystem *m_renderSystem;    // TODO This should be part of some list
     InputSystem *m_input_system;
+    MovementSystem *m_movementy_system;
 
     enum State {e_start, e_running, e_paused, e_quit};
     State m_state = e_start;

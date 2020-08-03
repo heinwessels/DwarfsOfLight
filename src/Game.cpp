@@ -2,7 +2,8 @@
 
 Game::Game()
     :   m_renderSystem(new RenderSystem(*this, screen_width, screen_height)),
-        m_input_system(new InputSystem(*this, *m_renderSystem))
+        m_input_system(new InputSystem(*this, *m_renderSystem)),
+        m_movementy_system(new MovementSystem(*this))
 {
 
     m_entities.push_back(new Dwarf(
@@ -20,9 +21,9 @@ Game::~Game(){
 bool Game::step(float dT){
 
     // Loop through all systems
-    m_renderSystem->update(0);
-    m_input_system->update(0);
-
+    m_renderSystem->update(dT);
+    m_input_system->update(dT);
+    m_movementy_system->update(dT);
 
     return m_state != e_quit;
 }
