@@ -1,15 +1,18 @@
 #include "Game.hpp"
 
-Game::Game()
-    :   m_renderSystem(new RenderSystem(*this, screen_width, screen_height)),
-        m_input_system(new InputSystem(*this, *m_renderSystem)),
-        m_movementy_system(new MovementSystem(*this))
-{
+Game::Game(){
 
+    init_systems();
+
+
+    // THIS IS A HACK FOR A TEST DWARF
+    ////////////////////////////////////////////////
+    RenderSystem* render_system = static_cast<RenderSystem*>(m_systems[0].get());
     m_entities.push_back(new Dwarf(
-        m_renderSystem->load_texture("textures/dwarf.png"),
+        render_system->load_texture("textures/dwarf.png"),
         500, 500
     ));
+    ////////////////////////////////////////////////
 }
 
 Game::~Game(){
@@ -20,14 +23,20 @@ Game::~Game(){
 
 bool Game::step(float dT){
 
-    // Loop through all systems
-    m_renderSystem->update(dT);
-    m_input_system->update(dT);
-    m_movementy_system->update(dT);
+    // TODO: This should be `auto const`, but Inputsystem has a state that changes. Change!
+    for (auto &system : m_systems){
+        system->update(dT);
+    }
 
     return m_state != e_quit;
 }
 
 void Game::init_systems(){
+    // The order in which systems are added to this vector
+    // will determine in which order they will execute
+
+    m_systems.push_back(std::make_unique<RenderSystem>(*this, screen_width, screen_height));
+    m_systems.push_back(std::make_unique<InputSystem>(*this, *static_cast<RenderSystem*>(m_systems[0].get())));   // This requires the RenderSystem
+    m_systems.push_back(std::make_unique<MovementSystem>(*this));
 
 }
