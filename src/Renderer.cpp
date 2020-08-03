@@ -3,10 +3,7 @@
 Renderer::Renderer(int width, int height)
      : width(width), height(height)
 {
-    // Init the window
     init_window();
-
-    SDL_Init(SDL_INIT_VIDEO); // <--- This fails
 }
 
 void Renderer::clear_screen(){
@@ -21,7 +18,7 @@ void Renderer::renderTextureToScreen(SDL_Texture *texture){
     SDL_RenderCopy( m_pSdlRenderer, texture, NULL, NULL );
 }
 
-SDL_Texture* Renderer::load_texture( std::string path )
+SDL_Texture* Renderer::load_texture(std::string path)
 {
     //The final texture
     SDL_Texture* newTexture = NULL;

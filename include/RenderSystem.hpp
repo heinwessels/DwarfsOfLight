@@ -20,6 +20,6 @@ public:
     RenderSystem(Game &game, int width, int height);
     SDL_Texture* load_texture(std::string path){return m_Renderer.load_texture(path);}
 
-    virtual void update(Game &game, float dT) override;
+    virtual void update(float dT) override;
 };
 

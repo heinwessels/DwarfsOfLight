@@ -17,12 +17,10 @@ class Game{
 public:
 
     // Change this to something else
-    std::vector<std::unique_ptr<Entity>> m_entities;
+    std::vector<Entity*> m_entities;
 
     Game();
     void step(float dT);
-
-    Entity& get_last_entity(){return *(m_entities[0]);}
 
 private:
     void init_systems();

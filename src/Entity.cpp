@@ -3,7 +3,7 @@
 
 void Entity::add_component(std::unique_ptr<Component> component){
 
-    m_signature += 1>>component->m_componentID;
+    this->m_signature |= Component::get_component_signature(component->m_componentID);
 
     m_pComponents.emplace(
         component->m_componentID,
