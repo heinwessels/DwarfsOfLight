@@ -3,11 +3,10 @@
 class Game;
 class System{
 
+    Game &game;
 
-protected:
-    Game& m_pGame;
 
 public:
-    System(Game &game) : m_pGame(game) { }
-    virtual void update(float dT) = 0;
+    System (Game &game) : game(game) { }
+    virtual void update(Game &game, float dT) = 0;
 };

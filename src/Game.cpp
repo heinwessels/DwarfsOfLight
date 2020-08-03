@@ -1,12 +1,10 @@
 #include "Game.hpp"
 
-#include "Dwarf.hpp"
-
 Game::Game()
-    : m_renderSystem(RenderSystem(*this, screen_width, screen_height))
+    : m_renderSystem(new RenderSystem(*this, screen_width, screen_height))
 {
     m_entities.push_back(std::make_unique<Dwarf>(
-        m_renderSystem.load_texture("textures/dwarf.png")
+        m_renderSystem->load_texture("textures/dwarf.png")
     ));
 }
 

@@ -1,5 +1,5 @@
 #include "RenderSystem.hpp"
-
+#include "Game.hpp"
 
 RenderSystem::RenderSystem(Game &game, int width, int height)
     : System(game), m_Renderer(width, height)
@@ -7,6 +7,6 @@ RenderSystem::RenderSystem(Game &game, int width, int height)
 
 }
 
-void RenderSystem::update(float dT){
-    Entity& entity = m_pGame.get_last_entity();
+void RenderSystem::update(Game &game, float dT){
+
 }
