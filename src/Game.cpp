@@ -10,7 +10,12 @@ Game::Game(){
     RenderSystem* render_system = static_cast<RenderSystem*>(m_systems[0].get());
     m_entities.push_back(new Dwarf(
         render_system->load_texture("textures/dwarf.png"),
-        500, 500
+        300, 350
+    ));
+
+    m_entities.push_back(new Goblin(
+        render_system->load_texture("textures/dwarf.png"),
+        300, 300
     ));
     ////////////////////////////////////////////////
 }
@@ -38,5 +43,6 @@ void Game::init_systems(){
     m_systems.push_back(std::make_unique<RenderSystem>(*this, screen_width, screen_height));
     m_systems.push_back(std::make_unique<InputSystem>(*this, *static_cast<RenderSystem*>(m_systems[0].get())));   // This requires the RenderSystem
     m_systems.push_back(std::make_unique<MovementSystem>(*this));
+    m_systems.push_back(std::make_unique<CollisionSystem>(*this));
 
 }

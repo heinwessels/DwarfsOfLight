@@ -1,13 +1,16 @@
 #include "RenderSystem.hpp"
 #include "InputSystem.hpp"
 #include "MovementSystem.hpp"
+#include "CollisionSystem.hpp"
 
 #pragma once
 
 #include <vector>
 
 #include "Entity.hpp"
+
 #include "Dwarf.hpp"
+#include "Goblin.hpp"
 
 class Game{
     // This is the main manager of the game.
@@ -27,6 +30,8 @@ public:
     Game();
     ~Game();
     bool step(float dT);
+
+    std::vector<Entity*> &get_entities() { return m_entities; }
 
     void quit(){m_state = e_quit;}
 
