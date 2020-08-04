@@ -16,19 +16,9 @@ class Vec2 {
         y += v.y;
         return *this;
     }
-    Vec2 operator + (const Vec2 &v){
+    Vec2 operator + (const Vec2 &v) const{
         Vec2 t (*this);
         t += v;
-        return t;
-    }
-    Vec2& operator += (const T &c){
-        x += c;
-        y += c;
-        return *this;
-    }
-    Vec2 operator + (const T &c){
-        Vec2 t (*this);
-        t += c;
         return t;
     }
 
@@ -37,19 +27,9 @@ class Vec2 {
         y -= v.y;
         return *this;
     }
-    Vec2 operator - (const Vec2 &v){
+    Vec2 operator - (const Vec2 &v) const{
         Vec2 t (*this);
         t -= v;
-        return t;
-    }
-    Vec2& operator -= (const T &c){
-        x -= c;
-        y -= c;
-        return *this;
-    }
-    Vec2 operator - (const T &c){
-        Vec2 t (*this);
-        t -= c;
         return t;
     }
 
@@ -58,19 +38,9 @@ class Vec2 {
         y *= v.y;
         return *this;
     }
-    Vec2 operator * (const Vec2 &v){
+    Vec2 operator * (const Vec2 &v) const{
         Vec2 t (*this);
         t *= v;
-        return t;
-    }
-    Vec2& operator *= (const T &c){
-        x *= c;
-        y *= c;
-        return *this;
-    }
-    Vec2 operator * (const T &c){
-        Vec2 t (*this);
-        t *= c;
         return t;
     }
 
@@ -79,19 +49,9 @@ class Vec2 {
         y /= v.y;
         return *this;
     }
-    Vec2 operator / (const Vec2 &v){
+    Vec2 operator / (const Vec2 &v) const{
         Vec2 t (*this);
         t /= v;
-        return t;
-    }
-    Vec2& operator /= (const T &c){
-        x /= c;
-        y /= c;
-        return *this;
-    }
-    Vec2 operator / (const T &c){
-        Vec2 t (*this);
-        t /= c;
         return t;
     }
 };

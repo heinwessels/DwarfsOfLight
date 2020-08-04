@@ -18,5 +18,6 @@ public:
     CollisionSystem(Game &game);
     virtual void update(float dT) override;
 
-    bool has_collision(Vec2 a, Vec2 a_size, Vec2 b, Vec2 b_size);
+    bool has_collision(const Vec2 a, const Vec2 a_size, const Vec2 b, const Vec2 b_size);
+    Vec2 get_shortest_distance_resolve_conflict(const Vec2 a, const Vec2 a_size, const Vec2 b, const Vec2 b_size);
 };

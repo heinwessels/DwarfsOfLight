@@ -10,7 +10,7 @@ Game::Game(){
     RenderSystem* render_system = static_cast<RenderSystem*>(m_systems[0].get());
     m_entities.push_back(new Dwarf(
         render_system->load_texture("textures/dwarf.png"),
-        300, 350
+        350, 290
     ));
 
     m_entities.push_back(new Goblin(

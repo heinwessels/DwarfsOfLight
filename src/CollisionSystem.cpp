@@ -33,8 +33,19 @@ void CollisionSystem::update(float dT){
 
                             // These two objects have collided. Now what?
 
-                            printf("Collision!");
 
+                            // Move the object (if it can) to resolve the collision
+                            Vec2 delta = get_shortest_distance_resolve_conflict(
+                                a_move.position, Vec2(a_box.width, a_box.height),
+                                b_move.position, Vec2(b_box.width, b_box.height)
+                            );
+                            if (abs(delta.x) < abs(delta.y))  // Only offset in the shortest direction
+                                {delta.y=0.0f;}
+                            else
+                                {delta.x=0.0f;}
+                            float num_of_movers = !a_box.stationary + !b_box.stationary;
+                            a_move.position += delta / num_of_movers * !a_box.stationary;
+                            b_move.position -= delta / num_of_movers * !b_box.stationary;
                         }
                     }
                 }
@@ -44,9 +55,24 @@ void CollisionSystem::update(float dT){
 };
 
 
-bool CollisionSystem::has_collision(Vec2 a, Vec2 a_size, Vec2 b, Vec2 b_size){
+bool CollisionSystem::has_collision(
+    const Vec2 a, const Vec2 a_size,
+    const Vec2 b, const Vec2 b_size
+){
+    // Returns true if the collision boxes overlap
     return  (a.x - a_size.x / 2 )   < (b.x + b_size.x / 2) &&
             (a.x + a_size.x / 2 )   > (b.x - b_size.x / 2) &&
             (a.y - a_size.y / 2 )   < (b.y + b_size.y / 2) &&
             (a.y + a_size.y / 2 )   > (b.y - b_size.y / 2);
+}
+
+Vec2 CollisionSystem::get_shortest_distance_resolve_conflict(
+    const Vec2 a, const Vec2 a_size,
+    const Vec2 b, const Vec2 b_size
+){
+    // Calculates the shortest distance to move to resolve collision
+
+    Vec2 r = b - a;
+    Vec2 u = {r.x > 0.0f ? 1.0f : -1.0f, r.y > 0.0f ? 1.0f : -1.0f};
+    return (b - (u * b_size * 0.5f)) - (a + (u * a_size * 0.5f));
 }
