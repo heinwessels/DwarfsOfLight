@@ -9,17 +9,15 @@
 #include "MoveComponent.hpp"
 #include "CollisionBoxComponent.hpp"
 
-class Goblin : public Entity{
+class Tile : public Entity{
 
 private:
     float width = 32;
     float height = 32;
-    std::string m_texture_path = "textures/dwarf.png";
+    std::string m_texture_path = "textures/tile_eg.png";
 
 public:
-    Goblin(float x, float y) : Entity(Vec2(x, y)){
-        this->add_component(std::make_unique<MoveComponent>(Vec2(0.0f, 0.0f)));
+    Tile(float x, float y) : Entity(Vec2(x, y)) {
         this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
-        this->add_component(std::make_unique<CollisionBox>(width, height, false, false));
     }
 };

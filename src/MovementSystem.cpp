@@ -8,13 +8,12 @@ MovementSystem::MovementSystem(Game &game)
 }
 
 void MovementSystem::update(float dT){
-    for(auto const entity : m_pgame.m_entities){
+    for(auto const entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
             MoveComponent &move = static_cast<MoveComponent&>(entity->get_component(MoveComponentID));
 
-            move.position += move.speed * dT;
-
+            entity->set_posision(entity->get_posision() + move.speed * dT);
         }
     }
 }

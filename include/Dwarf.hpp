@@ -16,8 +16,8 @@ private:
     std::string m_texture_path = "textures/dwarf.png";
 
 public:
-    Dwarf(float x, float y){
-        this->add_component(std::make_unique<MoveComponent>(Vec2(x, y), Vec2(0.0f, 0.0f)));
+    Dwarf(float x, float y) : Entity(Vec2 (x, y)) {
+        this->add_component(std::make_unique<MoveComponent>(Vec2(0.0f, 0.0f)));
         this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
         this->add_component(std::make_unique<ControllerComponent>(10));
         this->add_component(std::make_unique<CollisionBox>(width, height));

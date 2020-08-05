@@ -6,7 +6,7 @@
 
 #include "Component.hpp"
 #include "Types.hpp"
-
+#include "MColour.hpp"
 
 //Texture wrapper class
 class MTexture
@@ -17,7 +17,7 @@ class MTexture
 
         void free();
         bool is_texture_loaded() {return m_texture != NULL;}
-        void setColor( Uint8 red, Uint8 green, Uint8 blue );
+        void setColor( Uint8 red, Uint8 green, Uint8 blue ){SDL_SetTextureColorMod( m_texture, red, green, blue );};
 
         void set_texture(SDL_Texture* texture, int width, int height);
         SDL_Texture *get_texture() { return m_texture; }

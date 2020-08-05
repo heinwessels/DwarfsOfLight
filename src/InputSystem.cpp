@@ -20,7 +20,7 @@ void InputSystem::update(float dT){
         }
 
         // Now handle any movement controllers
-        for(auto const entity : m_pgame.m_entities){
+        for(auto const entity : m_pgame.get_entities()){
             if(has_valid_signature(*entity)){
 
                 // This entity should be moved by this controller

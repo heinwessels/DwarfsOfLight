@@ -17,6 +17,9 @@ void CollisionSystem::update(float dT){
             for( auto b = a + 1; b != entities.end(); b++ ){
                 if(has_valid_signature(**b)){
 
+                    Vec2 a_pos = (*a)->get_posision();
+                    Vec2 b_pos = (*b)->get_posision();
+
                     MoveComponent &a_move = static_cast<MoveComponent&>((*a)->get_component(MoveComponentID));
                     MoveComponent &b_move = static_cast<MoveComponent&>((*b)->get_component(MoveComponentID));
 
@@ -27,8 +30,8 @@ void CollisionSystem::update(float dT){
                         // Don't check collisions between two stationary objects
 
                         if (has_collision(
-                            a_move.position, Vec2(a_box.width, a_box.height),
-                            b_move.position, Vec2(b_box.width, b_box.height)
+                            a_pos, Vec2(a_box.width, a_box.height),
+                            b_pos, Vec2(b_box.width, b_box.height)
                         )){
 
                             // These two objects have collided. Now what?
@@ -36,16 +39,20 @@ void CollisionSystem::update(float dT){
 
                             // Move the object (if it can) to resolve the collision
                             Vec2 delta = get_shortest_distance_resolve_conflict(
-                                a_move.position, Vec2(a_box.width, a_box.height),
-                                b_move.position, Vec2(b_box.width, b_box.height)
+                                a_pos, Vec2(a_box.width, a_box.height),
+                                b_pos, Vec2(b_box.width, b_box.height)
                             );
                             if (abs(delta.x) < abs(delta.y))  // Only offset in the shortest direction
                                 {delta.y=0.0f;}
                             else
                                 {delta.x=0.0f;}
                             float num_of_movers = !a_box.stationary + !b_box.stationary;
-                            a_move.position += delta / num_of_movers * !a_box.stationary;
-                            b_move.position -= delta / num_of_movers * !b_box.stationary;
+                            a_pos += delta / num_of_movers * !a_box.stationary;
+                            b_pos -= delta / num_of_movers * !b_box.stationary;
+
+                            // Save the updated posisions
+                            (*a)->set_posision(a_pos);
+                            (*b)->set_posision(b_pos);
                         }
                     }
                 }

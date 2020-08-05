@@ -24,6 +24,9 @@ std::vector<SDL_Event> Renderer::get_input_events(){
 }
 
 void Renderer::renderTextureToScreen(SDL_Texture *texture, float x, float y, float width, float height){
+
+
+
     SDL_Rect screen_location;
     screen_location.x = x - width / 2.0;
     screen_location.y = y - height / 2.0;
