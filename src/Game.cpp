@@ -5,18 +5,10 @@ Game::Game(){
     init_systems();
 
 
-    // THIS IS A HACK FOR A TEST DWARF
+    // THIS IS FOR TESTING
     ////////////////////////////////////////////////
-    RenderSystem* render_system = static_cast<RenderSystem*>(m_systems[0].get());
-    m_entities.push_back(new Dwarf(
-        render_system->load_texture("textures/dwarf.png"),
-        350, 290
-    ));
-
-    m_entities.push_back(new Goblin(
-        render_system->load_texture("textures/dwarf.png"),
-        300, 300
-    ));
+    m_entities.push_back(new Dwarf(350, 290));
+    m_entities.push_back(new Goblin(300, 300));
     ////////////////////////////////////////////////
 }
 

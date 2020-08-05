@@ -32,10 +32,12 @@ void Renderer::renderTextureToScreen(SDL_Texture *texture, float x, float y, flo
     SDL_RenderCopy( m_pSdlRenderer, texture, NULL, &screen_location );
 }
 
-SDL_Texture* Renderer::load_texture(std::string path)
+SDL_Texture* Renderer::load_texture(std::string path, int &width, int &height)
 {
     //The final texture
     SDL_Texture* newTexture = NULL;
+    width = 0;
+    height = 0;
 
     //Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
@@ -45,11 +47,20 @@ SDL_Texture* Renderer::load_texture(std::string path)
     }
     else
     {
+        //Color key image
+        SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0, 0 ) );
+
         //Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface( m_pSdlRenderer, loadedSurface );
         if( newTexture == NULL )
         {
             printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+        }
+        else
+        {
+            //Get image dimensions
+            width = loadedSurface->w;
+            height = loadedSurface->h;
         }
 
         //Get rid of old loaded surface

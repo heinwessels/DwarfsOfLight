@@ -10,6 +10,7 @@
 #include "System.hpp"
 #include "Renderer.hpp"
 #include "Entity.hpp"
+#include "Renderable.hpp"
 
 class Game;
 class RenderSystem : public System{
@@ -18,7 +19,7 @@ class RenderSystem : public System{
 
 public:
     RenderSystem(Game &game, int width, int height);
-    SDL_Texture* load_texture(std::string path){ return m_Renderer.load_texture(path); }
+    void load_texture_if_not_loaded(Renderable &renderable);
     std::vector<SDL_Event> get_input_events() { return m_Renderer.get_input_events(); }
 
     virtual void update(float dT) override;
