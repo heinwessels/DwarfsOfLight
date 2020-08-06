@@ -33,6 +33,7 @@ public:
     bool step(float dT);
 
     std::vector<Entity*> &get_entities() { return m_entities; }
+    World& get_world() {return m_world; }
 
     void quit(){m_state = e_quit;}
 

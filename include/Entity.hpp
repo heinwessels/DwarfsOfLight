@@ -22,10 +22,11 @@ public:
     Entity(Vec2 posision) : m_posision(posision) { }
     bool contains_signature (ComponentListSignature signature) const {return (m_signature & signature) == signature;}
     Component& get_component(ComponentID component_id){return *m_pComponents[component_id];}
+    bool has_component(ComponentID component_id) const { return m_signature & Component::get_component_signature(component_id); }
 
     bool is_still_alive(){ return m_is_alive; }
 
-    Vec2 get_posision() { return m_posision; }
+    Vec2 get_posision() const { return m_posision; }
     void set_posision(Vec2 posision) { m_posision = posision; }
 
 protected:

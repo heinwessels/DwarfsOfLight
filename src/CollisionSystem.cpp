@@ -20,9 +20,6 @@ void CollisionSystem::update(float dT){
                     Vec2 a_pos = (*a)->get_posision();
                     Vec2 b_pos = (*b)->get_posision();
 
-                    MoveComponent &a_move = static_cast<MoveComponent&>((*a)->get_component(MoveComponentID));
-                    MoveComponent &b_move = static_cast<MoveComponent&>((*b)->get_component(MoveComponentID));
-
                     CollisionBox &a_box = static_cast<CollisionBox&>((*a)->get_component(CollisionBoxComponentID));
                     CollisionBox &b_box = static_cast<CollisionBox&>((*b)->get_component(CollisionBoxComponentID));
 

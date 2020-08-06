@@ -11,7 +11,6 @@ Game::Game()
     ////////////////////////////////////////////////
     m_entities.push_back(new Dwarf(350, 290));
     m_entities.push_back(new Goblin(300, 300));
-    m_entities.push_back(new Tile(400, 300));
     ////////////////////////////////////////////////
 }
 
