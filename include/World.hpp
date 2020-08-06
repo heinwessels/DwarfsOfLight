@@ -1,6 +1,7 @@
 #pragma once
 
-#include <map>
+#include <vector>
+#include <cmath>
 
 #include "Tile.hpp"
 #include "Renderable.hpp"
@@ -19,8 +20,9 @@ class World{
 public:
     World (int width, int height, float grid_size);
 
-    Tile& get_tile_at(int x, int y){ return m_world[x*m_width + m_height]; }   // There should always be a tile at that location
+    Tile& get_tile_at(int x, int y){ return m_world[x*m_width + y]; }   // There should always be a tile at that location
     std::vector<Tile>& get_tiles() { return m_world; }
+    Tile& get_closest_tile(Vec2 point);
 
 private:
     void clear(){ m_world.clear(); }

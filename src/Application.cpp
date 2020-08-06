@@ -7,13 +7,24 @@ Application::Application()
 
 void Application::run(){
 
-    float fps = 30.0;
+    using clock = std::chrono::system_clock;
+    using sec = std::chrono::duration<double>;
+
+    float fps = 20.0;
 
     bool nquit = true;
     while(nquit){
 
+        auto loop_start = clock::now();
+
         nquit = m_game.step(1.0/fps);
 
-        usleep(1.0/fps * 1000.0);
+        const auto loop_end = clock::now();
+
+        sec loop_time = loop_end - loop_start;
+        if(loop_time.count() < 1.0/fps){
+            // If there is still time left before the next frame must be drawn
+            // SDL_Delay((1.0/fps - loop_time.count()) * 1000.0);
+        }
     }
 }

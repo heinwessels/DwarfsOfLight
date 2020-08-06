@@ -83,9 +83,6 @@ void RenderSystem::update_world(){
 
 void RenderSystem::load_texture_if_not_loaded(Renderable &renderable){
     if (!renderable.is_texture_loaded()){
-
-        printf("Loading...");
-
         int width = 0, height = 0;
         SDL_Texture* texture = m_Renderer.load_texture(renderable.get_texture_path(), width, height);
         renderable.get_mtexture().set_texture(texture, width, height);

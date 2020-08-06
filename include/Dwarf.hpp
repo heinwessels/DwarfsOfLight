@@ -19,7 +19,7 @@ public:
     Dwarf(float x, float y) : Entity(Vec2 (x, y)) {
         this->add_component(std::make_unique<MoveComponent>(Vec2(0.0f, 0.0f)));
         this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
-        this->add_component(std::make_unique<ControllerComponent>(10));
+        this->add_component(std::make_unique<ControllerComponent>(30));
         this->add_component(std::make_unique<CollisionBox>(width, height));
     }
 };

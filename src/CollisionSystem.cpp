@@ -4,13 +4,47 @@
 CollisionSystem::CollisionSystem(Game &game)
     : System(game)
 {
-    m_signature |= Component::get_component_signature(MoveComponentID);
     m_signature |= Component::get_component_signature(CollisionBoxComponentID);
 }
 
 void CollisionSystem::update(float dT){
-    auto entities = m_pgame.get_entities();
+    check_collision_with_entities();
+    check_collision_with_world();
+};
 
+
+void CollisionSystem::check_collision_with_world(){
+    auto entities = m_pgame.get_entities();
+    for( auto entity = entities.begin(); entity != entities.end(); entity++ ){
+        if(has_valid_signature(**entity)){
+
+            Vec2 a_pos = (*entity)->get_posision();
+
+            // TODO WRONG! This should be closest tile WITH collision box
+            Tile &closest_tile = m_pgame.get_world().get_closest_tile(a_pos);
+            if (closest_tile.has_component(CollisionBoxComponentID)){
+                // A collision with
+
+                Vec2 tile_pos = closest_tile.get_posision();
+
+                CollisionBox &a_box = static_cast<CollisionBox&>((*entity)->get_component(CollisionBoxComponentID));
+                CollisionBox &tile_box = static_cast<CollisionBox&>(closest_tile.get_component(CollisionBoxComponentID));
+
+
+                if(repel_if_collision(
+                    a_pos, a_box,
+                    tile_pos, tile_box
+                )){
+                    (*entity)->set_posision(a_pos);
+                    // Not possible for tile to move (repel will account for this)
+                }
+            }
+        }
+    }
+}
+
+void CollisionSystem::check_collision_with_entities(){
+    auto entities = m_pgame.get_entities();
     for( auto a = entities.begin(); a != entities.end()-1; a++ ){
         if(has_valid_signature(**a)){
 
@@ -23,41 +57,51 @@ void CollisionSystem::update(float dT){
                     CollisionBox &a_box = static_cast<CollisionBox&>((*a)->get_component(CollisionBoxComponentID));
                     CollisionBox &b_box = static_cast<CollisionBox&>((*b)->get_component(CollisionBoxComponentID));
 
-                    if (!a_box.stationary || !b_box.stationary){
-                        // Don't check collisions between two stationary objects
-
-                        if (has_collision(
-                            a_pos, Vec2(a_box.width, a_box.height),
-                            b_pos, Vec2(b_box.width, b_box.height)
-                        )){
-
-                            // These two objects have collided. Now what?
-
-
-                            // Move the object (if it can) to resolve the collision
-                            Vec2 delta = get_shortest_distance_resolve_conflict(
-                                a_pos, Vec2(a_box.width, a_box.height),
-                                b_pos, Vec2(b_box.width, b_box.height)
-                            );
-                            if (abs(delta.x) < abs(delta.y))  // Only offset in the shortest direction
-                                {delta.y=0.0f;}
-                            else
-                                {delta.x=0.0f;}
-                            float num_of_movers = !a_box.stationary + !b_box.stationary;
-                            a_pos += delta / num_of_movers * !a_box.stationary;
-                            b_pos -= delta / num_of_movers * !b_box.stationary;
-
-                            // Save the updated posisions
-                            (*a)->set_posision(a_pos);
-                            (*b)->set_posision(b_pos);
-                        }
+                    if(repel_if_collision(
+                        a_pos, a_box,
+                        b_pos, b_box
+                    )){
+                        (*a)->set_posision(a_pos);
+                        (*b)->set_posision(b_pos);
                     }
                 }
             }
         }
     }
-};
+}
 
+bool CollisionSystem::repel_if_collision(
+    Vec2 &a_pos, const CollisionBox &a_box,
+    Vec2 &b_pos, const CollisionBox &b_box
+){
+    if (!a_box.stationary || !b_box.stationary){
+        // Don't check collisions between two stationary objects
+
+        if (has_collision(
+            a_pos, Vec2(a_box.width, a_box.height),
+            b_pos, Vec2(b_box.width, b_box.height)
+        )){
+            // These two objects have collided. Now what?
+
+            // Move the object (if it can) to resolve the collision
+            Vec2 delta = get_shortest_distance_resolve_conflict(
+                a_pos, Vec2(a_box.width, a_box.height),
+                b_pos, Vec2(b_box.width, b_box.height)
+            );
+            if (abs(delta.x) < abs(delta.y))  // Only offset in the shortest direction
+                {delta.y=0.0f;}
+            else
+                {delta.x=0.0f;}
+            float num_of_movers = !a_box.stationary + !b_box.stationary;
+            a_pos += delta / num_of_movers * !a_box.stationary;
+            b_pos -= delta / num_of_movers * !b_box.stationary;
+
+            return true;
+        }
+    }
+
+    return false;
+}
 
 bool CollisionSystem::has_collision(
     const Vec2 a, const Vec2 a_size,
