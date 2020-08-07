@@ -32,6 +32,9 @@ public:
             this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
             this->add_component(std::make_unique<CollisionBox>(width, height, false, true));
         }
+        else if (m_type == TypeAir){
+            this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
+        }
     }
 
     Type get_type(){ return m_type; }

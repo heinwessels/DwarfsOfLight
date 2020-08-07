@@ -93,7 +93,18 @@ void LightSystem::grow_light_source(LightMap &lightmap, LightComponent light, Ve
 
     // Create the list of seeds that need to grow.
     std::list<Seed> seeds;
-    seeds.push_front(Seed(floor(origin.x), floor(origin.y)));
+    Seed source_seed = Seed(floor(origin.x), floor(origin.y));
+    seeds.push_front(source_seed);  // This guy will execute first
+
+    // Also add the first 8 neighbours to ensure it grows in all directions
+    seeds.push_front(Seed(source_seed.x + 1, source_seed.y + 1)); // Top row
+    seeds.push_front(Seed(source_seed.x + 0, source_seed.y + 1));
+    seeds.push_front(Seed(source_seed.x - 1, source_seed.y + 1));
+    seeds.push_front(Seed(source_seed.x + 1, source_seed.y - 1)); // Bottom row
+    seeds.push_front(Seed(source_seed.x + 0, source_seed.y - 1));
+    seeds.push_front(Seed(source_seed.x - 1, source_seed.y - 1));
+    seeds.push_front(Seed(source_seed.x - 1, source_seed.y));       // Left and right
+    seeds.push_front(Seed(source_seed.x + 1, source_seed.y));
 
     // Sanity check to prevent infinite loops (WILL NEED IMPROVEMENT)
     int maximum_steps = ceil((light.max_dist+3)*(light.max_dist+3)*M_PI);
