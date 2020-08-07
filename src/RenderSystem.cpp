@@ -58,21 +58,23 @@ void RenderSystem::update_entities(){
 
 void RenderSystem::update_world(){
 
-    for(auto &tile : m_pgame.get_world().get_tiles()){
-        if (tile.has_component(RenderComponentID)){
+    for(auto &column : m_pgame.get_world().get_tiles()){
+        for (auto &tile : column){
+            if (tile.has_component(RenderComponentID)){
 
-            Vec2 pos = tile.get_posision();
-            Renderable &renderable = static_cast<Renderable&>(tile.get_component(RenderComponentID));
+                Vec2 pos = tile.get_posision();
+                Renderable &renderable = static_cast<Renderable&>(tile.get_component(RenderComponentID));
 
-            // This is a hacky solution to only load textures the first time they're drawn. Rather load on startup.
-            // TODO Load all textures function.
-            load_texture_if_not_loaded(renderable);
+                // This is a hacky solution to only load textures the first time they're drawn. Rather load on startup.
+                // TODO Load all textures function.
+                load_texture_if_not_loaded(renderable);
 
-            m_Renderer.renderTextureToScreen(
-                renderable.get_mtexture().get_texture(),
-                pos.x, pos.y,
-                renderable.width, renderable.height
-            );
+                m_Renderer.renderTextureToScreen(
+                    renderable.get_mtexture().get_texture(),
+                    pos.x, pos.y,
+                    renderable.width, renderable.height
+                );
+            }
         }
     }
 }

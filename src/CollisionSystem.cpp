@@ -17,19 +17,19 @@ void CollisionSystem::check_collision_with_world(){
     auto entities = m_pgame.get_entities();
     for( auto entity = entities.begin(); entity != entities.end(); entity++ ){
         if(has_valid_signature(**entity)){
+            // For each entity with a collision box
 
             Vec2 a_pos = (*entity)->get_posision();
+            CollisionBox &a_box = static_cast<CollisionBox&>((*entity)->get_component(CollisionBoxComponentID));
 
-            // TODO WRONG! This should be closest tile WITH collision box
-            Tile &closest_tile = m_pgame.get_world().get_closest_tile(a_pos);
-            if (closest_tile.has_component(CollisionBoxComponentID)){
-                // A collision with
+            // Get the closest world tile with a collision component
+            Tile *closest_tile = m_pgame.get_world().get_closest_tile_in_range_with_component(
+                a_pos, Vec2(a_box.width, a_box.height), CollisionBoxComponentID
+            );
+            if (closest_tile != nullptr){
 
-                Vec2 tile_pos = closest_tile.get_posision();
-
-                CollisionBox &a_box = static_cast<CollisionBox&>((*entity)->get_component(CollisionBoxComponentID));
-                CollisionBox &tile_box = static_cast<CollisionBox&>(closest_tile.get_component(CollisionBoxComponentID));
-
+                Vec2 tile_pos = closest_tile->get_posision();
+                CollisionBox &tile_box = static_cast<CollisionBox&>(closest_tile->get_component(CollisionBoxComponentID));
 
                 if(repel_if_collision(
                     a_pos, a_box,

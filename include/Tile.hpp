@@ -12,8 +12,9 @@
 class Tile : public Entity{
 public:
     typedef int Type;
-    static constexpr Type TypeAir = 0;
-    static constexpr Type TypeWall = 1;
+    static constexpr Type TypeEmpty = 0;
+    static constexpr Type TypeAir = 1;
+    static constexpr Type TypeWall = 2;
 
 private:
 
@@ -23,7 +24,7 @@ private:
     Type m_type;
 
 public:
-
+    Tile() : Entity(Vec2(0.0, 0.0)), m_type(TypeEmpty) { }  // For empty world tiles
     Tile(Type type, float x, float y) : Entity(Vec2(x, y)), m_type(type) {
         if(m_type == TypeWall){
             this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));

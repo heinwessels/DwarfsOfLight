@@ -52,4 +52,8 @@ class Vec2 {
         t /= v;
         return t;
     }
+
+    static float dist_sq(const Vec2 &a, const Vec2 &b){
+        return (a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y);
+    }
 };
