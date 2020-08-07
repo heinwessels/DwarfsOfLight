@@ -33,4 +33,6 @@ public:
             this->add_component(std::make_unique<CollisionBox>(width, height, false, true));
         }
     }
+
+    Type get_type(){ return m_type; }
 };

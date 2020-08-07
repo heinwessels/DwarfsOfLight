@@ -12,6 +12,8 @@ public:
     MColour current_gradient;
     MColour frequency;
 
+    float max_dist = 5*5;    // TEMPORARY TESTING VALUE
+
     LightComponent(MColour base_colour, MColour colour_weight, MColour frequency)
         : Component(LightComponentID),
         base_colour(base_colour), current_colour(base_colour),
