@@ -1,7 +1,7 @@
 #include "World.hpp"
 
 World::World (int width, int height)
-        : m_width(width), m_height(height)
+        : m_lightmap(width, height), m_width(width), m_height(height)
 {
     clear();
     resize(width, height);
@@ -52,22 +52,6 @@ Tile* World::get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, Co
     return closest_tile;
 }
 
-void World::add_global_lighting(){
-    for (auto & column : m_light_map){
-        for (auto & light : column){
-            light += m_global_lighting;
-        }
-    }
-}
-
-void World::reset_light_map(){
-    for (auto & column : m_light_map){
-        for (auto & light : column){
-            light = MColour(0.0f);
-        }
-    }
-}
-
 void World::clear(){
     for (auto & column : m_world){
         column.clear();
@@ -78,11 +62,6 @@ void World::clear(){
 void World::resize(int width, int height){
     m_world.resize(width);
     for (auto & column : m_world){
-        column.resize(height);
-    }
-
-    m_light_map.resize(width);
-    for (auto & column : m_light_map){
         column.resize(height);
     }
 }

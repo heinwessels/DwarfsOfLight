@@ -5,6 +5,7 @@
 
 #include "Tile.hpp"
 #include "Renderable.hpp"
+#include "LightMap.hpp"
 
 class World{
 
@@ -17,8 +18,7 @@ class World{
     using Tiles = std::vector<std::vector<Tile>>;
     Tiles m_world;
 
-    using LightMap = std::vector<std::vector<MColour>>;
-    LightMap m_light_map;
+    LightMap m_lightmap;
     MColour m_global_lighting = {80, 80, 120};
 
 public:
@@ -28,10 +28,9 @@ public:
     Tile& get_closest_tile_to(Vec2 point){ return m_world[floor(point.x )][floor(point.y)]; };
     Tile* get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, ComponentID component_ID);
 
-    MColour get_lighting_at(Vec2 point){ return m_light_map[floor(point.x )][floor(point.y)]; };
+    LightMap& get_light_map() { return m_lightmap; }
     void set_global_lighting(MColour global_lighting) { m_global_lighting = global_lighting; }
-    void add_global_lighting();
-    void reset_light_map();
+    MColour get_global_lighting() { return m_global_lighting; }
 
 private:
     void clear();

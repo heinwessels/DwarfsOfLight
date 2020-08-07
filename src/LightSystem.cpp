@@ -18,13 +18,15 @@ void LightSystem::update(float dT){
 
 void LightSystem::add_lighting_to_world(){
 
+    LightMap& lightmap = m_pgame.get_world().get_light_map();
+
     for (auto & column : m_pgame.get_world().get_tiles()){
         for (auto & tile : column){
             if (tile.has_component(RenderComponentID)){
 
                 Renderable &renderable = static_cast<Renderable&>(tile.get_component(RenderComponentID));
                 renderable.get_mtexture().setColor(
-                    m_pgame.get_world().get_lighting_at(tile.get_posision())
+                    lightmap.get_lighting_at(tile.get_posision())
                 );
             }
         }
@@ -32,11 +34,14 @@ void LightSystem::add_lighting_to_world(){
 }
 
 void LightSystem::add_lighting_to_entities(){
+
+    LightMap& lightmap = m_pgame.get_world().get_light_map();
+
     for(auto const &entity : m_pgame.get_entities()){
         if (entity->has_component(RenderComponentID)){
             Renderable &renderable = static_cast<Renderable&>(entity->get_component(RenderComponentID));
             renderable.get_mtexture().setColor(
-                m_pgame.get_world().get_lighting_at(entity->get_posision())
+                lightmap.get_lighting_at(entity->get_posision())
             );
         }
     }
@@ -44,9 +49,11 @@ void LightSystem::add_lighting_to_entities(){
 
 void LightSystem::populate_lightmap(){
 
-    m_pgame.get_world().reset_light_map();
+    LightMap& lightmap = m_pgame.get_world().get_light_map();
 
-    m_pgame.get_world().add_global_lighting();
+    lightmap.zero();
+
+    lightmap.add_global_lighting(m_pgame.get_world().get_global_lighting());
 }
 
 void LightSystem::update_all_lightsources(float dT){
