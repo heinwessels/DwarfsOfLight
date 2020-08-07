@@ -9,9 +9,11 @@ LightSystem::LightSystem(Game &game)
 
 void LightSystem::update(float dT){
 
-    update_all_lightsources(dT);
+    // update_all_lightsources(dT);
     populate_lightmap();
+
     add_lighting_to_world();
+    add_lighting_to_entities();
 }
 
 void LightSystem::add_lighting_to_world(){
@@ -21,21 +23,28 @@ void LightSystem::add_lighting_to_world(){
             if (tile.has_component(RenderComponentID)){
 
                 Renderable &renderable = static_cast<Renderable&>(tile.get_component(RenderComponentID));
-                // renderable.get_mtexture().setColor()
-
+                renderable.get_mtexture().setColor(
+                    m_pgame.get_world().get_lighting_at(tile.get_posision())
+                );
             }
         }
     }
-
 }
 
 void LightSystem::add_lighting_to_entities(){
-
+    for(auto const &entity : m_pgame.get_entities()){
+        if (entity->has_component(RenderComponentID)){
+            Renderable &renderable = static_cast<Renderable&>(entity->get_component(RenderComponentID));
+            renderable.get_mtexture().setColor(
+                m_pgame.get_world().get_lighting_at(entity->get_posision())
+            );
+        }
+    }
 }
 
 void LightSystem::populate_lightmap(){
 
-    m_pgame.get_world().clear_light_map();
+    m_pgame.get_world().reset_light_map();
 
     m_pgame.get_world().add_global_lighting();
 }

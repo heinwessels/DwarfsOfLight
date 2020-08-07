@@ -17,7 +17,7 @@ class MTexture
 
         void free();
         bool is_texture_loaded() {return m_texture != NULL;}
-        void setColor( MColour colour ){SDL_SetTextureColorMod( m_texture, colour.r, colour.g, colour.b );};
+        void setColor( MColour colour ){SDL_SetTextureColorMod( m_texture, colour.r, colour.g, colour.b );};    // This modulates the colour by eg <r/255>
 
         void set_texture(SDL_Texture* texture, int width, int height);
         SDL_Texture *get_texture() { return m_texture; }

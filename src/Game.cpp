@@ -34,9 +34,9 @@ void Game::init_systems(){
     // The order in which systems are added to this vector
     // will determine in which order they will execute
 
+    m_systems.push_back(std::make_unique<LightSystem>(*this));
     m_systems.push_back(std::make_unique<RenderSystem>(*this, screen_width, screen_height));
     m_systems.push_back(std::make_unique<InputSystem>(*this, *static_cast<RenderSystem*>(m_systems[0].get())));   // This requires the RenderSystem
     m_systems.push_back(std::make_unique<MovementSystem>(*this));
     m_systems.push_back(std::make_unique<CollisionSystem>(*this));
-    m_systems.push_back(std::make_unique<LightSystem>(*this));
 }

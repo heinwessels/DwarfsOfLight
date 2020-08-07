@@ -26,10 +26,6 @@ World::World (int width, int height)
     ////////////////////////////////////////////////////////
 }
 
-Tile& World::get_closest_tile_to(Vec2 point){
-    return m_world[floor(point.x )][floor(point.y)];
-}
-
 Tile* World::get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, ComponentID component_ID){
     // <range> is size of square around <point>
     // Returns <nullptr> if none found.
@@ -64,11 +60,12 @@ void World::add_global_lighting(){
     }
 }
 
-void World::clear_light_map(){
+void World::reset_light_map(){
     for (auto & column : m_light_map){
-        column.clear();
+        for (auto & light : column){
+            light = MColour(0.0f);
+        }
     }
-    m_light_map.clear();
 }
 
 void World::clear(){
