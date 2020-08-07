@@ -5,10 +5,16 @@
 
 
 class LightComponent : public Component{
-    MColour m_base_colour;
-    MColour m_colour_weight;
-    MColour m_frequency;
 public:
-    LightComponent() : Component(LightComponentID) { }
+    MColour base_colour;
+    MColour current_colour;
+    MColour colour_weight;
+    MColour current_gradient;
+    MColour frequency;
+
+    LightComponent(MColour base_colour, MColour colour_weight, MColour frequency)
+        : Component(LightComponentID),
+        base_colour(base_colour), current_colour(base_colour),
+        colour_weight(colour_weight), frequency(frequency), current_gradient(MColour(0)) { }
 };
 

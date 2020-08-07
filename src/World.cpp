@@ -1,7 +1,7 @@
 #include "World.hpp"
 
-World::World (int width, int height, float grid_size)
-        : m_width(width), m_height(height), m_grid_size(grid_size)
+World::World (int width, int height)
+        : m_width(width), m_height(height)
 {
     clear();
     resize(width, height);
@@ -19,16 +19,15 @@ World::World (int width, int height, float grid_size)
 
             m_world[x][y] = Tile(
                 type,
-                m_grid_size / 2.0 + x * m_grid_size,
-                m_grid_size / 2.0 + y * m_grid_size
-            );
+                x + 0.5f, y + 0.5f
+            );  // + 0.5 to center the tile in the middle of the grid. (I think, we'll see)
 
         }
     ////////////////////////////////////////////////////////
 }
 
 Tile& World::get_closest_tile_to(Vec2 point){
-    return m_world[floor(point.x / m_grid_size)][floor(point.y / m_grid_size)];
+    return m_world[floor(point.x )][floor(point.y)];
 }
 
 Tile* World::get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, ComponentID component_ID){
@@ -39,8 +38,8 @@ Tile* World::get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, Co
     float closest_distance_sq = 1e8;
     Vec2 bottom_left = point - range / 2;
     Vec2 top_right = point + range / 2;
-    for (int x = floor(bottom_left.x/m_grid_size); x <= ceil(top_right.x/m_grid_size); x ++){
-        for (int y = floor(bottom_left.y/m_grid_size); y <= ceil(top_right.y/m_grid_size); y ++){
+    for (int x = floor(bottom_left.x); x <= ceil(top_right.x); x ++){
+        for (int y = floor(bottom_left.y); y <= ceil(top_right.y); y ++){
 
             if(m_world[x][y].has_component(component_ID)){
 
@@ -57,14 +56,36 @@ Tile* World::get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, Co
     return closest_tile;
 }
 
-void World::clear(){
-    for (auto & column : m_world)
+void World::add_global_lighting(){
+    for (auto & column : m_light_map){
+        for (auto & light : column){
+            light += m_global_lighting;
+        }
+    }
+}
+
+void World::clear_light_map(){
+    for (auto & column : m_light_map){
         column.clear();
+    }
+    m_light_map.clear();
+}
+
+void World::clear(){
+    for (auto & column : m_world){
+        column.clear();
+    }
     m_world.clear();
+
 }
 void World::resize(int width, int height){
     m_world.resize(width);
     for (auto & column : m_world){
+        column.resize(height);
+    }
+
+    m_light_map.resize(width);
+    for (auto & column : m_light_map){
         column.resize(height);
     }
 }

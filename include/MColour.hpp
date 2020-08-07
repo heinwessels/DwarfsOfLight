@@ -1,9 +1,13 @@
+#pragma once
+
 #include <bits/stdc++.h>
 
 class MColour{
 public:
     int r = 0, g = 0, b = 0, a = 0;
     MColour() { }
+    MColour(int c) : r(c), g(c), b(c), a(255) { }
+    MColour(int r, int g, int b) : r(r), g(g), b(b), a(255) { }
     MColour(int r, int g, int b, int a) : r(r), g(g), b(b), a(a) { }
 
     MColour& operator += (const MColour & v){

@@ -12,8 +12,8 @@
 class Goblin : public Entity{
 
 private:
-    float width = 32;
-    float height = 32;
+    float width = 1;
+    float height = 1;
     std::string m_texture_path = "textures/dwarf.png";
 
 public:

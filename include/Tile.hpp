@@ -18,10 +18,12 @@ public:
 
 private:
 
-    float width = 32;
-    float height = 32;
+    float width = 1;
+    float height = 1;
     std::string m_texture_path = "textures/tile_eg.png";
     Type m_type;
+
+    MColour lighting = MColour(0);
 
 public:
     Tile() : Entity(Vec2(0.0, 0.0)), m_type(TypeEmpty) { }  // For empty world tiles

@@ -17,6 +17,8 @@ class RenderSystem : public System{
 
     Renderer m_Renderer;
 
+    float m_scaling = 32; // TEMPORARY BEFORE IMPLEMENTING CAMERA
+
 public:
     RenderSystem(Game &game, int width, int height);
     std::vector<SDL_Event> get_input_events() { return m_Renderer.get_input_events(); }

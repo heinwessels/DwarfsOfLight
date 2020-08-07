@@ -2,6 +2,7 @@
 #include "InputSystem.hpp"
 #include "MovementSystem.hpp"
 #include "CollisionSystem.hpp"
+#include "LightSystem.hpp"
 
 #pragma once
 

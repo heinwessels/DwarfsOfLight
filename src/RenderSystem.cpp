@@ -35,7 +35,6 @@ void RenderSystem::update(float dT){
 }
 
 void RenderSystem::update_entities(){
-
     for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
@@ -48,8 +47,8 @@ void RenderSystem::update_entities(){
 
             m_Renderer.renderTextureToScreen(
                 renderable.get_mtexture().get_texture(),
-                pos.x, pos.y,
-                renderable.width, renderable.height
+                pos.x*m_scaling, pos.y*m_scaling,
+                renderable.width*m_scaling, renderable.height*m_scaling
             );
 
         }
@@ -71,8 +70,8 @@ void RenderSystem::update_world(){
 
                 m_Renderer.renderTextureToScreen(
                     renderable.get_mtexture().get_texture(),
-                    pos.x, pos.y,
-                    renderable.width, renderable.height
+                    pos.x*m_scaling, pos.y*m_scaling,
+                    renderable.width*m_scaling, renderable.height*m_scaling
                 );
             }
         }
