@@ -10,8 +10,6 @@
 #include "Renderable.hpp"
 #include "LightComponent.hpp"
 
-class Seed {public: int x, y; Seed(int x, int y) : x(x), y(y) { }};
-
 class Game;
 class LightSystem : public System{
 
@@ -28,8 +26,8 @@ private:
     void update_lightsource(LightComponent &light, float dT);
     void populate_lightmap();
 
-    void grow_light_source(LightMap &lightmap, const LightComponent light, Vec2 origin);
-    std::list<Seed> grow_light_seed(Seed source, Vec2 origin, LightMap& lightmap, LightComponent light);
-    std::list<Seed> get_neighbour_seeds_in_direction(Seed seed, float angle);
+    void ray_trace_source(Vec2 origin, LightComponent &light, LightMap &lightmap);
+    void ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, LightComponent &light);
+    Vec2 ray_get_next_intersection(Vec2 position, Vec2 direction);
 };
 

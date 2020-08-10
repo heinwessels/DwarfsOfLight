@@ -62,4 +62,8 @@ class Vec2 {
     static Vec2 floor(const Vec2 &a){
         return Vec2(std::floor(a.x), std::floor(a.y));
     }
+
+    static Vec2 transpose(const Vec2 &a){
+        return Vec2(a.y, a.x);
+    }
 };

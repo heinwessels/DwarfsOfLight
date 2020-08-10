@@ -58,7 +58,7 @@ void LightSystem::populate_lightmap(){
             LightComponent &light = static_cast<LightComponent&>(entity->get_component(LightComponentID));
 
             // TODO This will only work with ONE LIGHT
-            grow_light_source(lightmap, light, Vec2::floor(entity->get_posision()));
+            ray_trace_source(entity->get_posision(), light, lightmap);
         }
     }
 
@@ -88,127 +88,120 @@ void LightSystem::update_lightsource(LightComponent &light, float dT){
         light.current_colour.b = 0;
 }
 
-void LightSystem::grow_light_source(LightMap &lightmap, LightComponent light, Vec2 origin){
-    // The <lightmap> will contain the output data
+void LightSystem::ray_trace_source(Vec2 origin, LightComponent &light, LightMap &lightmap){
 
-    // Create the list of seeds that need to grow.
-    std::list<Seed> seeds;
-    Seed source_seed = Seed(floor(origin.x), floor(origin.y));
-    seeds.push_front(source_seed);  // This guy will execute first
+    static const int num_of_rays = 12;
+    for (float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / num_of_rays){
 
-    // Also add the first 8 neighbours to ensure it grows in all directions
-    seeds.push_front(Seed(source_seed.x + 1, source_seed.y + 1)); // Top row
-    seeds.push_front(Seed(source_seed.x + 0, source_seed.y + 1));
-    seeds.push_front(Seed(source_seed.x - 1, source_seed.y + 1));
-    seeds.push_front(Seed(source_seed.x + 1, source_seed.y - 1)); // Bottom row
-    seeds.push_front(Seed(source_seed.x + 0, source_seed.y - 1));
-    seeds.push_front(Seed(source_seed.x - 1, source_seed.y - 1));
-    seeds.push_front(Seed(source_seed.x - 1, source_seed.y));       // Left and right
-    seeds.push_front(Seed(source_seed.x + 1, source_seed.y));
+        printf("\nAngle %.3f: ", angle * 180 / M_PI);
 
-    // Sanity check to prevent infinite loops (WILL NEED IMPROVEMENT)
-    int maximum_steps = ceil((light.max_dist+3)*(light.max_dist+3)*M_PI);
-    int count_steps = 0;
-    bool failed = false;
-
-    while(!seeds.empty() && !failed){
-
-        // Remove the front seed
-        Seed seed = seeds.back();
-        seeds.pop_back();
-
-        // Add light at this seed
-        lightmap.set_lighting_at(seed.x, seed.y, light.base_colour);
-        lightmap.modify(seed.x, seed.y);    // This is still a hacky solution
-
-        // Grow this seed to get more!
-        if (m_pgame.get_world().get_tiles()[seed.x][seed.y].get_type() != Tile::TypeWall){
-            // But only if this seed is NOT on a wall.
-            // We still allow the wall, because we need to see it.
-
-            std::list<Seed> new_seeds = grow_light_seed(seed, origin, lightmap, light);
-
-            // Add these seeds to the master pile
-            seeds.splice(seeds.begin(), new_seeds); // This will add new seeds at the front
-        }
-
-
-        // A sanity check to prevent infinite loops (TEMPORARY)
-        if (count_steps++ > maximum_steps){
-            failed = true;
-            printf("ERROR: The light source growing failed!\n");
-        }
+        ray_trace(
+            origin,
+            Vec2(cosf(angle), sinf(angle)),
+            lightmap,
+            light
+        );
     }
-
 }
 
-std::list<Seed> LightSystem::grow_light_seed(Seed source_seed, Vec2 origin, LightMap& lightmap, LightComponent light){
-    using World = std::vector<std::vector<Tile>>;
+void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, LightComponent &light){
+
+    Vec2 current_position = origin;
     World &world = m_pgame.get_world().get_tiles();
 
-    // Calculate angle from origin to the source seed
-    float angle = atan2(source_seed.y - origin.y, source_seed.x - origin.x);
-    // NOTE: If <atan2> takes too long, can change to using gradient. Just be careful of infinity.
+    bool end_ray = false;
+    while(!end_ray){
 
-    // First the source's three neighbours based on the angle to the origin
-    std::list<Seed> possible_seeds = get_neighbour_seeds_in_direction(source_seed, angle);
+        // Get the current tile we're working with
+        int x = floor(current_position.x);
+        int y = floor(current_position.y);
 
-    // Now loop through each seed and make sure it's a valid place to grow
-    // And if it's valid, update the lightmap
-    std::list<Seed> valid_seeds;
-    for (auto & seed : possible_seeds){
+        // If this tile has not been modified, and receives light, update!
+        if (lightmap.has_been_modifed(x, y)){
+            // It has not been modified!
 
-        if (seed.x < 0 || seed.x > lightmap.get_width() || seed.y < 0 || seed.y > lightmap.get_height()){
-            // This tile is out of bounds. Not valid!
+            // Update the light at this tile
+            lightmap.set_lighting_at(x, y, light.base_colour);
+            lightmap.modify(x, y);  // This is an unnesary step. Should be part of <set_lighting_at>
         }
-        else if (lightmap.has_been_modifed(seed.x, seed.y)){
-            // This tile has already been grown to. Not valid
+
+        // Now propogate the ray
+        current_position = ray_get_next_intersection(current_position, direction);
+
+        // Get the new tile we're working with (TODO Can be optimized)
+        x = floor(current_position.x);
+        y = floor(current_position.y);
+
+        // Verify this ray is still valid
+        if (Vec2::dist_sq(origin, current_position) > light.max_dist*light.max_dist){
+            // It can't travel any further
+            end_ray = true;
         }
-        else if (light.max_dist < (seed.x-origin.x)*(seed.x-origin.x) + (seed.y-origin.y)*(seed.y-origin.y)){
-            // The light doesn't shine this far
+        else if (world[x][y].get_type() == Tile::TypeAir){
+            // We've reached a light blocking block
+            end_ray = true;
         }
-        else{
-            // This tile will get light! (I hope)
-            valid_seeds.push_front(seed);
-        }
+
+        // printf(".");
+        printf("Dist: %.3f\n", sqrt(Vec2::dist_sq(origin, current_position)));
     }
-
-
-    return valid_seeds;
 }
 
-std::list<Seed> LightSystem::get_neighbour_seeds_in_direction(Seed seed, float angle){
-    // Returns the 3 neighbours in the direction of the angle
+Vec2 LightSystem::ray_get_next_intersection(Vec2 position, Vec2 direction){
 
-    int angle_sign = angle > 0 ? 1 : -1;
-    std::list<Seed> seeds;
+    // Should we transpose to avoid infinities at vertical lines when direction > 45 degrees
+    bool transposed = abs(direction.y) > abs(direction.x);
+    Vec2 position_ = transposed ? Vec2::transpose(position) : position;
+    Vec2 direction_ = transposed ? Vec2::transpose(direction) : direction;
 
-    // Dividing the coordinate system into octants.
-    if (abs(angle) < M_PI / 8.0) /* 22.5 */{
-        seeds.push_front(Seed(seed.x + 1, seed.y + 1));
-        seeds.push_front(Seed(seed.x + 1, seed.y));
-        seeds.push_front(Seed(seed.x + 1, seed.y - 1));
+    // Finish the straight line equation < y=mx+c >
+    float m = direction_.y / direction_.x;
+    float c = position_.y - m * position_.x;
+
+    // Get the tile we're currently working with
+    Vec2 current_tile_ = Vec2::floor(position_); // Could this give the wrong number on edge cases?
+
+    // TODO FIX HERE! The current tile gives the wrong result under certain conditions.
+
+    // Now find the next intersection on the current tile edge (whole number)
+    // Remember to verify that you don't return the same edge by looking at the ray direction!
+    // TODO This can be optimized by calculating the new possible coordinate once, instead of twice
+    Vec2 new_intersection_ = position_;
+    if (
+        /* Left edge */
+        (current_tile_.y <= (m*(current_tile_.x) + c)) && ((m*(current_tile_.x) + c) <= (current_tile_.y + 1))
+        && (direction_.x < 0)
+    ){
+        new_intersection_ = Vec2(current_tile_.x, m*(current_tile_.x) + c);
     }
-    else if (abs(angle) < 3.0 * M_PI / 8.0)/*67.5*/ {
-        seeds.push_front(Seed(seed.x + 0, seed.y + angle_sign));
-        seeds.push_front(Seed(seed.x + 1, seed.y + angle_sign));
-        seeds.push_front(Seed(seed.x + 1, seed.y));
+    else if (
+        /* Right edge */
+        (current_tile_.y <= (m*(current_tile_.x + 1) + c)) && ((m*(current_tile_.x + 1) + c) <= (current_tile_.y + 1))
+        && (direction_.x > 0)
+    ){
+        new_intersection_ = Vec2(current_tile_.x + 1, m*(current_tile_.x + 1) + c);
     }
-    else if (abs(angle) < 5.0 * M_PI / 8.0) /*112.5*/ {
-        seeds.push_front(Seed(seed.x - 1, seed.y + angle_sign));
-        seeds.push_front(Seed(seed.x + 0, seed.y + angle_sign));
-        seeds.push_front(Seed(seed.x + 1, seed.y + angle_sign));
+    else if (
+        /* Bottom edge */
+        (current_tile_.x <= ((current_tile_.y - c)/m) && ((current_tile_.y - c)/m) <= (current_tile_.x + 1))
+        && (direction_.y < 0)
+    ){
+        new_intersection_ = Vec2((current_tile_.y - c)/m, current_tile_.y);
     }
-    else if (abs(angle) < 7.0 * M_PI / 8.0)/* 157.5 */ {
-        seeds.push_front(Seed(seed.x - 1, seed.y));
-        seeds.push_front(Seed(seed.x - 1, seed.y + angle_sign));
-        seeds.push_front(Seed(seed.x + 0, seed.y + angle_sign));
+    else if (
+        /* Bottom edge */
+        (current_tile_.x <= ((current_tile_.y + 1 - c)/m) && ((current_tile_.y + 1 - c)/m) <= (current_tile_.x + 1))
+        && (direction_.y > 0)
+    ){
+        new_intersection_ = Vec2((current_tile_.y + 1 - c)/m, current_tile_.y + 1);
     }
-    else /* abs(angle) > 157.5 */ {
-        seeds.push_front(Seed(seed.x - 1, seed.y + 1));
-        seeds.push_front(Seed(seed.x - 1, seed.y));
-        seeds.push_front(Seed(seed.x - 1, seed.y - 1));
+    else{
+        // It should never reach this!
+        printf("ERROR: Ray tracing couldn't find next tile! (Position = [%.3f, %.3f], Direction = [%.3f, %.3f]\n",
+            position.x, position.y, direction.x, direction.y
+        );
     }
 
-    return seeds;
+    // Now return the transposed result
+    return transposed ? Vec2::transpose(new_intersection_) : new_intersection_;
 }

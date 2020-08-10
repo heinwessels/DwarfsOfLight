@@ -1,5 +1,5 @@
 # Dwarfs Of Light
-This is an implementation of a Entity Component System (ECS) based game engine, with a game built on top of it. The game is about dwarfs walking around in a dark cave with torches. The goal is to learn more about C++ containers, smart pointers, memory management, and hopefully templates.
+This is an implementation from scratch of a Entity Component System (ECS) based game engine, with a game built on top of it. The game is about dwarfs walking around in a dark cave with torches and dynamic lighting. The goal is to learn more about C++ containers, smart pointers, memory management, and hopefully templates.
 
 
 ## Problems Solved
@@ -38,7 +38,7 @@ This works well enough, and only lights up the tiles within a certain distance. 
 
 <sup>**Please ignore the bad tileset colours.**</sup>
 
-This is a good experiment, but for good looking lighting I believe the right way to go would be a form of ray tracing.
+This is a good experiment, but for good looking lighting I believe the right way to go would be a form of ray tracing. In order to shape this growing algorithm to achieve the shadows I want will require hacking the solution so much that it's not a simple grower anymore. Therefore I will rewriting it.
 
 #### Technique 2: Discrete Ray Tracing
 
