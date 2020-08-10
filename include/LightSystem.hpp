@@ -29,5 +29,6 @@ private:
     void ray_trace_source(Vec2 origin, LightComponent &light, LightMap &lightmap);
     void ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, LightComponent &light);
     Vec2 ray_get_next_intersection(Vec2 position, Vec2 direction);
+    Vec2 ray_get_propogating_tile(Vec2 position, Vec2 direction);
 };
 

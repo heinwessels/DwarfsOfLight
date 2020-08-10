@@ -12,7 +12,7 @@ public:
     MColour current_gradient;
     MColour frequency;
 
-    float max_dist = 5;
+    float max_dist = 10;
 
     LightComponent(MColour base_colour, MColour colour_weight, MColour frequency)
         : Component(LightComponentID),

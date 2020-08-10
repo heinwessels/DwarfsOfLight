@@ -13,7 +13,13 @@ World::World (int width, int height)
         for (int x = 0; x < m_width; x++){
 
             Tile::Type type = Tile::TypeFloor;
-            if ((x == 3) || (x == 13 && y > 12) || (x == 25) || (x == 13 && y == 5)){
+            if (
+                (x == 3)
+                || (x == 13 && y > 12)
+                || (x == 25 && y != 12)
+                || (x == 13 && y == 5)
+                || (x == 30 && (y == 13 || y == 14))
+            ){
                 type = Tile::TypeWall;
             }
 

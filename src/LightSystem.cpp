@@ -90,10 +90,8 @@ void LightSystem::update_lightsource(LightComponent &light, float dT){
 
 void LightSystem::ray_trace_source(Vec2 origin, LightComponent &light, LightMap &lightmap){
 
-    static const int num_of_rays = 12;
+    static const int num_of_rays = 100;
     for (float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / num_of_rays){
-
-        printf("\nAngle %.3f: ", angle * 180 / M_PI);
 
         ray_trace(
             origin,
@@ -113,11 +111,12 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
     while(!end_ray){
 
         // Get the current tile we're working with
-        int x = floor(current_position.x);
-        int y = floor(current_position.y);
+        Vec2 current_tile = ray_get_propogating_tile(current_position, direction);
+        int x = floor(current_tile.x);
+        int y = floor(current_tile.y);
 
         // If this tile has not been modified, and receives light, update!
-        if (lightmap.has_been_modifed(x, y)){
+        if (!lightmap.has_been_modifed(x, y)){
             // It has not been modified!
 
             // Update the light at this tile
@@ -129,25 +128,31 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
         current_position = ray_get_next_intersection(current_position, direction);
 
         // Get the new tile we're working with (TODO Can be optimized)
-        x = floor(current_position.x);
-        y = floor(current_position.y);
+        current_tile = ray_get_propogating_tile(current_position, direction);
+        x = round(current_tile.x);
+        y = round(current_tile.y);
 
         // Verify this ray is still valid
-        if (Vec2::dist_sq(origin, current_position) > light.max_dist*light.max_dist){
-            // It can't travel any further
+        if (x < 0 || (x > lightmap.get_width() - 1) || y < 0 || (y > lightmap.get_height() - 1)){
+            // The ray is going out of bounds
             end_ray = true;
         }
-        else if (world[x][y].get_type() == Tile::TypeAir){
+        else if (Vec2::dist_sq(origin, current_position) > light.max_dist*light.max_dist){
+            // It can't travel any further.
+            // TODO This check does not account for when the ray can still travel into the tile, but not all the way through
+            end_ray = true;
+        }
+        else if (world[x][y].get_type() == Tile::TypeWall){
             // We've reached a light blocking block
             end_ray = true;
         }
 
-        // printf(".");
-        printf("Dist: %.3f\n", sqrt(Vec2::dist_sq(origin, current_position)));
     }
 }
 
 Vec2 LightSystem::ray_get_next_intersection(Vec2 position, Vec2 direction){
+
+    const float tolerance = 1e-6;    // This is because whole numbers aren't always exact.
 
     // Should we transpose to avoid infinities at vertical lines when direction > 45 degrees
     bool transposed = abs(direction.y) > abs(direction.x);
@@ -159,48 +164,36 @@ Vec2 LightSystem::ray_get_next_intersection(Vec2 position, Vec2 direction){
     float c = position_.y - m * position_.x;
 
     // Get the tile we're currently working with
-    Vec2 current_tile_ = Vec2::floor(position_); // Could this give the wrong number on edge cases?
-    if(direction_.y < 0 && (
-        position_.y > current_tile_.y - 1e-6 && position_.y < current_tile_.y + 1e-6
-    )){
-        // If the ray is traveling left, and on the right edge, the current tile should move one left
-        current_tile_.y = current_tile_.y - 1;
-    }
-    if(direction_.x < 0 && (
-        position_.x > current_tile_.x - 1e-6 && position_.x < current_tile_.x + 1e-6
-    )){
-        // If the ray is traveling left, and on the right edge, the current tile should move one left
-        current_tile_.x = current_tile_.x - 1;
-    }
+    Vec2 current_tile_ = ray_get_propogating_tile(position_, direction_);
 
     // Now find the next intersection on the current tile edge (whole number)
     // Remember to verify that you don't return the same edge by looking at the ray direction!
     // TODO This can be optimized by calculating the new possible coordinate once, instead of twice
     Vec2 new_intersection_ = position_;
-    if (
+    if (+
         /* Left edge */
-        (current_tile_.y <= (m*(current_tile_.x) + c)) && ((m*(current_tile_.x) + c) <= (current_tile_.y + 1))
+        (current_tile_.y - tolerance <= (m*(current_tile_.x) + c)) && ((m*(current_tile_.x) + c) <= (current_tile_.y + 1 + tolerance))
         && (direction_.x < 0)
     ){
         new_intersection_ = Vec2(current_tile_.x, m*(current_tile_.x) + c);
     }
     else if (
         /* Right edge */
-        (current_tile_.y <= (m*(current_tile_.x + 1) + c)) && ((m*(current_tile_.x + 1) + c) <= (current_tile_.y + 1))
+        (current_tile_.y - tolerance <= (m*(current_tile_.x + 1) + c)) && ((m*(current_tile_.x + 1) + c) <= (current_tile_.y + 1 + tolerance))
         && (direction_.x > 0)
     ){
         new_intersection_ = Vec2(current_tile_.x + 1, m*(current_tile_.x + 1) + c);
     }
     else if (
         /* Bottom edge */
-        (current_tile_.x <= ((current_tile_.y - c)/m) && ((current_tile_.y - c)/m) <= (current_tile_.x + 1))
+        (current_tile_.x - tolerance <= ((current_tile_.y - c)/m) && ((current_tile_.y - c)/m) <= (current_tile_.x + 1 + tolerance))
         && (direction_.y < 0)
     ){
         new_intersection_ = Vec2((current_tile_.y - c)/m, current_tile_.y);
     }
     else if (
         /* Bottom edge */
-        (current_tile_.x <= ((current_tile_.y + 1 - c)/m) && ((current_tile_.y + 1 - c)/m) <= (current_tile_.x + 1))
+        (current_tile_.x - tolerance <= ((current_tile_.y + 1 - c)/m) && ((current_tile_.y + 1 - c)/m) <= (current_tile_.x + 1 + tolerance))
         && (direction_.y > 0)
     ){
         new_intersection_ = Vec2((current_tile_.y + 1 - c)/m, current_tile_.y + 1);
@@ -214,4 +207,26 @@ Vec2 LightSystem::ray_get_next_intersection(Vec2 position, Vec2 direction){
 
     // Now return the transposed result
     return transposed ? Vec2::transpose(new_intersection_) : new_intersection_;
+}
+
+Vec2 LightSystem::ray_get_propogating_tile(Vec2 position, Vec2 direction){
+    // This is because the just flooring that value isn't good enough.
+    // It doesn't handle edge cases where the position is on the edge,
+    // And the ray could be traveling either way.
+
+    const float tolerance = 1e-6;
+    Vec2 current_tile = Vec2::floor(position); // Could this give the wrong number on edge cases?
+    if(direction.y < 0 && (
+        position.y >= current_tile.y - tolerance && position.y <= current_tile.y + tolerance
+    )){
+        // If the ray is traveling left, and on the right edge, the current tile should move one left
+        current_tile.y = current_tile.y - 1;
+    }
+    if(direction.x < 0 && (
+        position.x > current_tile.x - tolerance && position.x < current_tile.x + tolerance
+    )){
+        // If the ray is traveling left, and on the right edge, the current tile should move one left
+        current_tile.x = current_tile.x - 1;
+    }
+    return current_tile;
 }
