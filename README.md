@@ -12,6 +12,40 @@ This is an implementation of a Entity Component System (ECS) based game engine, 
 - **Storage of Entities, Components and Systems**:
   - **Entities** will be stored in a `std::list` in the `Game` class. This is good for random inserting, deleting and sorting. `Entities` will almost never be randomly accessed, and will typically be looped through with `iterators`, which is still fast. A possible downside is caching since the data won't be stored serially. However, the `Entity` only contains pointers to `components` (see next point), so it's already not great for caching. This list will also be sorted during rendering (for rendering order), which is very fast with `std::list` since it only changes pointers.
   - **Components** are currently stored in the `entity` it belongs to, in a `std::unorderer_map` of `std::unique_ptr`s. Storing it inside the `entity` is not ideal (see TODO #1), but was used for learn the ECS system. It's stored in a `std::unorderer_map` to have quick access by using a unique key (`ComponentTypeID`).
+- **Light Rendering:** This is one of the main features of the game. Therefore it has a seperate heading, just scroll down.
+
+## Detailed Descriptions
+
+### Lighting Simulation
+
+For this project I want to have the effect of a dwarf carrying a fire torch in a cave. Which means it will only light up the area around him, and cast a lot of shadows. Therefore, it would need some form of ray tracing to *not* light up blocks that's obscured. I saw two ways to achieve this.
+
+#### Technique 1: Light Growing Algorithm
+
+I thought a growing algorithm would suffuce, since the calculation will be done on large 2D discrete tiles. I've also always wanted to develop my own growing algorithm.
+
+Therefore I defined a list of `Seeds`, which is only a tile coordinate. The first seeds is the light source tile, and each of it's neighbours. Then I will loop through this list of seeds and attempt to grow each one. A seed will only grow in certain conditions, and if creates more seeds successfully, then it's added to the main seed list. Then the main seed list is just looped until it's empty.
+
+The initial rules I used was:
+- New tile is not out of bounds of the map
+- New tile has not already contain a seed
+- New tile is within lighting distance from light source (do not like the squared distance calculation).
+
+This works well enough, and only lights up the tiles within a certain distance. However, the light seems to bend around corners. This is due to the rough choice on which tiles are available to grow.
+
+<center>
+![](gifs/light_growing _light_bend.gif)
+
+![](gifs/light_growing _light_bend2.gif)
+
+*Please ignore the bad tile set.*
+</center>
+
+
+This is a good experiment, but for good looking lighting I believe the right way to go would be a form of ray tracing.
+
+#### Technique 2: Discrete Ray Tracing
 
 ## TODO
 1. Convert software to store data serially, which is one of the goals of ECS. For example, *all* `components` stored serially, with references to which `entity` they belong. The `systems` will then loop through the `components`, not caring to which `entity` it belongs to.
+
