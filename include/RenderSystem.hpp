@@ -17,13 +17,13 @@ class RenderSystem : public System{
 
     Renderer m_Renderer;
 
-    float m_scaling = 32; // TEMPORARY BEFORE IMPLEMENTING CAMERA
+    double m_scaling = 32; // TEMPORARY BEFORE IMPLEMENTING CAMERA
 
 public:
     RenderSystem(Game &game, int width, int height);
     std::vector<SDL_Event> get_input_events() { return m_Renderer.get_input_events(); }
 
-    virtual void internal_update(float dT) override;
+    virtual void internal_update(double dT) override;
 
 private:
     void load_texture_if_not_loaded(Renderable &renderable);

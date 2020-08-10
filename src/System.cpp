@@ -1,6 +1,6 @@
 #include "System.hpp"
 
-void System::update(float dT){
+void System::update(double dT){
     // We're going to keep track of how long these functions take.
 
     using clock = std::chrono::system_clock;

@@ -9,7 +9,7 @@ InputSystem::InputSystem(Game &game, RenderSystem &render_sytem)
     m_signature |= Component::get_component_signature(MoveComponentID);
 }
 
-void InputSystem::internal_update(float dT){
+void InputSystem::internal_update(double dT){
     m_last_events = m_pRender_system.get_input_events();
 
     // Loop through all events
@@ -97,6 +97,6 @@ void InputSystem::handle_entity_movement(SDL_Event &event, MoveComponent &move, 
     }
 
     // Now update speed
-    float magnitude = (direction.x != 0 || direction.y != 0) ? 1 : sqrt(2);
+    double magnitude = (direction.x != 0 || direction.y != 0) ? 1 : sqrt(2);
     move.speed = direction * magnitude * controller.max_speed;
 }

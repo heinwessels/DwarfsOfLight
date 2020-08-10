@@ -7,7 +7,7 @@ CollisionSystem::CollisionSystem(Game &game)
     m_signature |= Component::get_component_signature(CollisionBoxComponentID);
 }
 
-void CollisionSystem::internal_update(float dT){
+void CollisionSystem::internal_update(double dT){
     check_collision_with_entities();
     check_collision_with_world();
 };
@@ -92,7 +92,7 @@ bool CollisionSystem::repel_if_collision(
                 {delta.y=0.0f;}
             else
                 {delta.x=0.0f;}
-            float num_of_movers = !a_box.stationary + !b_box.stationary;
+            double num_of_movers = !a_box.stationary + !b_box.stationary;
             a_pos += delta / num_of_movers * !a_box.stationary;
             b_pos -= delta / num_of_movers * !b_box.stationary;
 

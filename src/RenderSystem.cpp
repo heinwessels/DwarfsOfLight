@@ -24,7 +24,7 @@ RenderSystem::RenderSystem(Game &game, int width, int height)
     m_signature |= Component::get_component_signature(RenderComponentID);
 }
 
-void RenderSystem::internal_update(float dT){
+void RenderSystem::internal_update(double dT){
 
     m_Renderer.clear_screen();
 

@@ -12,12 +12,12 @@
 class Goblin : public Entity{
 
 private:
-    float width = 1;
-    float height = 1;
+    double width = 1;
+    double height = 1;
     std::string m_texture_path = "textures/dwarf.png";
 
 public:
-    Goblin(float x, float y) : Entity(Vec2(x, y)){
+    Goblin(double x, double y) : Entity(Vec2(x, y)){
         this->add_component(std::make_unique<MoveComponent>(Vec2(0.0f, 0.0f)));
         this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
         this->add_component(std::make_unique<CollisionBox>(width, height, false, false));

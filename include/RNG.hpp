@@ -2,4 +2,4 @@
 
 #include <random>
 
-static float random_float_in_range(float a, float b) { return ((b - a) * ((float)rand() / RAND_MAX)) + a; }
+static double random_float_in_range(double a, double b) { return ((b - a) * ((double)rand() / RAND_MAX)) + a; }

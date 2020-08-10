@@ -36,7 +36,7 @@ Tile* World::get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, Co
     // Returns <nullptr> if none found.
 
     Tile* closest_tile = nullptr; // Empty tile
-    float closest_distance_sq = 1e8;
+    double closest_distance_sq = 1e8;
     Vec2 bottom_left = point - range / 2;
     Vec2 top_right = point + range / 2;
     for (int x = floor(bottom_left.x); x <= ceil(top_right.x); x ++){
@@ -44,7 +44,7 @@ Tile* World::get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, Co
 
             if(m_world[x][y].has_component(component_ID)){
 
-                float dist_sq = Vec2::dist_sq(point, m_world[x][y].get_posision());
+                double dist_sq = Vec2::dist_sq(point, m_world[x][y].get_posision());
 
                 if(dist_sq < closest_distance_sq){
                     closest_distance_sq = dist_sq;

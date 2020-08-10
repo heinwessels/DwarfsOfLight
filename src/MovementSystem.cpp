@@ -7,7 +7,7 @@ MovementSystem::MovementSystem(Game &game)
     m_signature |= Component::get_component_signature(MoveComponentID);
 }
 
-void MovementSystem::internal_update(float dT){
+void MovementSystem::internal_update(double dT){
     for(auto const entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 

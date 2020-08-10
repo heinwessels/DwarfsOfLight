@@ -20,8 +20,8 @@ protected:
 public:
     System (Game &game, std::string name) : m_pgame(game), m_name(name) { }
     virtual ~System() { };
-    void update(float dT);
-    virtual void internal_update(float dT) = 0;
+    void update(double dT);
+    virtual void internal_update(double dT) = 0;
     bool has_valid_signature(const Entity &entity){ return entity.contains_signature(m_signature); }
 
     std::string get_name() { return m_name; }

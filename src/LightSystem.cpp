@@ -7,7 +7,7 @@ LightSystem::LightSystem(Game &game)
     m_signature |= Component::get_component_signature(LightComponentID);
 }
 
-void LightSystem::internal_update(float dT){
+void LightSystem::internal_update(double dT){
 
     update_all_lightsources(dT);
     populate_lightmap();
@@ -69,7 +69,7 @@ void LightSystem::populate_lightmap(){
     lightmap.scale_to_max_channel();   // Ensure all lightmap values are between 0 and 255
 }
 
-void LightSystem::update_all_lightsources(float dT){
+void LightSystem::update_all_lightsources(double dT){
     for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
@@ -79,7 +79,7 @@ void LightSystem::update_all_lightsources(float dT){
     }
 }
 
-void LightSystem::update_lightsource(LightComponent &light, float dT){
+void LightSystem::update_lightsource(LightComponent &light, double dT){
 
     // Change the gradient based on the frequency
     light.time_to_gradient_change -= dT;
@@ -107,7 +107,7 @@ void LightSystem::update_lightsource(LightComponent &light, float dT){
 void LightSystem::ray_trace_source(Vec2 origin, LightComponent &light, LightMap &lightmap){
 
     static const int num_of_rays = 200;
-    for (float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / num_of_rays){
+    for (double angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / num_of_rays){
 
         ray_trace(
             origin,
@@ -154,7 +154,7 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
 
             // Calculate distance to MIDDLE of tile (not current position)
             // Because that where we need the ligth value from
-            float dist_sq = Vec2::dist_sq(origin, Vec2(current_x, current_y));
+            double dist_sq = Vec2::dist_sq(origin, Vec2(current_x, current_y));
 
             if (dist_sq > light.range*light.range){
                 // It can't travel any further.
@@ -172,7 +172,7 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
     }
 }
 
-void LightSystem::attempt_to_set_colour(int x, int y, LightMap &lightmap, LightComponent &light, float distance_sq){
+void LightSystem::attempt_to_set_colour(int x, int y, LightMap &lightmap, LightComponent &light, double distance_sq){
     // First check if this tile has been modified
     if (!lightmap.has_been_modifed(x, y)){
         lightmap.set_lighting_at(
@@ -184,7 +184,7 @@ void LightSystem::attempt_to_set_colour(int x, int y, LightMap &lightmap, LightC
 
 Vec2 LightSystem::ray_get_next_intersection(Vec2 position, Vec2 direction){
 
-    const float tolerance = 1e-6;    // This is because whole numbers aren't always exact.
+    const double tolerance = 1e-6;    // This is because whole numbers aren't always exact.
 
     // Should we transpose to avoid infinities at vertical lines when direction > 45 degrees
     bool transposed = abs(direction.y) > abs(direction.x);
@@ -192,8 +192,8 @@ Vec2 LightSystem::ray_get_next_intersection(Vec2 position, Vec2 direction){
     Vec2 direction_ = transposed ? Vec2::transpose(direction) : direction;
 
     // Finish the straight line equation < y=mx+c >
-    float m = direction_.y / direction_.x;
-    float c = position_.y - m * position_.x;
+    double m = direction_.y / direction_.x;
+    double c = position_.y - m * position_.x;
 
     // Get the tile we're currently working with
     Vec2 current_tile_ = ray_get_propogating_tile(position_, direction_);
@@ -246,7 +246,7 @@ Vec2 LightSystem::ray_get_propogating_tile(Vec2 position, Vec2 direction){
     // It doesn't handle edge cases where the position is on the edge,
     // And the ray could be traveling either way.
 
-    const float tolerance = 1e-6;
+    const double tolerance = 1e-6;
     Vec2 current_tile = Vec2::floor(position); // Could this give the wrong number on edge cases?
     if(direction.y < 0 && (
         position.y >= current_tile.y - tolerance && position.y <= current_tile.y + tolerance
@@ -264,6 +264,6 @@ Vec2 LightSystem::ray_get_propogating_tile(Vec2 position, Vec2 direction){
 }
 
 
-MColour LightSystem::get_light_at_distance(LightComponent &light, float distance){
+MColour LightSystem::get_light_at_distance(LightComponent &light, double distance){
     return light.current_colour - MColour(static_cast<int>(255.0 * distance / light.range));
 }

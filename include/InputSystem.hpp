@@ -15,7 +15,7 @@ class InputSystem : public System {
 
 public:
     InputSystem(Game &game, RenderSystem &render_sytem);
-    virtual void internal_update(float dT) override;
+    virtual void internal_update(double dT) override;
 
 private:
     void handle_entity_movement(SDL_Event &event, MoveComponent &move, ControllerComponent &controller);

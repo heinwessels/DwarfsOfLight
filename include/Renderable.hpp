@@ -40,8 +40,8 @@ class Renderable : public Component{
     std::string m_path;
     MTexture m_texture;
 public:
-    float width = 0, height = 0;
-    Renderable (std::string path, float width, float height)
+    double width = 0, height = 0;
+    Renderable (std::string path, double width, double height)
             : Component(RenderComponentID), m_path(path), width(width), height(height) { };
     bool is_texture_loaded() {return m_texture.is_texture_loaded();}
     MTexture &get_mtexture () { return m_texture; }

@@ -10,7 +10,7 @@ void Application::run(){
     using clock = std::chrono::system_clock;
     using sec = std::chrono::duration<double>;
 
-    float fps = 20.0;
+    double fps = 20.0;
 
     bool nquit = true;
     while(nquit){

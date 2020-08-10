@@ -37,11 +37,11 @@ public:
     MColour operator + (const MColour &v) const{
         MColour t (*this); t += v; return t;
     }
-    MColour& operator += (const float & f){
+    MColour& operator += (const double & f){
         r += f; g += f; b += f; a += f;
         return *this;
     }
-    MColour operator + (const float &f) const{
+    MColour operator + (const double &f) const{
         MColour t (*this); t += f; return t;
     }
 
@@ -52,11 +52,11 @@ public:
     MColour operator - (const MColour &v) const{
         MColour t (*this); t -= v; return t;
     }
-    MColour& operator -= (const float & f){
+    MColour& operator -= (const double & f){
         r -= f; g -= f; b -= f; a -= f;
         return *this;
     }
-    MColour operator - (const float &f) const{
+    MColour operator - (const double &f) const{
         MColour t (*this); t -= f; return t;
     }
 
@@ -67,11 +67,11 @@ public:
     MColour operator * (const MColour &v) const{
         MColour t (*this); t *= v; return t;
     }
-    MColour& operator *= (const float & f){
+    MColour& operator *= (const double & f){
         r *= f; g *= f; b *= f; a *= f;
         return *this;
     }
-    MColour operator * (const float &f) const{
+    MColour operator * (const double &f) const{
         MColour t (*this); t *= f; return t;
     }
 
@@ -82,11 +82,11 @@ public:
     MColour operator / (const MColour &v) const{
         MColour t (*this); t /= v; return t;
     }
-    MColour& operator /= (const float & f){
+    MColour& operator /= (const double & f){
         r /= f; g /= f; b /= f; a /= f;
         return *this;
     }
-    MColour operator / (const float &f) const{
+    MColour operator / (const double &f) const{
         MColour t (*this); t /= f; return t;
     }
 };

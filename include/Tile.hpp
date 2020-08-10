@@ -19,8 +19,8 @@ public:
 
 private:
 
-    float width = 1;
-    float height = 1;
+    double width = 1;
+    double height = 1;
     std::string m_texture_path = "textures/tile_eg.png";
     Type m_type;
 
@@ -28,7 +28,7 @@ private:
 
 public:
     Tile() : Entity(Vec2(0.0, 0.0)), m_type(TypeEmpty) { }  // For empty world tiles
-    Tile(Type type, float x, float y) : Entity(Vec2(x, y)), m_type(type) {
+    Tile(Type type, double x, double y) : Entity(Vec2(x, y)), m_type(type) {
         if(m_type == TypeWall){
             this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
             this->add_component(std::make_unique<CollisionBox>(width, height, false, true));
