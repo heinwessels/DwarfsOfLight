@@ -31,7 +31,7 @@ The initial rules I used was:
 - New tile has not already contain a seed
 - New tile is within lighting distance from light source (do not like the squared distance calculation).
 
-This works well enough, and only lights up the tiles within a certain distance. However, the light seems to bend around corners. This is due to the rough choice on which tiles are available to grow. This is visible in the two gifs below, where the dwarf-like entity is holding a light source.
+This works well enough, and only lights up the tiles within a certain distance. However, the light seems to bend around corners. This is due to the rough choice on which tiles are available to grow. This is visible in the two gifs below, where the dwarf-like entity is holding a light source. In this case the tile's brightness is not influences by die distance from the source.
 
 ![](gifs/light_growing_light_bend.gif)
 ![](gifs/light_growing_light_bend2.gif)

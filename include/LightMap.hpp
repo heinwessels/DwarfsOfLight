@@ -20,12 +20,11 @@ public:
 
     void set_lighting_at(int x, int y, MColour c) { m_lightmap[x][y] = c; m_changedmap[x][y] = true; }
     MColour get_lighting_at(Vec2 point) const { return m_lightmap[floor(point.x)][floor(point.y)]; }
-
-    void modify(int x, int y) { m_changedmap[x][y] = true; }
     bool has_been_modifed(int x, int y) { return m_changedmap[x][y]; }
 
     void add_global_lighting(MColour colour);
     void zero();
+    void clamp();
 
     void resize(int width, int height);
     int get_width() { return m_width; }

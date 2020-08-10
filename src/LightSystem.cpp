@@ -53,16 +53,20 @@ void LightSystem::populate_lightmap(){
     lightmap.zero();
 
     // Calculate the light created by all entities with light
+    LightMap new_lightmap = LightMap(lightmap.get_width(), lightmap.get_height());
     for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
             LightComponent &light = static_cast<LightComponent&>(entity->get_component(LightComponentID));
 
-            // TODO This will only work with ONE LIGHT
-            ray_trace_source(entity->get_posision(), light, lightmap);
+            // Calculate the lightmap of this lightsource
+            new_lightmap.zero();
+            ray_trace_source(entity->get_posision(), light, new_lightmap);
+            lightmap += new_lightmap;   // TODO This doesn't merge colours nicely.
         }
     }
 
     // lightmap.add_global_lighting(m_pgame.get_world().get_global_lighting());
+    lightmap.clamp();   // Ensure all lightmap values are between 0 and 255
 }
 
 void LightSystem::update_all_lightsources(float dT){
@@ -71,7 +75,6 @@ void LightSystem::update_all_lightsources(float dT){
 
             LightComponent &light = static_cast<LightComponent&>(entity->get_component(LightComponentID));
             update_lightsource(light, dT);
-
         }
     }
 }
@@ -79,18 +82,12 @@ void LightSystem::update_all_lightsources(float dT){
 void LightSystem::update_lightsource(LightComponent &light, float dT){
 
     light.current_colour += light.colour_weight * dT * 128;
-
-    if(light.current_colour.r > 255)
-        light.current_colour.r = 0;
-    if(light.current_colour.g > 255)
-        light.current_colour.g = 0;
-    if(light.current_colour.b > 255)
-        light.current_colour.b = 0;
+    light.current_colour.clamp();
 }
 
 void LightSystem::ray_trace_source(Vec2 origin, LightComponent &light, LightMap &lightmap){
 
-    static const int num_of_rays = 100;
+    static const int num_of_rays = 200;
     for (float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / num_of_rays){
 
         ray_trace(
@@ -107,21 +104,25 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
     Vec2 current_position = origin;
     World &world = m_pgame.get_world().get_tiles();
 
+    // Get the current tile we're working with
+    Vec2 current_tile = ray_get_propogating_tile(current_position, direction);
+    int current_x = floor(current_tile.x);
+    int current_y = floor(current_tile.y);
+
+    // Light up the source tile if it hasn't been already
+    if (!lightmap.has_been_modifed(current_x, current_y)){
+        // Update the light at this tile
+        lightmap.set_lighting_at(current_x, current_y, light.base_colour);
+    }
+
     bool end_ray = false;
     while(!end_ray){
 
-        // Get the current tile we're working with
-        Vec2 current_tile = ray_get_propogating_tile(current_position, direction);
-        int x = floor(current_tile.x);
-        int y = floor(current_tile.y);
-
         // If this tile has not been modified, and receives light, update!
-        if (!lightmap.has_been_modifed(x, y)){
-            // It has not been modified!
+        if (!lightmap.has_been_modifed(current_x, current_y)){
 
             // Update the light at this tile
-            lightmap.set_lighting_at(x, y, light.base_colour);
-            lightmap.modify(x, y);  // This is an unnesary step. Should be part of <set_lighting_at>
+            lightmap.set_lighting_at(current_x, current_y, light.base_colour);
         }
 
         // Now propogate the ray
@@ -129,11 +130,14 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
 
         // Get the new tile we're working with (TODO Can be optimized)
         current_tile = ray_get_propogating_tile(current_position, direction);
-        x = round(current_tile.x);
-        y = round(current_tile.y);
+        current_x = round(current_tile.x);
+        current_y = round(current_tile.y);
 
         // Verify this ray is still valid
-        if (x < 0 || (x > lightmap.get_width() - 1) || y < 0 || (y > lightmap.get_height() - 1)){
+        if (
+            current_x < 0 || (current_x > lightmap.get_width() - 1) ||
+            current_y < 0 || (current_y > lightmap.get_height() - 1)
+        ){
             // The ray is going out of bounds
             end_ray = true;
         }
@@ -142,11 +146,16 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
             // TODO This check does not account for when the ray can still travel into the tile, but not all the way through
             end_ray = true;
         }
-        else if (world[x][y].get_type() == Tile::TypeWall){
+        else if (world[current_x][current_y].get_type() == Tile::TypeWall){
             // We've reached a light blocking block
             end_ray = true;
-        }
 
+            // We need to still draw this tile. Hack it in here.
+            if (!lightmap.has_been_modifed(current_x, current_y)){
+                // Update the light at this tile
+                lightmap.set_lighting_at(current_x, current_y, light.base_colour);
+            }
+        }
     }
 }
 
@@ -230,3 +239,4 @@ Vec2 LightSystem::ray_get_propogating_tile(Vec2 position, Vec2 direction){
     }
     return current_tile;
 }
+

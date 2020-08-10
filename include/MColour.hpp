@@ -10,6 +10,13 @@ public:
     MColour(int r, int g, int b) : r(r), g(g), b(b), a(255) { }
     MColour(int r, int g, int b, int a) : r(r), g(g), b(b), a(a) { }
 
+    void clamp (){
+        r = std::max(0, std::min(r, 255));
+        g = std::max(0, std::min(g, 255));
+        b = std::max(0, std::min(b, 255));
+        a = std::max(0, std::min(a, 255));
+    }
+
     MColour& operator += (const MColour & v){
         r += v.r; g += v.g; b += v.b; a += v.a;
         return *this;
@@ -42,12 +49,4 @@ public:
         MColour t (*this); t /= v; return t;
     }
 
-    MColour clamp (MColour &colour){
-        MColour &c (*this);
-        c.r = std::min(0, std::max(c.r, 255));
-        c.g = std::min(0, std::max(c.g, 255));
-        c.b = std::min(0, std::max(c.b, 255));
-        c.a = std::min(0, std::max(c.a, 255));
-        return c;
-    }
 };

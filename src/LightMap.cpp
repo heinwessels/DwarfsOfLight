@@ -21,6 +21,14 @@ void LightMap::zero(){
     resize(m_width, m_height);
 }
 
+void LightMap::clamp(){
+    for (auto & column : m_lightmap){
+        for (auto & colour : column){
+            colour.clamp();
+        }
+    }
+}
+
 void LightMap::resize(int width, int height){
     m_lightmap.resize(width);
     for (auto & column : m_lightmap){
