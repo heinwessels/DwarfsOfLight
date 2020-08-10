@@ -8,6 +8,7 @@
 
 #include <vector>
 
+#include "Timing.hpp"
 #include "Entity.hpp"
 #include "World.hpp"
 

@@ -17,7 +17,7 @@ class LightSystem : public System{
 
 public:
     LightSystem(Game &game);
-    virtual void update(float dT) override;
+    virtual void internal_update(float dT) override;
 
 private:
     void add_lighting_to_world();

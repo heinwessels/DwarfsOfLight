@@ -2,12 +2,12 @@
 #include "Game.hpp"
 
 MovementSystem::MovementSystem(Game &game)
-    :   System(game)
+    :   System(game, std::string("Moving System"))
 {
     m_signature |= Component::get_component_signature(MoveComponentID);
 }
 
-void MovementSystem::update(float dT){
+void MovementSystem::internal_update(float dT){
     for(auto const entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 

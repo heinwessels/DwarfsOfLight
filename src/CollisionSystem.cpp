@@ -2,12 +2,12 @@
 #include "Game.hpp"
 
 CollisionSystem::CollisionSystem(Game &game)
-    : System(game)
+    : System(game, std::string("Collision System"))
 {
     m_signature |= Component::get_component_signature(CollisionBoxComponentID);
 }
 
-void CollisionSystem::update(float dT){
+void CollisionSystem::internal_update(float dT){
     check_collision_with_entities();
     check_collision_with_world();
 };

@@ -16,7 +16,7 @@ class CollisionSystem : public System {
 
 public:
     CollisionSystem(Game &game);
-    virtual void update(float dT) override;
+    virtual void internal_update(float dT) override;
 
 private:
     void check_collision_with_world();

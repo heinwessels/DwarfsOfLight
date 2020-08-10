@@ -2,13 +2,14 @@
 #include "Game.hpp"
 
 InputSystem::InputSystem(Game &game, RenderSystem &render_sytem)
-    :   System(game), m_pRender_system(render_sytem)
+    :   System(game, std::string("Input System")),
+        m_pRender_system(render_sytem)
 {
     m_signature |= Component::get_component_signature(ControllerComponentID);
     m_signature |= Component::get_component_signature(MoveComponentID);
 }
 
-void InputSystem::update(float dT){
+void InputSystem::internal_update(float dT){
     m_last_events = m_pRender_system.get_input_events();
 
     // Loop through all events

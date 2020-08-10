@@ -2,12 +2,12 @@
 #include "Game.hpp"
 
 LightSystem::LightSystem(Game &game)
-    :   System(game)
+    :   System(game, std::string("Lighting System"))
 {
     m_signature |= Component::get_component_signature(LightComponentID);
 }
 
-void LightSystem::update(float dT){
+void LightSystem::internal_update(float dT){
 
     // update_all_lightsource_seeds(dT);
     populate_lightmap();

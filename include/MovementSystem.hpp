@@ -10,5 +10,5 @@ class MovementSystem : public System {
 
 public:
     MovementSystem(Game &game);
-    virtual void update(float dT) override;
+    virtual void internal_update(float dT) override;
 };

@@ -27,6 +27,25 @@ bool Game::step(float dT){
         system->update(dT);
     }
 
+    // THIS IS HACKY TO SEE TIMINGS
+    //////////////////////////////////////////////////////////////////
+    static int count = 0;
+    if (++count > 200){
+        printf("-----------------------------------------------\n");
+        printf("Timing Information (last, min, max) [ms]:\n");
+        for (auto &system : m_systems){
+            Timing timing = system->get_timing();
+            printf("%20s:\t", system->get_name().c_str());
+            printf("%5.3f\t%5.3f\t%5.3f\n",
+                timing.get_update_time(),
+                timing.get_update_time_min(),
+                timing.get_update_time_max()
+            );
+        }
+        count = 0;
+    }
+    //////////////////////////////////////////////////////////////////
+
     return m_state != e_quit;
 }
 

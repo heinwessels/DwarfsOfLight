@@ -23,7 +23,7 @@ public:
     RenderSystem(Game &game, int width, int height);
     std::vector<SDL_Event> get_input_events() { return m_Renderer.get_input_events(); }
 
-    virtual void update(float dT) override;
+    virtual void internal_update(float dT) override;
 
 private:
     void load_texture_if_not_loaded(Renderable &renderable);

@@ -19,12 +19,12 @@ void MTexture::free(){
 }
 
 RenderSystem::RenderSystem(Game &game, int width, int height)
-    : System(game), m_Renderer(width, height)
+    : System(game, std::string("Render System")), m_Renderer(width, height)
 {
     m_signature |= Component::get_component_signature(RenderComponentID);
 }
 
-void RenderSystem::update(float dT){
+void RenderSystem::internal_update(float dT){
 
     m_Renderer.clear_screen();
 
