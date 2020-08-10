@@ -16,6 +16,19 @@ public:
         b = std::max(0, std::min(b, 255));
         a = std::max(0, std::min(a, 255));
     }
+    void scale_to_max_channel(){
+        // Scale the colour to the maximum r,g,b channel
+        // But only if any channel is above 255
+        int max = std::max(r, std::max(g, b));
+        if (max > 255){
+            r = (r * 255) / max;
+            g = (g * 255) / max;
+            b = (b * 255) / max;
+        }
+        else{
+            clamp();
+        }
+    }
 
     MColour& operator += (const MColour & v){
         r += v.r; g += v.g; b += v.b; a += v.a;

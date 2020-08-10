@@ -14,8 +14,7 @@ World::World (int width, int height)
 
             Tile::Type type = Tile::TypeFloor;
             if (
-                (x == 3)
-                || (x == 13 && y > 12)
+                (x == 13 && y > 12)
                 || (x == 25 && y != 12)
                 || (x == 13 && y == 5)
                 || (x == 30 && (y == 13 || y == 14))

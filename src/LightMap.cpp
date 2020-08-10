@@ -29,6 +29,14 @@ void LightMap::clamp(){
     }
 }
 
+void LightMap::scale_to_max_channel(){
+    for (auto & column : m_lightmap){
+        for (auto & colour : column){
+            colour.scale_to_max_channel();
+        }
+    }
+}
+
 void LightMap::resize(int width, int height){
     m_lightmap.resize(width);
     for (auto & column : m_lightmap){

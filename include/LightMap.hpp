@@ -25,6 +25,7 @@ public:
     void add_global_lighting(MColour colour);
     void zero();
     void clamp();
+    void scale_to_max_channel();
 
     void resize(int width, int height);
     int get_width() { return m_width; }

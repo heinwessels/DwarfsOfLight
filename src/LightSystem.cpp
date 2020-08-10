@@ -66,7 +66,7 @@ void LightSystem::populate_lightmap(){
     }
 
     lightmap.add_global_lighting(m_pgame.get_world().get_global_lighting());
-    lightmap.clamp();   // Ensure all lightmap values are between 0 and 255
+    lightmap.scale_to_max_channel();   // Ensure all lightmap values are between 0 and 255
 }
 
 void LightSystem::update_all_lightsources(float dT){
