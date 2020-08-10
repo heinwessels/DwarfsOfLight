@@ -160,8 +160,18 @@ Vec2 LightSystem::ray_get_next_intersection(Vec2 position, Vec2 direction){
 
     // Get the tile we're currently working with
     Vec2 current_tile_ = Vec2::floor(position_); // Could this give the wrong number on edge cases?
-
-    // TODO FIX HERE! The current tile gives the wrong result under certain conditions.
+    if(direction_.y < 0 && (
+        position_.y > current_tile_.y - 1e-6 && position_.y < current_tile_.y + 1e-6
+    )){
+        // If the ray is traveling left, and on the right edge, the current tile should move one left
+        current_tile_.y = current_tile_.y - 1;
+    }
+    if(direction_.x < 0 && (
+        position_.x > current_tile_.x - 1e-6 && position_.x < current_tile_.x + 1e-6
+    )){
+        // If the ray is traveling left, and on the right edge, the current tile should move one left
+        current_tile_.x = current_tile_.x - 1;
+    }
 
     // Now find the next intersection on the current tile edge (whole number)
     // Remember to verify that you don't return the same edge by looking at the ray direction!
