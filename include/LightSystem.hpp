@@ -3,6 +3,8 @@
 #include <list>
 #include <utility>
 
+#include "RNG.hpp"
+
 #include "Tile.hpp"
 #include "LightMap.hpp"
 #include "System.hpp"

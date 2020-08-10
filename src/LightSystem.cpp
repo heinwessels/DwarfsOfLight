@@ -9,7 +9,7 @@ LightSystem::LightSystem(Game &game)
 
 void LightSystem::internal_update(float dT){
 
-    // update_all_lightsource_seeds(dT);
+    update_all_lightsources(dT);
     populate_lightmap();
 
     add_lighting_to_world();
@@ -81,8 +81,27 @@ void LightSystem::update_all_lightsources(float dT){
 
 void LightSystem::update_lightsource(LightComponent &light, float dT){
 
-    // light.current_colour += light.colour_weight * dT * 128;
-    // light.current_colour.clamp();
+    // Change the gradient based on the frequency
+    light.time_to_gradient_change -= dT;
+    if (light.time_to_gradient_change < 0.0){
+
+        // Calculate the new colour target
+        MColour target_colour = MColour(
+            light.base_colour.r + random_float_in_range(-light.colour_variation.r, light.colour_variation.r),
+            light.base_colour.g + random_float_in_range(-light.colour_variation.g, light.colour_variation.g),
+            light.base_colour.b + random_float_in_range(-light.colour_variation.b, light.colour_variation.b)
+        );
+
+        // Calculate the new period
+        light.time_to_gradient_change = light.period + random_float_in_range(-1, 1) * light.period * 0.5;   // 30% variation
+
+        // Calculate the new
+        light.current_gradient = (target_colour - light.current_colour) / light.time_to_gradient_change;
+    }
+
+    // Now follow this gradient
+    light.current_colour += light.current_gradient * dT;
+    light.current_colour.clamp();
 }
 
 void LightSystem::ray_trace_source(Vec2 origin, LightComponent &light, LightMap &lightmap){

@@ -24,7 +24,7 @@ void Application::run(){
         sec loop_time = loop_end - loop_start;
         if(loop_time.count() < 1.0/fps){
             // If there is still time left before the next frame must be drawn
-            // SDL_Delay((1.0/fps - loop_time.count()) * 1000.0);
+            SDL_Delay((1.0/fps - loop_time.count()) * 1000.0);
         }
     }
 }
