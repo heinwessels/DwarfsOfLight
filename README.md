@@ -49,7 +49,9 @@ I implemented a discrete ray tracing algorithm from scratch, and this achieved m
 
 <sup>**Please ignore the bad tileset colours.**</sup>
 
-This was done by implementing a discrete lightmap, and every object in the game is illuminated according to this map. To propogate a ray through this map I only calculated the next intersection with the lightmap's tile border.
+This was done by implementing a discrete lightmap, and every object in the game is illuminated according to this map. To propogate a ray through this map I only calculate the intersection with the next lightmap-tile's border, and continue doing this until the ray hits an obstacle or its max distance. This means no `n`-body collision detection, which makes it very fast. And it creates very real looking shadows.
+
+This is exactly the effect I desired, and is definitely worth the rewrite. However, this is only the base functionality, and now I will make it look nicer.
 
 ## TODO
 1. Convert software to store data serially, which is one of the goals of ECS. For example, *all* `components` stored serially, with references to which `entity` they belong. The `systems` will then loop through the `components`, not caring to which `entity` it belongs to.
