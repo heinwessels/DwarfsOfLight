@@ -12,8 +12,8 @@ World::World (int width, int height)
     for (int y = 0; y < m_height; y++)
         for (int x = 0; x < m_width; x++){
 
-            Tile::Type type = Tile::TypeAir;
-            if (x == 3 || x == 19){
+            Tile::Type type = Tile::TypeFloor;
+            if ((x == 3) || (x == 13 && y > 12) || (x == 25) || (x == 13 && y == 5)){
                 type = Tile::TypeWall;
             }
 

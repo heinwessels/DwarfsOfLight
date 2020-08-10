@@ -58,7 +58,7 @@ void LightSystem::populate_lightmap(){
             LightComponent &light = static_cast<LightComponent&>(entity->get_component(LightComponentID));
 
             // TODO This will only work with ONE LIGHT
-            grow_light_source(lightmap, light, entity->get_posision());
+            grow_light_source(lightmap, light, Vec2::floor(entity->get_posision()));
         }
     }
 
@@ -184,22 +184,22 @@ std::list<Seed> LightSystem::get_neighbour_seeds_in_direction(Seed seed, float a
     std::list<Seed> seeds;
 
     // Dividing the coordinate system into octants.
-    if (abs(angle) < 22.5){
+    if (abs(angle) < M_PI / 8.0) /* 22.5 */{
         seeds.push_front(Seed(seed.x + 1, seed.y + 1));
         seeds.push_front(Seed(seed.x + 1, seed.y));
         seeds.push_front(Seed(seed.x + 1, seed.y - 1));
     }
-    else if (abs(angle) < 67.5){
+    else if (abs(angle) < 3.0 * M_PI / 8.0)/*67.5*/ {
         seeds.push_front(Seed(seed.x + 0, seed.y + angle_sign));
         seeds.push_front(Seed(seed.x + 1, seed.y + angle_sign));
         seeds.push_front(Seed(seed.x + 1, seed.y));
     }
-    else if (abs(angle) < 112.5){
+    else if (abs(angle) < 5.0 * M_PI / 8.0) /*112.5*/ {
         seeds.push_front(Seed(seed.x - 1, seed.y + angle_sign));
         seeds.push_front(Seed(seed.x + 0, seed.y + angle_sign));
         seeds.push_front(Seed(seed.x + 1, seed.y + angle_sign));
     }
-    else if (abs(angle) < 157.5){
+    else if (abs(angle) < 7.0 * M_PI / 8.0)/* 157.5 */ {
         seeds.push_front(Seed(seed.x - 1, seed.y));
         seeds.push_front(Seed(seed.x - 1, seed.y + angle_sign));
         seeds.push_front(Seed(seed.x + 0, seed.y + angle_sign));

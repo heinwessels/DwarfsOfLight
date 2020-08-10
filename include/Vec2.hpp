@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 class Vec2 {
 
     public:
@@ -55,5 +57,9 @@ class Vec2 {
 
     static float dist_sq(const Vec2 &a, const Vec2 &b){
         return (a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y);
+    }
+
+    static Vec2 floor(const Vec2 &a){
+        return Vec2(std::floor(a.x), std::floor(a.y));
     }
 };

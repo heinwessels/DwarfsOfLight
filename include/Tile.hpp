@@ -14,7 +14,8 @@ public:
     typedef int Type;
     static constexpr Type TypeEmpty = 0;
     static constexpr Type TypeAir = 1;
-    static constexpr Type TypeWall = 2;
+    static constexpr Type TypeFloor = 2;
+    static constexpr Type TypeWall = 3;
 
 private:
 
@@ -32,8 +33,8 @@ public:
             this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
             this->add_component(std::make_unique<CollisionBox>(width, height, false, true));
         }
-        else if (m_type == TypeAir){
-            this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
+        else if (m_type == TypeFloor){
+            this->add_component(std::make_unique<Renderable>(std::string("textures/floor_tile_eg.png"), width, height));
         }
     }
 
