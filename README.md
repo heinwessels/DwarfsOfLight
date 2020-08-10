@@ -42,6 +42,15 @@ This is a good experiment, but for good looking lighting I believe the right way
 
 #### Technique 2: Discrete Ray Tracing
 
+I implemented a discrete ray tracing algorithm from scratch, and this achieved much better results!
+
+![](gifs/ray_tracing.gif)
+![](gifs/ray_tracing_2.gif)
+
+<sup>**Please ignore the bad tileset colours.**</sup>
+
+This was done by implementing a discrete lightmap, and every object in the game is illuminated according to this map. To propogate a ray through this map I only calculated the next intersection with the lightmap's tile border.
+
 ## TODO
 1. Convert software to store data serially, which is one of the goals of ECS. For example, *all* `components` stored serially, with references to which `entity` they belong. The `systems` will then loop through the `components`, not caring to which `entity` it belongs to.
 

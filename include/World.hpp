@@ -19,7 +19,7 @@ class World{
     Tiles m_world;
 
     LightMap m_lightmap;
-    MColour m_global_lighting = {80, 80, 120};
+    MColour m_global_lighting = {0, 0, 0};
 
 public:
     World (int width, int height);
