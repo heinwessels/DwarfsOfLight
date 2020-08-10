@@ -30,5 +30,8 @@ private:
     void ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, LightComponent &light);
     Vec2 ray_get_next_intersection(Vec2 position, Vec2 direction);
     Vec2 ray_get_propogating_tile(Vec2 position, Vec2 direction);
+
+    void attempt_to_set_colour(int x, int y, LightMap &lightmap, LightComponent &light, float distance_sq);
+    MColour get_light_at_distance(LightComponent &light, float distance);
 };
 

@@ -22,7 +22,7 @@ public:
         this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
         this->add_component(std::make_unique<CollisionBox>(width, height, false, false));
         this->add_component(std::make_unique<LightComponent>(
-            MColour(0, 255, 0, 0), MColour(0, 255, 0), MColour(0)
+            MColour(0, 255, 0, 0), MColour(0, 255, 0), MColour(0), 4
         ));
     }
 };

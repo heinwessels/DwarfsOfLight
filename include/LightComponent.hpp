@@ -8,15 +8,16 @@ class LightComponent : public Component{
 public:
     MColour base_colour;
     MColour current_colour;
-    MColour colour_weight;
+    MColour colour_variation;
     MColour current_gradient;
     MColour frequency;
 
-    float max_dist = 10;
+    float range;  // How far does this light shine?
 
-    LightComponent(MColour base_colour, MColour colour_weight, MColour frequency)
+    LightComponent(MColour base_colour, MColour colour_variation, MColour frequency, float range)
         : Component(LightComponentID),
         base_colour(base_colour), current_colour(base_colour),
-        colour_weight(colour_weight), frequency(frequency), current_gradient(MColour(0)) { }
+        colour_variation(colour_variation), frequency(frequency),
+        range(range), current_gradient(MColour(0)) { }
 };
 

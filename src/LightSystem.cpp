@@ -81,8 +81,8 @@ void LightSystem::update_all_lightsources(float dT){
 
 void LightSystem::update_lightsource(LightComponent &light, float dT){
 
-    light.current_colour += light.colour_weight * dT * 128;
-    light.current_colour.clamp();
+    // light.current_colour += light.colour_weight * dT * 128;
+    // light.current_colour.clamp();
 }
 
 void LightSystem::ray_trace_source(Vec2 origin, LightComponent &light, LightMap &lightmap){
@@ -109,26 +109,16 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
     int current_x = floor(current_tile.x);
     int current_y = floor(current_tile.y);
 
-    // Light up the source tile if it hasn't been already
-    if (!lightmap.has_been_modifed(current_x, current_y)){
-        // Update the light at this tile
-        lightmap.set_lighting_at(current_x, current_y, light.base_colour);
-    }
+    // We might not trigger the source block, so ensure it's coloured in.
+    attempt_to_set_colour(current_x, current_y, lightmap, light, 0);    // Assume zero distance
 
     bool end_ray = false;
     while(!end_ray){
 
-        // If this tile has not been modified, and receives light, update!
-        if (!lightmap.has_been_modifed(current_x, current_y)){
-
-            // Update the light at this tile
-            lightmap.set_lighting_at(current_x, current_y, light.base_colour);
-        }
-
-        // Now propogate the ray
+        // Propogate the ray
         current_position = ray_get_next_intersection(current_position, direction);
 
-        // Get the new tile we're working with (TODO Can be optimized)
+        // Get the new tile we're working with
         current_tile = ray_get_propogating_tile(current_position, direction);
         current_x = round(current_tile.x);
         current_y = round(current_tile.y);
@@ -141,21 +131,35 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
             // The ray is going out of bounds
             end_ray = true;
         }
-        else if (Vec2::dist_sq(origin, current_position) > light.max_dist*light.max_dist){
-            // It can't travel any further.
-            // TODO This check does not account for when the ray can still travel into the tile, but not all the way through
-            end_ray = true;
-        }
-        else if (world[current_x][current_y].get_type() == Tile::TypeWall){
-            // We've reached a light blocking block
-            end_ray = true;
+        else {
 
-            // We need to still draw this tile. Hack it in here.
-            if (!lightmap.has_been_modifed(current_x, current_y)){
-                // Update the light at this tile
-                lightmap.set_lighting_at(current_x, current_y, light.base_colour);
+            // Calculate distance to MIDDLE of tile (not current position)
+            // Because that where we need the ligth value from
+            float dist_sq = Vec2::dist_sq(origin, Vec2(current_x, current_y));
+
+            if (dist_sq > light.range*light.range){
+                // It can't travel any further.
+                end_ray = true;
+            }
+
+            // We know now that this tile must have light
+            attempt_to_set_colour(current_x, current_y, lightmap, light, dist_sq);
+
+            if (world[current_x][current_y].get_type() == Tile::TypeWall){
+                // If we reached a wall, it must not propogate again. (We did need to draw it)
+                end_ray = true;
             }
         }
+    }
+}
+
+void LightSystem::attempt_to_set_colour(int x, int y, LightMap &lightmap, LightComponent &light, float distance_sq){
+    // First check if this tile has been modified
+    if (!lightmap.has_been_modifed(x, y)){
+        lightmap.set_lighting_at(
+            x, y,
+            get_light_at_distance(light, sqrtf(distance_sq))
+        );
     }
 }
 
@@ -240,3 +244,7 @@ Vec2 LightSystem::ray_get_propogating_tile(Vec2 position, Vec2 direction){
     return current_tile;
 }
 
+
+MColour LightSystem::get_light_at_distance(LightComponent &light, float distance){
+    return light.current_colour - MColour(static_cast<int>(255.0 * distance / light.range));
+}
