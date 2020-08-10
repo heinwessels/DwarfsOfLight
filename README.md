@@ -31,16 +31,12 @@ The initial rules I used was:
 - New tile has not already contain a seed
 - New tile is within lighting distance from light source (do not like the squared distance calculation).
 
-This works well enough, and only lights up the tiles within a certain distance. However, the light seems to bend around corners. This is due to the rough choice on which tiles are available to grow.
+This works well enough, and only lights up the tiles within a certain distance. However, the light seems to bend around corners. This is due to the rough choice on which tiles are available to grow. This is visible in the two gifs below, where the dwarf-like entity is holding a light source.
 
-<center>
-![](gifs/light_growing _light_bend.gif)
+![](gifs/light_growing_light_bend.gif)
+![](gifs/light_growing_light_bend2.gif)
 
-![](gifs/light_growing _light_bend2.gif)
-
-*Please ignore the bad tile set.*
-</center>
-
+<sup>**Please ignore the bad tileset colours.**</sup>
 
 This is a good experiment, but for good looking lighting I believe the right way to go would be a form of ray tracing.
 
