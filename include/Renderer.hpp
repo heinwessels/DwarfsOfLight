@@ -29,7 +29,7 @@ public:
     void show_screen();
     std::vector<SDL_Event> get_input_events();
 
-    void renderTextureToScreen(SDL_Texture *texture, double x, double y, double width, double height);
+    void renderTextureToScreen(SDL_Texture *texture, const SDL_Rect & source, double x, double y, double width, double height);
     SDL_Texture* load_texture(std::string path, int &width, int &height);
 
 private:

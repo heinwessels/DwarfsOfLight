@@ -34,7 +34,7 @@ public:
             this->add_component(std::make_unique<CollisionBox>(width, height, false, true));
         }
         else if (m_type == TypeFloor){
-            this->add_component(std::make_unique<Renderable>(std::string("textures/floor_tile_eg.png"), width, height));
+            this->add_component(std::make_unique<Renderable>(std::string("textures/floor_tile_eg3.png"), width, height));
         }
     }
 

@@ -23,13 +23,13 @@ std::vector<SDL_Event> Renderer::get_input_events(){
     return events;
 }
 
-void Renderer::renderTextureToScreen(SDL_Texture *texture, double x, double y, double width, double height){
+void Renderer::renderTextureToScreen(SDL_Texture *texture, const SDL_Rect & source, double x, double y, double width, double height){
     SDL_Rect screen_location;
     screen_location.x = x - width / 2.0;
     screen_location.y = y - height / 2.0;
     screen_location.w = width;
     screen_location.h = height;
-    SDL_RenderCopy( m_pSdlRenderer, texture, NULL, &screen_location );
+    SDL_RenderCopy( m_pSdlRenderer, texture, &source, &screen_location );
 }
 
 SDL_Texture* Renderer::load_texture(std::string path, int &width, int &height)

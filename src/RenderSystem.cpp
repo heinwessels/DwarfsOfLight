@@ -59,6 +59,7 @@ void RenderSystem::draw_renderable(double x, double y, Renderable &renderable){
         // Now draw it
         m_Renderer.renderTextureToScreen(
             renderable.get_mtexture().get_texture(),
+            renderable.get_mtexture().get_source_rect(),
             x*m_scaling, y*m_scaling,
             renderable.width*m_scaling, renderable.height*m_scaling
         );

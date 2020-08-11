@@ -32,6 +32,11 @@ class MTexture
             m_texture = texture;
             m_width = width;
             m_height = height;
+
+            m_source_rect.x = 0;
+            m_source_rect.y = 0;
+            m_source_rect.w = width;
+            m_source_rect.h = height;
         }
         SDL_Texture *get_texture() { return m_texture; }
 
@@ -45,6 +50,8 @@ class MTexture
         int get_width() { return m_width; };
         int get_height() {return m_height; };
 
+        SDL_Rect get_source_rect() { return m_source_rect; }
+
     private:
 
         SDL_Texture* m_texture = NULL;
@@ -55,5 +62,7 @@ class MTexture
         bool m_hide = false;
 
         MColour m_colour_mod = {255};    // Default fully visible
+
+        SDL_Rect m_source_rect;
 
 };
