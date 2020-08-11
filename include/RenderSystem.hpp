@@ -26,7 +26,9 @@ public:
     virtual void internal_update(double dT) override;
 
 private:
+    void draw_renderable(double x, double y, Renderable &renderable);
     void load_texture_if_not_loaded(Renderable &renderable);
+    void load_all_textures();
 
     void update_entities();
     void update_world();

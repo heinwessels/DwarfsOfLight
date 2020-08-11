@@ -6,35 +6,8 @@
 
 #include "Component.hpp"
 #include "Types.hpp"
+#include "MTexture.hpp"
 #include "MColour.hpp"
-
-//Texture wrapper class
-class MTexture
-{
-    public:
-        MTexture() { };
-        ~MTexture(){ free(); };
-
-        void free();
-        bool is_texture_loaded() {return m_texture != NULL;}
-        void setColor( MColour colour ){SDL_SetTextureColorMod( m_texture, colour.r, colour.g, colour.b );};    // This modulates the colour by eg <r/255>
-
-        void set_texture(SDL_Texture* texture, int width, int height);
-        SDL_Texture *get_texture() { return m_texture; }
-
-        //Gets image dimensions
-        int get_width() { return m_width; };
-        int get_height() {return m_height; };
-
-    private:
-        //The actual hardware texture
-        SDL_Texture* m_texture = NULL;
-
-        //Image dimensions
-        int m_width = 0;
-        int m_height = 0;
-};
-
 
 class Renderable : public Component{
     std::string m_path;
@@ -44,6 +17,7 @@ public:
     Renderable (std::string path, double width, double height)
             : Component(RenderComponentID), m_path(path), width(width), height(height) { };
     bool is_texture_loaded() {return m_texture.is_texture_loaded();}
+    bool is_visible() {return m_texture.is_visible(); }
     MTexture &get_mtexture () { return m_texture; }
     std::string get_texture_path () { return m_path; }
 };
