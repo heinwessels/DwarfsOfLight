@@ -8,11 +8,13 @@ class LightComponent : public Component{
 public:
     MColour base_colour;
     MColour current_colour;
-    MColour colour_variation;
-    MColour current_gradient;
 
+    MColour colour_variation;
     double period;
+
+    MColour current_gradient;
     double time_to_gradient_change = 0;
+
     double range;  // How far does this light shine?
 
     LightComponent(MColour base_colour, MColour colour_variation, double period, double range)

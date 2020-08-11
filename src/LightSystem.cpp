@@ -155,7 +155,7 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
 
             // Calculate distance to this tile
             // Because that where we need the ligth value from
-            double dist_sq = Vec2::dist_sq(origin, Vec2(current_x + 0.5, current_y + 0.5));
+            double dist_sq = Vec2::dist_sq(origin, Vec2(current_x + 0.5, current_y + 0.5)); // <+0.5> to go from index to MIDDLE of tile
 
             if (dist_sq > light.range*light.range){
                 // It can't travel any further.
