@@ -20,11 +20,11 @@ Game::~Game(){
     }
 }
 
-bool Game::step(double dT){
+bool Game::update(double dT){
 
     // TODO: This should be `auto const`, but Inputsystem has a state that changes. Change!
     for (auto &system : m_systems){
-        system->update(dT);
+        system->update_timed(dT); // <update_timed> internally measures the update time
     }
 
     // THIS IS HACKY TO SEE TIMINGS

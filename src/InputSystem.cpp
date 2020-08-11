@@ -9,7 +9,7 @@ InputSystem::InputSystem(Game &game, RenderSystem &render_sytem)
     m_signature |= Component::get_component_signature(MoveComponentID);
 }
 
-void InputSystem::internal_update(double dT){
+void InputSystem::update(double dT){
     m_last_events = m_pRender_system.get_input_events();
 
     // Loop through all events

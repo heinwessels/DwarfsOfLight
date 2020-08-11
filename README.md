@@ -1,5 +1,58 @@
 # Dwarfs Of Light
-This is an implementation from scratch of a Entity Component System (ECS) based game engine, with a game built on top of it. The game is about dwarfs walking around in a dark cave with torches and dynamic lighting. The goal is to learn more about C++ containers, smart pointers, memory management, and hopefully templates.
+This is an implementation from scratch of a Entity Component System based game engine, with a game built on top of it. The game is about dwarfs walking around in a dark cave with torches and dynamic lighting. The goal is to learn more about C++ containers, smart pointers, memory management, and hopefully templates.
+
+<sup>The fact that it's based on dwarfs in a cave has nothing to do with the fact that I've been playing a lot of Dwarf Fortress lately.</sup>
+
+## Entity Component System Explained
+
+Game design architecture is a very important aspect of game design. This is because games are typically full of different kinds of objects that interact with multiple other kinds of objects in multiple different ways. This quickly and easily turns your code into spaghetti. The Entity Component System (also called ECS) attempts to solve this. This architecture is widely used today in large projects, like `Unreal`, `Overwatch`, `Unity`, etc.
+
+The idea is to split your architecture into three categories. First you have **entities** (like goblins, projectiles, etc) who's functionality is described by list of **components** (like renderable, collision box, light source). Then there's a list of **Systems** that only interacts with the `components` that is applicable to it (like a Rendering `System` only cares about `entities` with a renderable `component`). An important aspect of this is that `components` has no functionality, and `systems` has no state.
+
+For example, in my current implementation, my `Dwarf` needs to bump into walls so it has a collision box `component` which *only* contains the collision box shape. Then there's a Collision System which only runs collision checks on `entities` with the collision box `component` and handles any collisions. If it didn't have the collision box `component` the Collision system would simply ignore it.
+
+Below is a UML Class Diagram of how I layed out my ECS architecture:
+
+![](uml/ecs.jpeg)
+
+Here is an example of how simple it is to define a `Dwarf` with this architecture:
+
+```
+class Dwarf : public Entity{
+
+private:
+    double width = 1;
+    double height = 1;
+    std::string m_texture_path = "textures/dwarf.png";
+
+public:
+    Dwarf(double x, double y) : Entity(Vec2 (x, y)) {
+        this->add_component(std::make_unique<MoveComponent>(Vec2(0.0f, 0.0f)));
+        this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
+        this->add_component(std::make_unique<ControllerComponent>(5));
+        this->add_component(std::make_unique<CollisionBox>(width, height));
+        this->add_component(std::make_unique<LightComponent>(
+            MColour(200, 50, 0), MColour(10, 10, 10), 0.1, 10
+        ));
+    }
+};
+```
+
+and my main update loop is:
+
+```
+bool Game::update(double dT){
+    for (auto &system : m_systems){
+        system->update_timed(dT);   // <update_timed> measures the update duration
+    }
+    return m_state != e_quit;
+}
+```
+
+
+My implementation is not a *pure* ECS implementation, although I try to stay close to the ECS design philosophies as much as possible. This is still a side project, and development time is a big factor in design choices, even in industry.
+
+It should also be noted that my implemented architecture is not ideal. Ideally you would want all `components` stored in `Game` (and not in `Entity`). Then the `System` would simply loop through these `Components`, not caring to which `entity` it belongs. A big advantage to this would be that most of the data (which typically lives in `Components`) will be stored **serially**, making it much faster to read because cache will be on your side. In my system `components` are scattered throughout memory. However, on the small scale of **this** project this effect will hardly be measurable.
 
 
 ## Problems Solved

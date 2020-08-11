@@ -17,7 +17,7 @@ void Application::run(){
 
         auto loop_start = clock::now();
 
-        nquit = m_game.step(1.0/fps);
+        nquit = m_game.update(1.0/fps);
 
         const auto loop_end = clock::now();
 

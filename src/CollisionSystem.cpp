@@ -7,7 +7,7 @@ CollisionSystem::CollisionSystem(Game &game)
     m_signature |= Component::get_component_signature(CollisionBoxComponentID);
 }
 
-void CollisionSystem::internal_update(double dT){
+void CollisionSystem::update(double dT){
     check_collision_with_entities();
     check_collision_with_world();
 };

@@ -32,7 +32,7 @@ public:
 
     Game();
     ~Game();
-    bool step(double dT);
+    bool update(double dT);
 
     std::vector<Entity*> &get_entities() { return m_entities; }
     World& get_world() {return m_world; }

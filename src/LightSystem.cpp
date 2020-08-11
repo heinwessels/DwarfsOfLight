@@ -7,7 +7,7 @@ LightSystem::LightSystem(Game &game)
     m_signature |= Component::get_component_signature(LightComponentID);
 }
 
-void LightSystem::internal_update(double dT){
+void LightSystem::update(double dT){
 
     update_all_lightsources(dT);
     populate_lightmap();

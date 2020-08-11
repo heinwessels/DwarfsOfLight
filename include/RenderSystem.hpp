@@ -23,7 +23,7 @@ public:
     RenderSystem(Game &game, int width, int height);
     std::vector<SDL_Event> get_input_events() { return m_Renderer.get_input_events(); }
 
-    virtual void internal_update(double dT) override;
+    virtual void update(double dT) override;
 
 private:
     void draw_renderable(double x, double y, Renderable &renderable);

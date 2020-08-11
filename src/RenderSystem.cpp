@@ -10,7 +10,7 @@ RenderSystem::RenderSystem(Game &game, int width, int height)
     load_all_textures();
 }
 
-void RenderSystem::internal_update(double dT){
+void RenderSystem::update(double dT){
 
     m_Renderer.clear_screen();
 
