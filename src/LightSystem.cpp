@@ -153,9 +153,9 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
         }
         else {
 
-            // Calculate distance to MIDDLE of tile (not current position)
+            // Calculate distance to this tile
             // Because that where we need the ligth value from
-            double dist_sq = Vec2::dist_sq(origin, Vec2(current_x, current_y));
+            double dist_sq = Vec2::dist_sq(origin, Vec2(current_x + 0.5, current_y + 0.5));
 
             if (dist_sq > light.range*light.range){
                 // It can't travel any further.
@@ -180,12 +180,6 @@ void LightSystem::attempt_to_set_colour(int x, int y, LightMap &lightmap, LightC
             x, y,
             get_light_at_distance(light, sqrtf(distance_sq))
         );
-    }
-
-    if (lightmap.get_lighting_at(Vec2(x, y)).r < 0 ||
-            lightmap.get_lighting_at(Vec2(x, y)).g < 0 ||
-            lightmap.get_lighting_at(Vec2(x, y)).b < 0){
-        printf("What!\n");
     }
 }
 
