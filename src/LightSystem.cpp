@@ -66,7 +66,7 @@ void LightSystem::populate_lightmap(){
     }
 
     lightmap.add_global_lighting(m_pgame.get_world().get_global_lighting());
-    lightmap.scale_to_max_channel();   // Ensure all lightmap values are between 0 and 255
+    lightmap.clamp();   // Ensure all lightmap values are between 0 and 255
 }
 
 void LightSystem::update_all_lightsources(double dT){
@@ -91,6 +91,7 @@ void LightSystem::update_lightsource(LightComponent &light, double dT){
             light.base_colour.g + random_float_in_range(-light.colour_variation.g, light.colour_variation.g),
             light.base_colour.b + random_float_in_range(-light.colour_variation.b, light.colour_variation.b)
         );
+        target_colour.clamp();  // Make sure it's valid
 
         // Calculate the new period
         light.time_to_gradient_change = light.period + random_float_in_range(-1, 1) * light.period * 0.5;   // 30% variation
@@ -180,6 +181,12 @@ void LightSystem::attempt_to_set_colour(int x, int y, LightMap &lightmap, LightC
             get_light_at_distance(light, sqrtf(distance_sq))
         );
     }
+
+    if (lightmap.get_lighting_at(Vec2(x, y)).r < 0 ||
+            lightmap.get_lighting_at(Vec2(x, y)).g < 0 ||
+            lightmap.get_lighting_at(Vec2(x, y)).b < 0){
+        printf("What!\n");
+    }
 }
 
 Vec2 LightSystem::ray_get_next_intersection(Vec2 position, Vec2 direction){
@@ -265,5 +272,5 @@ Vec2 LightSystem::ray_get_propogating_tile(Vec2 position, Vec2 direction){
 
 
 MColour LightSystem::get_light_at_distance(LightComponent &light, double distance){
-    return light.current_colour - MColour(static_cast<int>(255.0 * distance / light.range));
+    return (light.current_colour - MColour(static_cast<int>(255.0 * distance / light.range))).clamp();
 }

@@ -9,8 +9,8 @@ Game::Game()
 
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
-    m_entities.push_back(new Dwarf(5, 5));
-    // m_entities.push_back(new Goblin(5.5, 5.5));
+    // m_entities.push_back(new Dwarf(2, 2));
+    m_entities.push_back(new Goblin(10.5, 10.5));
     ////////////////////////////////////////////////
 }
 

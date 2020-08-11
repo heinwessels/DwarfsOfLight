@@ -10,11 +10,12 @@ public:
     MColour(int r, int g, int b) : r(r), g(g), b(b), a(255) { }
     MColour(int r, int g, int b, int a) : r(r), g(g), b(b), a(a) { }
 
-    void clamp (){
+    MColour clamp (){
         r = std::max(0, std::min(r, 255));
         g = std::max(0, std::min(g, 255));
         b = std::max(0, std::min(b, 255));
         a = std::max(0, std::min(a, 255));
+        return *this;
     }
     void scale_to_max_channel(){
         // Scale the colour to the maximum r,g,b channel

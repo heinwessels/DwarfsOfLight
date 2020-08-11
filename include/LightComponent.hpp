@@ -23,7 +23,6 @@ public:
         colour_variation(colour_variation),
 
         period(period),
-        time_to_gradient_change (period),
         current_gradient(MColour(0)),
 
         range(range)
