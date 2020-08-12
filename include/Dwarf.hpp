@@ -23,7 +23,8 @@ public:
         this->add_component(std::make_unique<ControllerComponent>(5));
         this->add_component(std::make_unique<CollisionBox>(width, height));
         this->add_component(std::make_unique<LightComponent>(
-            MColour(230, 150, 0), MColour(20, 50, 0), 1, 10
+            // MColour(230, 150, 0), MColour(20, 50, 0), 1, 10
+            MColour(230, 180, 180), MColour(20, 20, 0), 1, 20
         ));
     }
 };
