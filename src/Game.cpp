@@ -5,14 +5,16 @@ Game::Game()
 {
 
     m_world.load_world("maps/map_test_1.csv");
+    printf("World loaded.\n");
 
     init_systems();
+    printf("Systems loaded.\n");
 
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
     m_entities.push_back(new Dwarf(5, 9));
     m_rendersystem->set_camera_target(m_entities[0]->get_position_ptr());
-    m_rendersystem->set_camera_zoom(50);
+    m_rendersystem->set_camera_zoom(40);
     m_entities.push_back(new Goblin(20, 9));
     ////////////////////////////////////////////////
 }

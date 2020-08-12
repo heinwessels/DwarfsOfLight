@@ -1,6 +1,10 @@
 # Dwarfs Of Light
 This is an implementation from scratch of a Entity Component System based game engine, with a game built on top of it. The game is about dwarfs walking around in a dark cave with torches and dynamic lighting. The goal is to learn more about C++ containers, smart pointers, memory management, and hopefully templates.
 
+Below is a quick video showing the current progress.
+
+![](gifs/eg.gif)
+
 <sup>The fact that it's based on dwarfs in a cave has nothing to do with the fact that I've been playing a lot of Dwarf Fortress lately.</sup>
 
 ## Entity Component System Explained

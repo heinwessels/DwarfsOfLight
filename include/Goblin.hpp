@@ -14,7 +14,7 @@ class Goblin : public Entity{
 private:
     double width = 1;
     double height = 1;
-    std::string m_texture_path = "textures/dwarf.png";
+    std::string m_texture_path = "textures/goblin.jpg";
 
 public:
     Goblin(double x, double y) : Entity(Vec2(x, y)){

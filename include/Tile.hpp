@@ -38,7 +38,7 @@ public:
         }
         else if (m_type == TypeFloor){
             this->add_component(std::make_unique<Renderable>(
-                "textures/dungeon_tiles.jpg", width, height,
+                "textures/dungeon_tiles_2.jpg", width, height,
                 4, 4, random_int_in_range(0, 4), random_int_in_range(0, 4)
             ));
         }

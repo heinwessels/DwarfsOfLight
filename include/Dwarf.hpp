@@ -12,9 +12,9 @@
 class Dwarf : public Entity{
 
 private:
-    double width = 1;
-    double height = 1;
-    std::string m_texture_path = "textures/dwarf.png";
+    double width = 1.5;
+    double height = 1.5;
+    std::string m_texture_path = "textures/dwarf2.jpg";
 
 public:
     Dwarf(double x, double y) : Entity(Vec2 (x, y)) {
@@ -23,7 +23,7 @@ public:
         this->add_component(std::make_unique<ControllerComponent>(5));
         this->add_component(std::make_unique<CollisionBox>(width, height));
         this->add_component(std::make_unique<LightComponent>(
-            MColour(200, 50, 0), MColour(10, 10, 10), 0.1, 10
+            MColour(230, 150, 0), MColour(20, 50, 0), 1, 10
         ));
     }
 };
