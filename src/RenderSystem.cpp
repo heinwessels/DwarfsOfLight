@@ -7,7 +7,9 @@ RenderSystem::RenderSystem(Game &game, int width, int height)
     m_camera(Vec2(0, 0), 32, Vec2(width, height))
 {
     m_signature |= Component::get_component_signature(RenderComponentID);
+}
 
+void RenderSystem::init(){
     // Load all textures of current world and entities on startup.
     load_all_textures();
 }

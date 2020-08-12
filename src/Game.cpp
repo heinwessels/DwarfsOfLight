@@ -7,7 +7,7 @@ Game::Game()
     m_world.load_world("maps/map_test_1.csv");
     printf("World loaded.\n");
 
-    init_systems();
+    load_systems();
     printf("Systems loaded.\n");
 
     // THIS IS FOR TESTING
@@ -17,6 +17,9 @@ Game::Game()
     m_rendersystem->set_camera_zoom(40);
     m_entities.push_back(new Goblin(20, 9));
     ////////////////////////////////////////////////
+
+    init_systems();
+    printf("Systems initialized.\n");
 }
 
 Game::~Game(){
@@ -54,7 +57,7 @@ bool Game::update(double dT){
     return m_state != e_quit;
 }
 
-void Game::init_systems(){
+void Game::load_systems(){
     // The order in which systems are added to this vector
     // will determine in which order they will execute
 
@@ -67,4 +70,10 @@ void Game::init_systems(){
     m_systems.push_back(std::make_unique<InputSystem>(*this, *m_rendersystem));   // This requires the RenderSystem
     m_systems.push_back(std::make_unique<MovementSystem>(*this));
     m_systems.push_back(std::make_unique<CollisionSystem>(*this));
+}
+
+void Game::init_systems(){
+    for (auto &system : m_systems){
+        system->init();
+    }
 }

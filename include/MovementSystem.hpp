@@ -10,5 +10,6 @@ class MovementSystem : public System {
 
 public:
     MovementSystem(Game &game);
+    virtual void init() override { };
     virtual void update(double dT) override;
 };

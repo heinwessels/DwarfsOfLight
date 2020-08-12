@@ -16,6 +16,7 @@ class CollisionSystem : public System {
 
 public:
     CollisionSystem(Game &game);
+    virtual void init() override { };
     virtual void update(double dT) override;
 
 private:

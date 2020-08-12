@@ -24,6 +24,7 @@ public:
     RenderSystem(Game &game, int width, int height);
     std::vector<SDL_Event> get_input_events() { return m_Renderer.get_input_events(); }
 
+    virtual void init() override;
     virtual void update(double dT) override;
 
     void set_camera_zoom(double zoom) { m_camera.set_zoom(zoom); }

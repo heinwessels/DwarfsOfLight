@@ -21,8 +21,10 @@ public:
     System (Game &game, std::string name) : m_pgame(game), m_name(name) { }
     virtual ~System() { };
     void update_timed(double dT);
-    virtual void update(double dT) = 0;
     bool has_valid_signature(const Entity &entity){ return entity.contains_signature(m_signature); }
+
+    virtual void init() = 0;
+    virtual void update(double dT) = 0;
 
     std::string get_name() { return m_name; }
     Timing get_timing() { return m_timing; }

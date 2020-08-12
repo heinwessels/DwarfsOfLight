@@ -42,5 +42,6 @@ public:
     void quit(){m_state = e_quit;}
 
 private:
+    void load_systems();
     void init_systems();
 };

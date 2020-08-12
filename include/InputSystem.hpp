@@ -15,6 +15,7 @@ class InputSystem : public System {
 
 public:
     InputSystem(Game &game, RenderSystem &render_sytem);
+    virtual void init() override { };
     virtual void update(double dT) override;
 
 private:
