@@ -3,14 +3,17 @@
 Game::Game()
     : m_world (40, 22)
 {
+
+    m_world.load_world("maps/map_test_1.csv");
+
     init_systems();
 
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
-    m_entities.push_back(new Dwarf(20, 15));
+    m_entities.push_back(new Dwarf(5, 9));
     m_rendersystem->set_camera_target(m_entities[0]->get_position_ptr());
     m_rendersystem->set_camera_zoom(50);
-    m_entities.push_back(new Goblin(10.5, 10.5));
+    m_entities.push_back(new Goblin(20, 9));
     ////////////////////////////////////////////////
 }
 

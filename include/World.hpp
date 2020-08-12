@@ -2,6 +2,13 @@
 
 #include <vector>
 #include <cmath>
+#include <string>
+
+#include <iostream>
+#include <fstream>
+#include <iterator>
+#include <algorithm>
+#include <boost/algorithm/string.hpp>
 
 #include "Tile.hpp"
 #include "Renderable.hpp"
@@ -9,8 +16,8 @@
 
 class World{
 
-    const int m_width;
-    const int m_height;
+    int m_width;
+    int m_height;
 
     // This is a variable size world.
     // It will be filled with Entities containing only
@@ -32,8 +39,10 @@ public:
     void set_global_lighting(MColour global_lighting) { m_global_lighting = global_lighting; }
     MColour get_global_lighting() { return m_global_lighting; }
 
+    void load_world(std::string path);
+    void add_tile_at(int x, int y, Tile::Type type);
+
 private:
     void clear();
     void resize(int width, int height);
-
 };

@@ -38,6 +38,9 @@ void LightMap::scale_to_max_channel(){
 }
 
 void LightMap::resize(int width, int height){
+    m_width = width;
+    m_height = height;
+
     m_lightmap.resize(width);
     for (auto & column : m_lightmap){
         column.resize(height);

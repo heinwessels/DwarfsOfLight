@@ -22,13 +22,16 @@ World::World (int width, int height)
                 type = Tile::TypeWall;
             }
 
-            m_world[x][y] = Tile(
-                type,
-                x + 0.5f, y + 0.5f
-            );  // + 0.5 to center the tile in the middle of the grid. (I think, we'll see)
-
+            add_tile_at(x, y, type);
         }
     ////////////////////////////////////////////////////////
+}
+void World::add_tile_at(int x, int y, Tile::Type type) {
+    m_world[x][y] = Tile(
+        type,
+        x + 0.5f,
+        y + 0.5f
+    );  // + 0.5 to center the tile in the middle of the grid.
 }
 
 Tile* World::get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, ComponentID component_ID){
@@ -65,8 +68,43 @@ void World::clear(){
 
 }
 void World::resize(int width, int height){
+    m_width = width;
+    m_height = height;
     m_world.resize(width);
     for (auto & column : m_world){
         column.resize(height);
+    }
+    m_lightmap.resize(width, height);
+}
+
+
+void World::load_world(std::string path){
+
+    // Reset the current world
+    clear();
+
+    // Read the data
+    std::vector<std::vector<std::string> > tile_map;
+    std::ifstream file(path);
+    std::string line = "";
+    while (getline(file, line))
+    {
+        std::vector<std::string> line_vec;
+        boost::algorithm::split(line_vec, line, boost::is_any_of(";"));
+        tile_map.push_back(line_vec);
+    }
+
+    // Close the File
+    file.close();
+
+    // Now unpack the data
+    resize(tile_map[0].size(), tile_map.size());
+    for(int y = 0; y < m_height; y ++){
+        for (int x = 0; x < m_height; x ++){
+            add_tile_at(
+                x, y,
+                std::stoi(tile_map[x][y])
+            );
+        }
     }
 }
