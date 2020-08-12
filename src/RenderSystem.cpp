@@ -4,7 +4,8 @@
 RenderSystem::RenderSystem(Game &game, int width, int height)
     : System(game, std::string("Render System")),
     m_Renderer(width, height),
-    m_camera(Vec2(0, 0), 32, Vec2(width, height))
+    m_camera(Vec2(0, 0), 32, Vec2(width, height)),
+    m_texturepool(m_Renderer)
 {
     m_signature |= Component::get_component_signature(RenderComponentID);
 }
@@ -63,10 +64,23 @@ void RenderSystem::draw_renderable(double x, double y, Renderable &renderable){
         double zoom = m_camera.get_zoom();
         Vec2 position_to_draw = m_camera.get_position_on_screen(Vec2(x, y));
 
-        // Now draw it
+        // Get the texture
+        MTexture & texture = m_texturepool.get_texture_from_pool(renderable.get_texture_path());
+
+        // Calculate the source rectangle
+        SDL_Rect source_rect = renderable.get_source_rect();
+        source_rect.w = texture.get_width() / source_rect.w;
+        source_rect.h = texture.get_height() / source_rect.h;
+        source_rect.x = source_rect.x * source_rect.w;
+        source_rect.y = source_rect.y * source_rect.h;
+
+        // Get the colour modulation for this texture
+        texture.set_colour_mod(renderable.get_colour_mod());
+
+        // Finally draw it
         m_Renderer.renderTextureToScreen(
-            renderable.get_mtexture().get_texture(),
-            renderable.get_mtexture().get_source_rect(),
+            texture.get_texture(),
+            source_rect,
             position_to_draw.x, position_to_draw.y,
             renderable.width*zoom, renderable.height*zoom
         );
@@ -92,9 +106,7 @@ void RenderSystem::load_all_textures(){
 }
 
 void RenderSystem::load_texture_if_not_loaded(Renderable &renderable){
-    if (!renderable.is_texture_loaded()){
-        int width = 0, height = 0;
-        SDL_Texture* texture = m_Renderer.load_texture(renderable.get_texture_path(), width, height);
-        renderable.get_mtexture().set_texture(texture, width, height);
+    if (!m_texturepool.is_texture_in_pool(renderable.get_texture_path())){
+        m_texturepool.load_texture_into_pool(renderable.get_texture_path());
     }
 }

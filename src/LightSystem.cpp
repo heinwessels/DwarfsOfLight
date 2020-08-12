@@ -25,7 +25,7 @@ void LightSystem::add_lighting_to_world(){
             if (tile.has_component(RenderComponentID)){
 
                 Renderable &renderable = static_cast<Renderable&>(tile.get_component(RenderComponentID));
-                renderable.get_mtexture().set_colour_mod(
+                renderable.set_colour_mod(
                     lightmap.get_lighting_at(tile.get_posision())
                 );
             }
@@ -40,7 +40,7 @@ void LightSystem::add_lighting_to_entities(){
     for(auto const &entity : m_pgame.get_entities()){
         if (entity->has_component(RenderComponentID)){
             Renderable &renderable = static_cast<Renderable&>(entity->get_component(RenderComponentID));
-            renderable.get_mtexture().set_colour_mod(
+            renderable.set_colour_mod(
                 lightmap.get_lighting_at(entity->get_posision())
             );
         }

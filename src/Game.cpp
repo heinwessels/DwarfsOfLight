@@ -5,6 +5,8 @@ Game::Game()
 {
 
     m_world.load_world("maps/map_test_1.csv");
+    // m_world.load_world("maps/empty_world.csv");
+
     printf("World loaded.\n");
 
     load_systems();

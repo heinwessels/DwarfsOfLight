@@ -7,10 +7,11 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "Renderer.hpp"
 #include "Camera.hpp"
+#include "TexturePool.hpp"
 
 #include "System.hpp"
-#include "Renderer.hpp"
 #include "Entity.hpp"
 #include "Renderable.hpp"
 
@@ -19,6 +20,7 @@ class RenderSystem : public System{
 
     Renderer m_Renderer;
     Camera m_camera;
+    TexturePool m_texturepool;
 
 public:
     RenderSystem(Game &game, int width, int height);
