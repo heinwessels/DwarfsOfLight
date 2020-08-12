@@ -2,7 +2,9 @@
 #include "Game.hpp"
 
 RenderSystem::RenderSystem(Game &game, int width, int height)
-    : System(game, std::string("Render System")), m_Renderer(width, height)
+    : System(game, std::string("Render System")),
+    m_Renderer(width, height),
+    m_camera(Vec2(0, 0), 32, Vec2(width, height))
 {
     m_signature |= Component::get_component_signature(RenderComponentID);
 
@@ -56,12 +58,15 @@ void RenderSystem::draw_renderable(double x, double y, Renderable &renderable){
     // Don't try to draw it then
     if (renderable.is_visible()){
 
+        double zoom = m_camera.get_zoom();
+        Vec2 position_to_draw = m_camera.get_position_on_screen(Vec2(x, y));
+
         // Now draw it
         m_Renderer.renderTextureToScreen(
             renderable.get_mtexture().get_texture(),
             renderable.get_mtexture().get_source_rect(),
-            x*m_scaling, y*m_scaling,
-            renderable.width*m_scaling, renderable.height*m_scaling
+            position_to_draw.x, position_to_draw.y,
+            renderable.width*zoom, renderable.height*zoom
         );
     }
 }

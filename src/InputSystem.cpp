@@ -20,7 +20,9 @@ void InputSystem::update(double dT){
             m_pgame.quit();
         }
 
-        // Now handle any movement controllers
+        // Handle the camera
+
+        // Handle any movement controllers
         for(auto const entity : m_pgame.get_entities()){
             if(has_valid_signature(*entity)){
 
@@ -29,7 +31,6 @@ void InputSystem::update(double dT){
                 ControllerComponent &controller = static_cast<ControllerComponent&>(entity->get_component(ControllerComponentID));
 
                 handle_entity_movement(event, move, controller);
-
             }
         }
     }

@@ -19,11 +19,13 @@
 class Game{
     // This is the main manager of the game.
 
-    int screen_width = 1280, screen_height = 704;
+    int screen_width = 1280, screen_height = 740;
 
     World m_world;
     std::vector<std::unique_ptr<System>> m_systems;
     std::vector<Entity*> m_entities;
+
+    RenderSystem *m_rendersystem;   // We use this a lot, so keep reference to it
 
     enum State {e_start, e_running, e_paused, e_quit};
     State m_state = e_start;

@@ -3,13 +3,13 @@
 Game::Game()
     : m_world (40, 22)
 {
-
     init_systems();
-
 
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
-    m_entities.push_back(new Dwarf(2, 2));
+    m_entities.push_back(new Dwarf(20, 15));
+    m_rendersystem->set_camera_target(m_entities[0]->get_position_ptr());
+    m_rendersystem->set_camera_zoom(50);
     m_entities.push_back(new Goblin(10.5, 10.5));
     ////////////////////////////////////////////////
 }
@@ -55,7 +55,11 @@ void Game::init_systems(){
 
     m_systems.push_back(std::make_unique<LightSystem>(*this));
     m_systems.push_back(std::make_unique<RenderSystem>(*this, screen_width, screen_height));
-    m_systems.push_back(std::make_unique<InputSystem>(*this, *static_cast<RenderSystem*>(m_systems[0].get())));   // This requires the RenderSystem
+
+    // We want a way to access the Render System directly
+    m_rendersystem = static_cast<RenderSystem*>(m_systems[1].get());    // TODO This is hacky.
+
+    m_systems.push_back(std::make_unique<InputSystem>(*this, *m_rendersystem));   // This requires the RenderSystem
     m_systems.push_back(std::make_unique<MovementSystem>(*this));
     m_systems.push_back(std::make_unique<CollisionSystem>(*this));
 }

@@ -10,7 +10,7 @@
 class Game;
 class InputSystem : public System {
 
-    RenderSystem m_pRender_system;
+    RenderSystem &m_pRender_system;
     std::vector<SDL_Event> m_last_events;       // TODO: This breaks the "System has no state rule"
 
 public:

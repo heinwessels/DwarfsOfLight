@@ -7,6 +7,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
+#include "Camera.hpp"
+
 #include "System.hpp"
 #include "Renderer.hpp"
 #include "Entity.hpp"
@@ -16,14 +18,16 @@ class Game;
 class RenderSystem : public System{
 
     Renderer m_Renderer;
-
-    double m_scaling = 32; // TEMPORARY BEFORE IMPLEMENTING CAMERA
+    Camera m_camera;
 
 public:
     RenderSystem(Game &game, int width, int height);
     std::vector<SDL_Event> get_input_events() { return m_Renderer.get_input_events(); }
 
     virtual void update(double dT) override;
+
+    void set_camera_zoom(double zoom) { m_camera.set_zoom(zoom); }
+    void set_camera_target(Vec2 *target) { m_camera.set_target(target); }
 
 private:
     void draw_renderable(double x, double y, Renderable &renderable);
