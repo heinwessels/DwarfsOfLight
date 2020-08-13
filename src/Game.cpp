@@ -56,7 +56,7 @@ bool Game::update(double dT){
     }
     //////////////////////////////////////////////////////////////////
 
-    return m_state != e_quit;
+    return m_state != e_quit;   // This state can be changed by systems
 }
 
 void Game::load_systems(){

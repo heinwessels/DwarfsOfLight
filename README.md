@@ -49,7 +49,7 @@ bool Game::update(double dT){
     for (auto &system : m_systems){
         system->update_timed(dT);   // <update_timed> measures the update duration
     }
-    return m_state != e_quit;
+    return m_state != e_quit;       // This state can be changed by systems
 }
 ```
 
@@ -69,8 +69,8 @@ It should also be noted that my implemented architecture is not ideal. Ideally y
 - **Storage of Entities, Components and Systems**:
   - **Entities** will be stored in a `std::list` in the `Game` class. This is good for random inserting, deleting and sorting. `Entities` will almost never be randomly accessed, and will typically be looped through with `iterators`, which is still fast. A possible downside is caching since the data won't be stored serially. However, the `Entity` only contains pointers to `components` (see next point), so it's already not great for caching. This list will also be sorted during rendering (for rendering order), which is very fast with `std::list` since it only changes pointers.
   - **Components** are currently stored in the `entity` it belongs to, in a `std::unorderer_map` of `std::unique_ptr`s. Storing it inside the `entity` is not ideal (see TODO #1), but was used for learn the ECS system. It's stored in a `std::unorderer_map` to have quick access by using a unique key (`ComponentTypeID`).
-- **Light Rendering:** This is one of the main features of the game. Therefore it has a seperate heading, just scroll down.
 - **Floats vs. Doubles:** Initially the software was written using floats, and it worked well until ray tracing was implemented. Floats were unreliable on the edge cases, especially on the righthand side on the screen (largest `x` coordinates). Therefore, the change was made to doubles. This had no noticable impact on the speed, although it was not stress tested, and completely solved the unreliability issue on the ray tracing.
+- **Global Texture Pool:** If possible entities should share textures (e.g. floor/wall tiles). Therefore, I implemented a texture pool from a `std::unordered_map` located in the `Render System`, with the `texture_path` as key and a texture-wrapper class as element. Each time a texture is requested it checks if it's in the texture pool. If it's not, then it creates a new entry with that path as key and loads the texture into `VRAM` (I think). This way a `Renderable Component` only needs to know it's texture's path and location on that texture (using index and number of row/columns), while the `system` handles the rest, which is true ECS design philosophy.
 
 ## Detailed Descriptions
 
@@ -107,9 +107,7 @@ I implemented a discrete ray tracing algorithm from scratch, and this achieved m
 
 <sup>**Please ignore the bad tileset colours.**</sup>
 
-This was done by implementing a discrete lightmap, and every object in the game is illuminated according to this map. To propogate a ray through this map I only calculate the intersection with the next lightmap-tile's border, and continue doing this until the ray hits an obstacle or its max distance. This means no `n`-body collision detection, which makes it very fast. And it creates very real looking shadows.
-
-This is exactly the effect I desired, and is definitely worth the rewrite. However, this is only the base functionality, and now I will make it look nicer.
+This was done by implementing a discrete lightmap, and every object in the game is illuminated according to this map. To propogate a ray through this map I only calculate the intersection with the next lightmap-tile's **border**, and continue doing this until the ray hits an obstacle or its max distance. This means no `n`-body collision detection, which makes it very fast. And it creates very real looking shadows. This is exactly the effect I desired, and was definitely worth the rewrite.
 
 ## TODO
 1. Convert software to store data serially, which is one of the goals of ECS. For example, *all* `components` stored serially, with references to which `entity` they belong. The `systems` will then loop through the `components`, not caring to which `entity` it belongs to.
