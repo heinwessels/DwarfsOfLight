@@ -10,7 +10,7 @@
 
 class Entity{
 
-    Vec2 m_position;
+    Vec2 m_position;    // TODO This breaks the ECS Philosophy!!!
     bool m_is_alive = true; // To trigger deletion by game
     ComponentListSignature m_signature = 0;
 
