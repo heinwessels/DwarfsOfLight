@@ -6,7 +6,7 @@
 #include "Entity.hpp"
 
 #include "Renderable.hpp"
-#include "MoveComponent.hpp"
+#include "TransformComponent.hpp"
 #include "CollisionBoxComponent.hpp"
 
 class Goblin : public Entity{
@@ -17,8 +17,8 @@ private:
     std::string m_texture_path = "textures/goblin.jpg";
 
 public:
-    Goblin(double x, double y) : Entity(Vec2(x, y)){
-        this->add_component(std::make_unique<MoveComponent>(Vec2(0.0f, 0.0f)));
+    Goblin(double x, double y) {
+        this->add_component(std::make_unique<TransformComponent>(Vec2(x, y)));
         this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
         this->add_component(std::make_unique<CollisionBox>(width, height, false, false));
         this->add_component(std::make_unique<LightComponent>(

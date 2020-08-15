@@ -4,16 +4,16 @@
 MovementSystem::MovementSystem(Game &game)
     :   System(game, std::string("Moving System"))
 {
-    m_signature |= Component::get_component_signature(MoveComponentID);
+    m_signature |= Component::get_component_signature(TransformComponentID);
 }
 
 void MovementSystem::update(double dT){
     for(auto const entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
-            MoveComponent &move = static_cast<MoveComponent&>(entity->get_component(MoveComponentID));
+            TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
 
-            entity->set_posision(entity->get_posision() + move.speed * dT);
+            transform.position += transform.speed * dT;
         }
     }
 }

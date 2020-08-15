@@ -4,6 +4,7 @@
 LightSystem::LightSystem(Game &game)
     :   System(game, std::string("Lighting System"))
 {
+    m_signature |= Component::get_component_signature(TransformComponentID);
     m_signature |= Component::get_component_signature(LightComponentID);
 }
 
@@ -24,9 +25,10 @@ void LightSystem::add_lighting_to_world(){
         for (auto & tile : column){
             if (tile.has_component(RenderComponentID)){
 
+                TransformComponent &transform = static_cast<TransformComponent&>(tile.get_component(TransformComponentID));
                 Renderable &renderable = static_cast<Renderable&>(tile.get_component(RenderComponentID));
                 renderable.set_colour_mod(
-                    lightmap.get_lighting_at(tile.get_posision())
+                    lightmap.get_lighting_at(transform.position)
                 );
             }
         }
@@ -39,9 +41,10 @@ void LightSystem::add_lighting_to_entities(){
 
     for(auto const &entity : m_pgame.get_entities()){
         if (entity->has_component(RenderComponentID)){
+            TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
             Renderable &renderable = static_cast<Renderable&>(entity->get_component(RenderComponentID));
             renderable.set_colour_mod(
-                lightmap.get_lighting_at(entity->get_posision())
+                lightmap.get_lighting_at(transform.position)
             );
         }
     }
@@ -56,11 +59,12 @@ void LightSystem::populate_lightmap(){
     LightMap new_lightmap = LightMap(lightmap.get_width(), lightmap.get_height());
     for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
+            TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
             LightComponent &light = static_cast<LightComponent&>(entity->get_component(LightComponentID));
 
             // Calculate the lightmap of this lightsource
             new_lightmap.zero();
-            ray_trace_source(entity->get_posision(), light, new_lightmap);
+            ray_trace_source(transform.position, light, new_lightmap);
             lightmap += new_lightmap;   // TODO This doesn't merge colours nicely.
         }
     }

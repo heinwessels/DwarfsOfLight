@@ -47,7 +47,7 @@ Tile* World::get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, Co
 
             if(m_world[x][y].has_component(component_ID)){
 
-                double dist_sq = Vec2::dist_sq(point, m_world[x][y].get_posision());
+                double dist_sq = Vec2::dist_sq(point, Vec2(x+0.5, y+0.5));
 
                 if(dist_sq < closest_distance_sq){
                     closest_distance_sq = dist_sq;

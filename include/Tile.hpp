@@ -7,7 +7,7 @@
 #include "Entity.hpp"
 
 #include "Renderable.hpp"
-#include "MoveComponent.hpp"
+#include "TransformComponent.hpp"
 #include "CollisionBoxComponent.hpp"
 
 class Tile : public Entity{
@@ -27,8 +27,9 @@ private:
     MColour lighting = MColour(0);
 
 public:
-    Tile() : Entity(Vec2(0.0, 0.0)), m_type(TypeEmpty) { }  // For empty world tiles
-    Tile(Type type, double x, double y) : Entity(Vec2(x, y)), m_type(type) {
+
+    Tile(Type type, double x, double y) : m_type(type) {
+        this->add_component(std::make_unique<TransformComponent>(Vec2(x, y)));
         if(m_type == TypeWall){
             this->add_component(std::make_unique<Renderable>(
                 "textures/wall_tile_atlas.jpg", width, height,
@@ -43,6 +44,7 @@ public:
             ));
         }
     }
+    Tile() : Tile(TypeEmpty, 0, 0) { }  // For empty world tiles
 
     Type get_type(){ return m_type; }
 };

@@ -4,7 +4,7 @@
 
 #include "System.hpp"
 #include "RenderSystem.hpp"
-#include "MoveComponent.hpp"
+#include "TransformComponent.hpp"
 #include "ControllerComponent.hpp"
 
 class Game;
@@ -19,6 +19,6 @@ public:
     virtual void update(double dT) override;
 
 private:
-    void handle_entity_movement(SDL_Event &event, MoveComponent &move, ControllerComponent &controller);
+    void handle_entity_movement(SDL_Event &event, TransformComponent &move, ControllerComponent &controller);
 
 };

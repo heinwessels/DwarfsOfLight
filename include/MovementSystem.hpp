@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "System.hpp"
-#include "MoveComponent.hpp"
+#include "TransformComponent.hpp"
 
 class Game;
 class MovementSystem : public System {

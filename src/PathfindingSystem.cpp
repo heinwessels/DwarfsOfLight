@@ -18,7 +18,7 @@ void PathfindingSystem::update(double dT){
     for(auto const entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
-            PathfindingComponent &pathfinding = static_cast<PathfindingComponent&>(entity->get_component(MoveComponentID));
+            PathfindingComponent &pathfinding = static_cast<PathfindingComponent&>(entity->get_component(TransformComponentID));
 
 
         }

@@ -8,7 +8,7 @@
 #include "System.hpp"
 #include "CollisionSystem.hpp"
 
-#include "MoveComponent.hpp"
+#include "TransformComponent.hpp"
 #include "CollisionBoxComponent.hpp"
 
 class Game;

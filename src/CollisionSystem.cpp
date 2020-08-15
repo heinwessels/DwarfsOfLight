@@ -1,9 +1,12 @@
 #include "CollisionSystem.hpp"
 #include "Game.hpp"
 
+#include "TransformComponent.hpp"
+
 CollisionSystem::CollisionSystem(Game &game)
     : System(game, std::string("Collision System"))
 {
+    m_signature |= Component::get_component_signature(TransformComponentID);
     m_signature |= Component::get_component_signature(CollisionBoxComponentID);
 }
 
@@ -19,25 +22,22 @@ void CollisionSystem::check_collision_with_world(){
         if(has_valid_signature(**entity)){
             // For each entity with a collision box
 
-            Vec2 a_pos = (*entity)->get_posision();
+            TransformComponent &a_transform = static_cast<TransformComponent&>((*entity)->get_component(TransformComponentID));
             CollisionBox &a_box = static_cast<CollisionBox&>((*entity)->get_component(CollisionBoxComponentID));
 
             // Get the closest world tile with a collision component
             Tile *closest_tile = m_pgame.get_world().get_closest_tile_in_range_with_component(
-                a_pos, Vec2(a_box.width, a_box.height), CollisionBoxComponentID
+                a_transform.position, Vec2(a_box.width, a_box.height), CollisionBoxComponentID
             );
             if (closest_tile != nullptr){
 
-                Vec2 tile_pos = closest_tile->get_posision();
+                TransformComponent &tile_transform = static_cast<TransformComponent&>(closest_tile->get_component(TransformComponentID));
                 CollisionBox &tile_box = static_cast<CollisionBox&>(closest_tile->get_component(CollisionBoxComponentID));
 
-                if(repel_if_collision(
-                    a_pos, a_box,
-                    tile_pos, tile_box
-                )){
-                    (*entity)->set_posision(a_pos);
-                    // Not possible for tile to move (repel will account for this)
-                }
+                repel_if_collision(
+                    a_transform.position, a_box,
+                    tile_transform.position, tile_box
+                ); // The function itself will move the entity by reference (and not the tile)
             }
         }
     }
@@ -51,19 +51,16 @@ void CollisionSystem::check_collision_with_entities(){
             for( auto b = a + 1; b != entities.end(); b++ ){
                 if(has_valid_signature(**b)){
 
-                    Vec2 a_pos = (*a)->get_posision();
-                    Vec2 b_pos = (*b)->get_posision();
+                    TransformComponent &a_transform = static_cast<TransformComponent&>((*a)->get_component(TransformComponentID));
+                    TransformComponent &b_transform = static_cast<TransformComponent&>((*b)->get_component(TransformComponentID));
 
                     CollisionBox &a_box = static_cast<CollisionBox&>((*a)->get_component(CollisionBoxComponentID));
                     CollisionBox &b_box = static_cast<CollisionBox&>((*b)->get_component(CollisionBoxComponentID));
 
-                    if(repel_if_collision(
-                        a_pos, a_box,
-                        b_pos, b_box
-                    )){
-                        (*a)->set_posision(a_pos);
-                        (*b)->set_posision(b_pos);
-                    }
+                    repel_if_collision(
+                        a_transform.position, a_box,
+                        b_transform.position, b_box
+                    );   // Positions are set inside this function
                 }
             }
         }

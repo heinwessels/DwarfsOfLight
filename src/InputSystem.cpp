@@ -6,7 +6,7 @@ InputSystem::InputSystem(Game &game, RenderSystem &render_sytem)
         m_pRender_system(render_sytem)
 {
     m_signature |= Component::get_component_signature(ControllerComponentID);
-    m_signature |= Component::get_component_signature(MoveComponentID);
+    m_signature |= Component::get_component_signature(TransformComponentID);
 }
 
 void InputSystem::update(double dT){
@@ -27,17 +27,17 @@ void InputSystem::update(double dT){
             if(has_valid_signature(*entity)){
 
                 // This entity should be moved by this controller
-                MoveComponent &move = static_cast<MoveComponent&>(entity->get_component(MoveComponentID));
+                TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
                 ControllerComponent &controller = static_cast<ControllerComponent&>(entity->get_component(ControllerComponentID));
 
-                handle_entity_movement(event, move, controller);
+                handle_entity_movement(event, transform, controller);
             }
         }
     }
 }
 
 
-void InputSystem::handle_entity_movement(SDL_Event &event, MoveComponent &move, ControllerComponent &controller){
+void InputSystem::handle_entity_movement(SDL_Event &event, TransformComponent &move, ControllerComponent &controller){
 
     Vec2 direction = {0.0};
 

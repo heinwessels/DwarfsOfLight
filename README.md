@@ -31,7 +31,7 @@ private:
 
 public:
     Dwarf(double x, double y) : Entity(Vec2 (x, y)) {
-        this->add_component(std::make_unique<MoveComponent>(Vec2(0.0f, 0.0f)));
+        this->add_component(std::make_unique<TransformComponent>(Vec2(0.0f, 0.0f)));
         this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
         this->add_component(std::make_unique<ControllerComponent>(5));
         this->add_component(std::make_unique<CollisionBox>(width, height));

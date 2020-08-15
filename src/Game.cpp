@@ -15,7 +15,8 @@ Game::Game()
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
     m_entities.push_back(new Dwarf(5, 9));
-    m_rendersystem->set_camera_target(m_entities[0]->get_position_ptr());
+    TransformComponent &positional = static_cast<TransformComponent&>(m_entities[0]->get_component(TransformComponentID));
+    m_rendersystem->set_camera_target(&positional.position);
     m_rendersystem->set_camera_zoom(40);
     m_entities.push_back(new Goblin(20, 9));
     ////////////////////////////////////////////////

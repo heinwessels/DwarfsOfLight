@@ -7,6 +7,7 @@ RenderSystem::RenderSystem(Game &game, int width, int height)
     m_camera(Vec2(0, 0), 32, Vec2(width, height)),
     m_texturepool(m_Renderer)
 {
+    m_signature |= Component::get_component_signature(TransformComponentID);
     m_signature |= Component::get_component_signature(RenderComponentID);
 }
 
@@ -29,10 +30,10 @@ void RenderSystem::update_entities(){
     for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
-            Vec2 pos = entity->get_posision();
+            TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
             Renderable &renderable = static_cast<Renderable&>(entity->get_component(RenderComponentID));
 
-            draw_renderable(pos.x, pos.y, renderable);
+            draw_renderable(transform.position.x, transform.position.y, renderable);
         }
     }
 }
@@ -43,10 +44,10 @@ void RenderSystem::update_world(){
         for (auto &tile : column){
             if (tile.has_component(RenderComponentID)){
 
-                Vec2 pos = tile.get_posision();
+                TransformComponent &transform = static_cast<TransformComponent&>(tile.get_component(TransformComponentID));
                 Renderable &renderable = static_cast<Renderable&>(tile.get_component(RenderComponentID));
 
-                draw_renderable(pos.x, pos.y, renderable);
+                draw_renderable(transform.position.x, transform.position.y, renderable);
             }
         }
     }
