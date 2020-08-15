@@ -4,19 +4,19 @@
 
 #include "System.hpp"
 
+struct Node{
+    Node *parent;
+    double f;   // Total weight
+    double g;   // Weight of distance from start to this
+    double h;   // Weight of distance from this to goal
+    int x, y;
+    Node(Node *parent, int x, int y) : parent(parent), x(x), y(y) { }
+    bool operator<(const Node& rhs) const{ return f < rhs.f; }
+    bool operator==(const Node& rhs) const{ return x == rhs.x && y == rhs.y; }
+};  // I want this private inside the class, but then the compiler complains (but it seems to work)
+
 class Game;
 class PathfindingSystem : public System {
-
-    struct Node{
-        Node *parent;
-        double f;   // Total weight
-        double g;   // Weight of distance from start to this
-        double h;   // Weight of distance from this to goal
-        int x, y;
-        Node(Node *parent, int x, int y) : parent(parent), x(x), y(y) { }
-        bool operator<(const Node& rhs) const{ return f < rhs.f; }
-        bool operator==(const Node& rhs) const{ return x == rhs.x && y == rhs.y; }
-    };
 
 public:
     PathfindingSystem(Game &game);

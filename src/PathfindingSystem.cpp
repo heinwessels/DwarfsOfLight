@@ -6,6 +6,8 @@
 
 #include "PathfindingComponent.hpp"
 
+
+
 PathfindingSystem::PathfindingSystem(Game &game)
     :   System(game, std::string("Moving System"))
 {
@@ -16,7 +18,7 @@ void PathfindingSystem::update(double dT){
     for(auto const entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
-            PathfindingComponent &move = static_cast<PathfindingComponent&>(entity->get_component(MoveComponentID));
+            PathfindingComponent &pathfinding = static_cast<PathfindingComponent&>(entity->get_component(MoveComponentID));
 
 
         }
@@ -25,7 +27,13 @@ void PathfindingSystem::update(double dT){
 
 bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::list<Vec2> &path){
 
-    Node goal { nullptr, floor(goal.x), floor(goal.y)};
+    path.clear();   // Make sure there's nothing in here
+
+    Node goal { nullptr,
+        static_cast<int>(floor(goal_point.x)),
+        static_cast<int>(floor(goal_point.y))
+    };
+    auto &world = m_pgame.get_world().get_tiles();
 
     std::list<Node> open_nodes;
     std::list<Node> closed_nodes;
@@ -36,7 +44,6 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
     ));
 
     // Loop through open nodes. If it runs out it means no path
-    bool reached_goal = false;
     while(!open_nodes.empty()){
 
         // Find the node with the lowest <f>
@@ -60,7 +67,7 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
             int dx = set[0], dy = set[1];
 
             // Create child
-            Node child {&parent, dx, dy};
+            Node child {&parent, parent.x + dx, parent.y + dy};
 
             // Have we reached the end?
             if (child == goal){
@@ -68,9 +75,16 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
 
                 // Calculate the path by following the genealogy
                 astar_backtrace_path(child, path);
+                path.emplace_back(goal_point);    // The final little step
 
                 // Stop the loop
                 return true;
+            }
+
+            // Is this child inside a wall?
+            if (world[child.x][child.y].get_type() == Tile::TypeWall){
+                // Yup. It's not valid.
+                continue;
             }
 
             // Update the <g> weight
@@ -101,12 +115,12 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
                 }
             }
 
-            // TODOOOOOOOOOOOOOOOO Is this tile valid?
-
-
             // This child is valid. (It won't reach here if it isn't)
             // Add to open list
             open_nodes.emplace_front(child);
+
+            // Add this current parent to the closed list so we don't check it again
+            closed_nodes.emplace_front(parent);
         }
     }
 
@@ -115,8 +129,15 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
 }
 
 void PathfindingSystem::astar_backtrace_path(Node &end, std::list<Vec2> &path){
-    // Node *parent = end.parent;
-    // while(){
 
-    // }
+    // Find the best path by following the end-node's parents
+    Node *node = &end;
+    while (node != nullptr){
+        path.emplace_front(Vec2(
+            node->x + 0.5,
+            node->y + 0.5
+        )); // Index point to the corner of tile, but want to move through the middle
+
+        node = node->parent;
+    }
 }
