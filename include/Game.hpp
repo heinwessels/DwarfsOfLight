@@ -3,6 +3,7 @@
 #include "MovementSystem.hpp"
 #include "CollisionSystem.hpp"
 #include "LightSystem.hpp"
+#include "PathfindingSystem.hpp"
 
 #pragma once
 

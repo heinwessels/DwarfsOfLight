@@ -8,6 +8,7 @@
 #include "Renderable.hpp"
 #include "TransformComponent.hpp"
 #include "CollisionBoxComponent.hpp"
+#include "PathfindingComponent.hpp"
 
 class Goblin : public Entity{
 
@@ -24,5 +25,7 @@ public:
         this->add_component(std::make_unique<LightComponent>(
             MColour(0, 200, 100, 0), MColour(0, 50, 30), 1, 4
         ));
+
+        this->add_component(std::make_unique<PathfindingComponent>());
     }
 };

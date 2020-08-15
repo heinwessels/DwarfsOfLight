@@ -15,10 +15,13 @@ Game::Game()
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
     m_entities.push_back(new Dwarf(5, 9));
-    TransformComponent &positional = static_cast<TransformComponent&>(m_entities[0]->get_component(TransformComponentID));
+    // TransformComponent &positional = static_cast<TransformComponent&>(m_entities[0]->get_component(TransformComponentID));
+    // m_rendersystem->set_camera_target(&positional.position);
+    // m_rendersystem->set_camera_zoom(40);
+    m_entities.push_back(new Goblin(20, 9));
+    TransformComponent &positional = static_cast<TransformComponent&>(m_entities[1]->get_component(TransformComponentID));
     m_rendersystem->set_camera_target(&positional.position);
     m_rendersystem->set_camera_zoom(40);
-    m_entities.push_back(new Goblin(20, 9));
     ////////////////////////////////////////////////
 
     init_systems();
@@ -71,8 +74,10 @@ void Game::load_systems(){
     m_rendersystem = static_cast<RenderSystem*>(m_systems[1].get());    // TODO This is hacky.
 
     m_systems.push_back(std::make_unique<InputSystem>(*this, *m_rendersystem));   // This requires the RenderSystem
+    m_systems.push_back(std::make_unique<PathfindingSystem>(*this));
     m_systems.push_back(std::make_unique<MovementSystem>(*this));
     m_systems.push_back(std::make_unique<CollisionSystem>(*this));
+
 }
 
 void Game::init_systems(){

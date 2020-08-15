@@ -4,9 +4,8 @@
 #include <queue>
 #include <array>
 
+#include "TransformComponent.hpp"
 #include "PathfindingComponent.hpp"
-
-
 
 PathfindingSystem::PathfindingSystem(Game &game)
     :   System(game, std::string("Moving System"))
@@ -18,16 +17,38 @@ void PathfindingSystem::update(double dT){
     for(auto const entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
+            TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
             PathfindingComponent &pathfinding = static_cast<PathfindingComponent&>(entity->get_component(TransformComponentID));
 
-
+            handle_pathfinding(transform, pathfinding);
         }
     }
 }
 
+bool PathfindingSystem::handle_pathfinding(TransformComponent &transform, PathfindingComponent &pathfinding){
+    // Return if true if a pathfinding calculation was done so that the caller can count it
+
+    pathfinding.go_to_target(Vec2(5, 9));
+
+    bool calculated_path = false;
+    if (pathfinding.is_path_requested()){
+        // This entity wants to go somewhere. Lets calculate a path for him
+
+        astar_search(
+            transform.position,
+            pathfinding.get_target(),
+            pathfinding.get_path()
+        );
+
+        calculated_path = true;
+    }
+
+    return calculated_path;
+}
+
 bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::list<Vec2> &path){
 
-    path.clear();   // Make sure there's nothing in here
+    // path.clear();   // Make sure there's nothing in here
 
     Node goal { nullptr,
         static_cast<int>(floor(goal_point.x)),
