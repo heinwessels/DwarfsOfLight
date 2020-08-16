@@ -4,8 +4,10 @@ Game::Game()
     : m_world (40, 22)
 {
 
-    m_world.load_world("maps/map_test_1.csv");
+    // m_world.load_world("maps/map_test_1.csv");
     // m_world.load_world("maps/empty_world.csv");
+    // m_world.load_world("maps/SmallFlat.csv");
+    m_world.load_world("maps/thin_line.csv");
 
     printf("World loaded.\n");
 
@@ -14,14 +16,17 @@ Game::Game()
 
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
-    m_entities.push_back(new Dwarf(5, 9));
+
+    // m_entities.push_back(new Dwarf(2, 1.5));
     // TransformComponent &positional = static_cast<TransformComponent&>(m_entities[0]->get_component(TransformComponentID));
     // m_rendersystem->set_camera_target(&positional.position);
     // m_rendersystem->set_camera_zoom(40);
-    m_entities.push_back(new Goblin(20, 9));
-    TransformComponent &positional = static_cast<TransformComponent&>(m_entities[1]->get_component(TransformComponentID));
+    m_entities.push_back(new Goblin(2, 1.5));
+    TransformComponent &positional = static_cast<TransformComponent&>(m_entities[0]->get_component(TransformComponentID));
     m_rendersystem->set_camera_target(&positional.position);
     m_rendersystem->set_camera_zoom(40);
+
+
     ////////////////////////////////////////////////
 
     init_systems();

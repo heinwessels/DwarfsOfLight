@@ -9,7 +9,7 @@ class PathfindingComponent : public Component{
     Vec2 m_target = {0};
     bool m_path_requested = false;
     bool m_move_to_target = false;
-    std::list<Vec2> m_path;
+    std::list<Vec2> m_waypoints = {}; // Initialize to be empty
 
 public:
     PathfindingComponent () : Component(PathfindingComponentID) { }
@@ -18,8 +18,8 @@ public:
     Vec2 get_target() { return m_target; }
     bool is_path_requested() { return m_path_requested; }
 
-    std::list<Vec2> &get_path() { return m_path; }
-    void set_path(std::list<Vec2> path) { m_path = path; m_path_requested = false; }
+    std::list<Vec2> &get_path() { return m_waypoints; }
+    void set_path(std::list<Vec2> path) { m_waypoints = path; m_path_requested = false; }
 
     void reached_target() { m_move_to_target = false; }
 };

@@ -100,10 +100,10 @@ void World::load_world(std::string path){
     // Now unpack the data
     resize(tile_map[0].size(), tile_map.size());
     for(int y = 0; y < m_height; y ++){
-        for (int x = 0; x < m_height; x ++){
+        for (int x = 0; x < m_width; x ++){
             add_tile_at(
                 x, y,
-                std::stoi(tile_map[x][y])
+                std::stoi(tile_map[y][x]) /* It's transposed */
             );
         }
     }

@@ -10,6 +10,7 @@
 PathfindingSystem::PathfindingSystem(Game &game)
     :   System(game, std::string("Moving System"))
 {
+    m_signature |= Component::get_component_signature(TransformComponentID);
     m_signature |= Component::get_component_signature(PathfindingComponentID);
 }
 
@@ -18,7 +19,7 @@ void PathfindingSystem::update(double dT){
         if(has_valid_signature(*entity)){
 
             TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
-            PathfindingComponent &pathfinding = static_cast<PathfindingComponent&>(entity->get_component(TransformComponentID));
+            PathfindingComponent &pathfinding = static_cast<PathfindingComponent&>(entity->get_component(PathfindingComponentID));
 
             handle_pathfinding(transform, pathfinding);
         }
@@ -28,7 +29,7 @@ void PathfindingSystem::update(double dT){
 bool PathfindingSystem::handle_pathfinding(TransformComponent &transform, PathfindingComponent &pathfinding){
     // Return if true if a pathfinding calculation was done so that the caller can count it
 
-    pathfinding.go_to_target(Vec2(5, 9));
+    pathfinding.go_to_target(Vec2(7, 1.5));
 
     bool calculated_path = false;
     if (pathfinding.is_path_requested()){
@@ -46,9 +47,9 @@ bool PathfindingSystem::handle_pathfinding(TransformComponent &transform, Pathfi
     return calculated_path;
 }
 
-bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::list<Vec2> &path){
+bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::list<Vec2> &waypoints){
 
-    // path.clear();   // Make sure there's nothing in here
+    waypoints.clear();   // Make sure there's nothing in here
 
     Node goal { nullptr,
         static_cast<int>(floor(goal_point.x)),
@@ -79,7 +80,6 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
         Node parent = *lowest_iter;         // Get the parent
         open_nodes.erase(lowest_iter);      // Pop it from the queue (or list)
 
-
         // Create the 8 children
         const std::array<std::array<int, 2>, 8> dxdy {{
             {{0, -1}}, {{0, 1}}, {{-1, 0}}, {{1, 0}}, {{-1, -1}}, {{-1, 1}}, {{1, -1}}, {{1, 1}}
@@ -95,8 +95,8 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
                 // Yes! Success!
 
                 // Calculate the path by following the genealogy
-                astar_backtrace_path(child, path);
-                path.emplace_back(goal_point);    // The final little step
+                astar_backtrace_path(child, waypoints);
+                waypoints.push_back(goal_point);    // The final little step
 
                 // Stop the loop
                 return true;
@@ -109,13 +109,12 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
             }
 
             // Update the <g> weight
-            child.g += parent.g + (abs(dx) || abs(dy) ? 1.0 : 1.414);
+            child.g = parent.g + (abs(dx) || abs(dy) ? 1.0 : 2.0);   // The square distance
 
             // Update the <h> weight with hypotenuse approximation
             int dist_to_goal_x = goal.x - child.x;
             int dist_to_goal_y = goal.y - child.y;
-            child.h = std::max(dist_to_goal_x, dist_to_goal_y)
-                         + 3.0/7.0*std::min(dist_to_goal_x, dist_to_goal_y);
+            child.h = dist_to_goal_x*dist_to_goal_x + dist_to_goal_y*dist_to_goal_y;    // Square distance
 
             // Update the final weight
             child.f = child.g + child.h;
@@ -138,23 +137,23 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
 
             // This child is valid. (It won't reach here if it isn't)
             // Add to open list
-            open_nodes.emplace_front(child);
-
-            // Add this current parent to the closed list so we don't check it again
-            closed_nodes.emplace_front(parent);
+            open_nodes.push_front(child);
         }
+
+        // Add this current parent to the closed list so we don't check it again
+        closed_nodes.push_front(parent);
     }
 
     // We didn't reach the goal
     return false;
 }
 
-void PathfindingSystem::astar_backtrace_path(Node &end, std::list<Vec2> &path){
+void PathfindingSystem::astar_backtrace_path(Node &end, std::list<Vec2> &waypoints){
 
     // Find the best path by following the end-node's parents
     Node *node = &end;
     while (node != nullptr){
-        path.emplace_front(Vec2(
+        waypoints.push_front(Vec2(
             node->x + 0.5,
             node->y + 0.5
         )); // Index point to the corner of tile, but want to move through the middle

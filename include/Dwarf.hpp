@@ -17,7 +17,7 @@ private:
     std::string m_texture_path = "textures/dwarf2.jpg";
 
 public:
-    Dwarf(double x, double y) {
+    Dwarf(double x, double y) : Entity("Dwarf") {
         this->add_component(std::make_unique<TransformComponent>(Vec2(x, y)));
         this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
         this->add_component(std::make_unique<ControllerComponent>(5));

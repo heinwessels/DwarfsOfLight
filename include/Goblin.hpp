@@ -18,7 +18,7 @@ private:
     std::string m_texture_path = "textures/goblin.jpg";
 
 public:
-    Goblin(double x, double y) {
+    Goblin(double x, double y) : Entity("Goblin") {
         this->add_component(std::make_unique<TransformComponent>(Vec2(x, y)));
         this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
         this->add_component(std::make_unique<CollisionBox>(width, height, false, false));

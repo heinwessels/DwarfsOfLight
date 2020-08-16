@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <memory>
+#include <string>
 
 #include "Vec2.hpp"
 
@@ -17,8 +18,10 @@ class Entity{
     // Bad for caching.
     std::unordered_map<ComponentID, std::unique_ptr<Component>> m_pComponents;
 
+    std::string m_name;     // This is only for debugging purposes
+
 public:
-    Entity() { }
+    Entity(std::string name) { m_name = name; }
     bool contains_signature (ComponentListSignature signature) const {return (m_signature & signature) == signature;}
     Component& get_component(ComponentID component_id){return *m_pComponents[component_id];}
     bool has_component(ComponentID component_id) const { return m_signature & Component::get_component_signature(component_id); }

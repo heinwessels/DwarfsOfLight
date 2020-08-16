@@ -28,7 +28,7 @@ private:
 
 public:
 
-    Tile(Type type, double x, double y) : m_type(type) {
+    Tile(Type type, double x, double y) : Entity("Tile"), m_type(type) {
         this->add_component(std::make_unique<TransformComponent>(Vec2(x, y)));
         if(m_type == TypeWall){
             this->add_component(std::make_unique<Renderable>(
