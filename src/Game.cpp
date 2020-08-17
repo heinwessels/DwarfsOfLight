@@ -4,10 +4,10 @@ Game::Game()
     : m_world (40, 22)
 {
 
-    // m_world.load_world("maps/map_test_1.csv");
+    m_world.load_world("maps/map_test_1.csv");
     // m_world.load_world("maps/empty_world.csv");
     // m_world.load_world("maps/SmallFlat.csv");
-    m_world.load_world("maps/thin_line.csv");
+    // m_world.load_world("maps/thin_line.csv");
 
     printf("World loaded.\n");
 
@@ -17,14 +17,15 @@ Game::Game()
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
 
-    // m_entities.push_back(new Dwarf(2, 1.5));
-    // TransformComponent &positional = static_cast<TransformComponent&>(m_entities[0]->get_component(TransformComponentID));
-    // m_rendersystem->set_camera_target(&positional.position);
-    // m_rendersystem->set_camera_zoom(40);
-    m_entities.push_back(new Goblin(2, 1.5));
+    m_entities.push_back(new Dwarf(24, 20));
     TransformComponent &positional = static_cast<TransformComponent&>(m_entities[0]->get_component(TransformComponentID));
     m_rendersystem->set_camera_target(&positional.position);
+    // m_rendersystem->set_camera_zoom(40);
+    m_entities.push_back(new Goblin(4, 4));
+    // TransformComponent &positional = static_cast<TransformComponent&>(m_entities.back()->get_component(TransformComponentID));
+    // m_rendersystem->set_camera_target(&positional.position);
     m_rendersystem->set_camera_zoom(40);
+
 
 
     ////////////////////////////////////////////////
@@ -72,11 +73,11 @@ void Game::load_systems(){
     // The order in which systems are added to this vector
     // will determine in which order they will execute
 
-    m_systems.push_back(std::make_unique<LightSystem>(*this));
+    // m_systems.push_back(std::make_unique<LightSystem>(*this));
     m_systems.push_back(std::make_unique<RenderSystem>(*this, screen_width, screen_height));
 
     // We want a way to access the Render System directly
-    m_rendersystem = static_cast<RenderSystem*>(m_systems[1].get());    // TODO This is hacky.
+    m_rendersystem = static_cast<RenderSystem*>(m_systems.back().get());    // TODO This is hacky.
 
     m_systems.push_back(std::make_unique<InputSystem>(*this, *m_rendersystem));   // This requires the RenderSystem
     m_systems.push_back(std::make_unique<PathfindingSystem>(*this));

@@ -109,6 +109,23 @@ I implemented a discrete ray tracing algorithm from scratch, and this achieved m
 
 This was done by implementing a discrete lightmap, and every object in the game is illuminated according to this map. To propogate a ray through this map I only calculate the intersection with the next lightmap-tile's **border**, and continue doing this until the ray hits an obstacle or its max distance. This means no `n`-body collision detection, which makes it very fast. And it creates very real looking shadows. This is exactly the effect I desired, and was definitely worth the rewrite.
 
+### Pathfinding
+
+For pathfinding I implemented a A* algorithm from scratch using psuedo code. I store all `nodes` as `std::unique_ptr`s in the open and closed `std::lists`. This works, because when a node moves from open to closed, the address stays the same, meaning a `child` node knows where his `parent` is. I did not use a `std::priotity_queue` for ease of implementation, since it does not have iterators. For the weight calculation for each node (or the `h` metric) I simply used the euclidean distance. This is accurate, but could be improved to more efficient solutions.
+
+My goal was to implement the pathfinding, and optimize later. The pathfinding in the picture below takes `<2 ms`. If requried later I could improve this by:
+- Implement (or mimic) a `std::priotity_queue` to avoid looping.
+- For `h` use the Manhatten distance, or approximate the hypotenuse.
+
+<img src="gifs/pathfinding.jpg" alt="drawing" width="500"/>
+
+This is also where the ECS architecture excels, because I can finely adjust how and when the engine does pathfinding. Currently I can limit the amount of pathfinding calculations per `update` easily. The process for a entity to pathfind is as follows:
+
+1. An `component` requires the entity to move somewhere (e.g. AI).
+2. This sets the pathfinding `component` to `pathfind requested`.
+3. The pathfinding `system` then loops through all pathfinding `components`, and calculates a specified amount
+4. Any pathfinding requests thats left will be calculated in the next update.
+
 ## TODO
 1. Convert software to store data serially, which is one of the goals of ECS. For example, *all* `components` stored serially, with references to which `entity` they belong. The `systems` will then loop through the `components`, not caring to which `entity` it belongs to.
 

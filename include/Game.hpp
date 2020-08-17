@@ -39,6 +39,7 @@ public:
 
     std::vector<Entity*> &get_entities() { return m_entities; }
     World& get_world() {return m_world; }
+    RenderSystem& get_render_system() { return *m_rendersystem; }   // For debugging stuff
 
     void quit(){m_state = e_quit;}
 
