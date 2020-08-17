@@ -2,13 +2,12 @@
 #include "Game.hpp"
 
 #include <queue>
-#include <array>
 
 #include "TransformComponent.hpp"
 #include "PathfindingComponent.hpp"
 
 PathfindingSystem::PathfindingSystem(Game &game)
-    :   System(game, std::string("Moving System"))
+    :   System(game, std::string("Pathfinding System"))
 {
     m_signature |= Component::get_component_signature(TransformComponentID);
     m_signature |= Component::get_component_signature(PathfindingComponentID);
@@ -57,11 +56,11 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
     };
     auto &world = m_pgame.get_world().get_tiles();
 
-    std::list<Node> open_nodes;
-    std::list<Node> closed_nodes;
+    std::list<std::unique_ptr<Node>> open_nodes;
+    std::list<std::unique_ptr<Node>> closed_nodes;
 
     // Add the starting node
-    open_nodes.push_back(Node(
+    open_nodes.push_back(std::make_unique<Node>(
         nullptr, floor(start_point.x), floor(start_point.y)
     ));
 
@@ -72,13 +71,13 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
         double lowest_f = INT_MAX;
         auto lowest_iter = open_nodes.begin(); // We're going to keep track of the iterator
         for (auto iter = open_nodes.begin(); iter != open_nodes.end(); iter++){
-            if (iter->f < lowest_f){
+            if ((*iter)->f < lowest_f){
                 lowest_iter = iter;
-                lowest_f = iter->f;
+                lowest_f = (*iter)->f;
             }
         }
-        Node parent = *lowest_iter;         // Get the parent
-        open_nodes.erase(lowest_iter);      // Pop it from the queue (or list)
+        std::unique_ptr<Node> parent = std::move(*lowest_iter);         // Get the parent
+        open_nodes.erase(lowest_iter);          // Pop it from the queue (or list)
 
         // Create the 8 children
         const std::array<std::array<int, 2>, 8> dxdy {{
@@ -88,14 +87,18 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
             int dx = set[0], dy = set[1];
 
             // Create child
-            Node child {&parent, parent.x + dx, parent.y + dy};
+            // We can can it as a temporary here. We will add it to <all_nodes>
+            // soon, and only after might it's address be required.
+            std::unique_ptr<Node> child = std::make_unique<Node>(
+                 parent.get(), parent->x + dx, parent->y + dy
+            );
 
             // Have we reached the end?
-            if (child == goal){
+            if (*child == goal){
                 // Yes! Success!
 
                 // Calculate the path by following the genealogy
-                astar_backtrace_path(child, waypoints);
+                astar_backtrace_path(*child, waypoints);
                 waypoints.push_back(goal_point);    // The final little step
 
                 // Stop the loop
@@ -103,25 +106,25 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
             }
 
             // Is this child inside a wall?
-            if (world[child.x][child.y].get_type() == Tile::TypeWall){
+            if (world[child->x][child->y].get_type() == Tile::TypeWall){
                 // Yup. It's not valid.
                 continue;
             }
 
             // Update the <g> weight
-            child.g = parent.g + (abs(dx) || abs(dy) ? 1.0 : 2.0);   // The square distance
+            child->g = parent->g + (abs(dx) || abs(dy) ? 1.0 : 2.0);   // The square distance
 
             // Update the <h> weight with hypotenuse approximation
-            int dist_to_goal_x = goal.x - child.x;
-            int dist_to_goal_y = goal.y - child.y;
-            child.h = dist_to_goal_x*dist_to_goal_x + dist_to_goal_y*dist_to_goal_y;    // Square distance
+            int dist_to_goal_x = goal.x - child->x;
+            int dist_to_goal_y = goal.y - child->y;
+            child->h = dist_to_goal_x*dist_to_goal_x + dist_to_goal_y*dist_to_goal_y;    // Square distance
 
             // Update the final weight
-            child.f = child.g + child.h;
+            child->f = child->g + child->h;
 
             // Is this child already in the OPEN list with lower <f>?
             for (auto & node : open_nodes){
-                if (child.x == node.x && child.y == node.y && child.f > node.f){
+                if (child->x == node->x && child->y == node->y && child->f > node->f){
                     // This child is not valid! Skip it!
                     continue;
                 }
@@ -129,7 +132,7 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
 
             // Is this child already in the CLOSE list with lower <f>?
             for (auto & node : closed_nodes){
-                if (child.x == node.x && child.y == node.y && child.f > node.f){
+                if (child->x == node->x && child->y == node->y && child->f > node->f){
                     // This child is not valid! Skip it!
                     continue;
                 }
@@ -137,11 +140,13 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
 
             // This child is valid. (It won't reach here if it isn't)
             // Add to open list
-            open_nodes.push_front(child);
+            open_nodes.push_front(std::move(child));
         }
 
         // Add this current parent to the closed list so we don't check it again
-        closed_nodes.push_front(parent);
+        // <std::move> will keep the parent at the same address and only move the pointer,
+        // which means the child's <parent> will still be valid.
+        closed_nodes.push_front(std::move(parent));
     }
 
     // We didn't reach the goal
