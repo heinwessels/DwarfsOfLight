@@ -42,6 +42,9 @@ public:
     void load_world(std::string path);
     void add_tile_at(int x, int y, Tile::Type type);
 
+    int get_width() const { return m_width; }
+    int get_height()const { return m_height; }
+
 private:
     void clear();
     void resize(int width, int height);

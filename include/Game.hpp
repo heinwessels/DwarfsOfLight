@@ -4,6 +4,7 @@
 #include "CollisionSystem.hpp"
 #include "LightSystem.hpp"
 #include "PathfindingSystem.hpp"
+#include "AISystem.hpp"
 
 #pragma once
 

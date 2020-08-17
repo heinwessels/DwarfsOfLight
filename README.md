@@ -117,7 +117,7 @@ My goal was to implement the pathfinding, and optimize later. The pathfinding in
 - Implement (or mimic) a `std::priotity_queue` to avoid looping.
 - For `h` use the Manhatten distance, or approximate the hypotenuse.
 
-<img src="gifs/pathfinding.jpg" alt="drawing" width="500"/>
+<img src="gifs/pathfinding.jpg" alt="drawing" width="600"/>
 
 This is also where the ECS architecture excels, because I can finely adjust how and when the engine does pathfinding. Currently I can limit the amount of pathfinding calculations per `update` easily. The process for a entity to pathfind is as follows:
 

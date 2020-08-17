@@ -17,8 +17,8 @@ Game::Game()
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
 
-    m_entities.push_back(new Dwarf(24, 20));
-    TransformComponent &positional = static_cast<TransformComponent&>(m_entities[0]->get_component(TransformComponentID));
+    m_entities.push_back(new Dwarf(7, 7));
+    TransformComponent &positional = static_cast<TransformComponent&>(m_entities.back()->get_component(TransformComponentID));
     m_rendersystem->set_camera_target(&positional.position);
     // m_rendersystem->set_camera_zoom(40);
     m_entities.push_back(new Goblin(4, 4));
@@ -73,13 +73,14 @@ void Game::load_systems(){
     // The order in which systems are added to this vector
     // will determine in which order they will execute
 
-    // m_systems.push_back(std::make_unique<LightSystem>(*this));
+    m_systems.push_back(std::make_unique<LightSystem>(*this));
     m_systems.push_back(std::make_unique<RenderSystem>(*this, screen_width, screen_height));
 
     // We want a way to access the Render System directly
     m_rendersystem = static_cast<RenderSystem*>(m_systems.back().get());    // TODO This is hacky.
 
     m_systems.push_back(std::make_unique<InputSystem>(*this, *m_rendersystem));   // This requires the RenderSystem
+    m_systems.push_back(std::make_unique<AISystem>(*this));
     m_systems.push_back(std::make_unique<PathfindingSystem>(*this));
     m_systems.push_back(std::make_unique<MovementSystem>(*this));
     m_systems.push_back(std::make_unique<CollisionSystem>(*this));

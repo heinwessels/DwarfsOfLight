@@ -27,7 +27,8 @@ public:
     virtual void update(double dT) override;
 
 private:
-    bool handle_pathfinding(TransformComponent &transform, PathfindingComponent &pathfinding);
+    void handle_waypoint(TransformComponent &transform, PathfindingComponent &pathfinding);
+    void handle_pathfinding(TransformComponent &transform, PathfindingComponent &pathfinding);
 
     bool astar_search(Vec2 start, Vec2 goal, std::list<Vec2> &path);
     void astar_backtrace_path(Node &end, std::list<Vec2> &path);

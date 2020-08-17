@@ -22,30 +22,69 @@ void PathfindingSystem::update(double dT){
             TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
             PathfindingComponent &pathfinding = static_cast<PathfindingComponent&>(entity->get_component(PathfindingComponentID));
 
-            handle_pathfinding(transform, pathfinding);
+            if (pathfinding.is_path_requested()){
+                handle_pathfinding(transform, pathfinding);
+            }
+            if (pathfinding.is_moving_to_target()){
+                handle_waypoint(transform, pathfinding);
+            }
         }
     }
 }
 
-bool PathfindingSystem::handle_pathfinding(TransformComponent &transform, PathfindingComponent &pathfinding){
-    // Return if true if a pathfinding calculation was done so that the caller can count it
+void PathfindingSystem::handle_waypoint(TransformComponent &transform, PathfindingComponent &pathfinding){
 
-    pathfinding.go_to_target(Vec2(24, 18));
+    // This is the next point we are aiming for
+    Vec2 next_waypoint = pathfinding.get_waypoints().front();
 
-    bool calculated_path = false;
-    if (pathfinding.is_path_requested()){
-        // This entity wants to go somewhere. Lets calculate a path for him
+    // How far are we from there
+    Vec2 distance_to_target = next_waypoint - transform.position;
 
-        astar_search(
-            transform.position,
-            pathfinding.get_target(),
-            pathfinding.get_path()
-        );
+    // Are within half a unit of the goal?
+    if(distance_to_target.x*distance_to_target.x + distance_to_target.y*distance_to_target.y < 0.5*0.5){
+        // We've reached this waypoint
 
-        calculated_path = true;
+        // Remove this waypoint
+        pathfinding.get_waypoints().pop_front();
+
+        // If there's another one, follow. If not, stop moving
+        if (pathfinding.get_waypoints().empty()){
+            // We reached the target
+            pathfinding.reached_target();
+
+            // Stop this function
+            return;
+        }
+        else{
+            // Point towards the next one
+
+            next_waypoint = pathfinding.get_waypoints().front();
+        }
     }
 
-    return calculated_path;
+    // If we reach here we need to move to the next waypoint
+    Vec2 direction = (next_waypoint - transform.position);
+    direction /= sqrt(direction.x*direction.x + direction.y*direction.y);
+    transform.speed = direction * 1;    // Hardcoded speed
+}
+
+void PathfindingSystem::handle_pathfinding(TransformComponent &transform, PathfindingComponent &pathfinding){
+    // Return if true if a pathfinding calculation was done so that the caller can count it
+
+    // Attempt pathfinding
+    if(astar_search(
+        transform.position,
+        pathfinding.get_target(),
+        pathfinding.get_waypoints()
+    ))  // This will set the path
+    {
+        // If it was successful. Follow them!
+        pathfinding.start_following_waypoints();
+    }
+
+    // Send the path to the component
+    // If it was unsuccessful, it will only clear the request
+    pathfinding.clear_pathing_request();
 }
 
 bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::list<Vec2> &waypoints){

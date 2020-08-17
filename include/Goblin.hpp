@@ -9,6 +9,7 @@
 #include "TransformComponent.hpp"
 #include "CollisionBoxComponent.hpp"
 #include "PathfindingComponent.hpp"
+#include "AIComponent.hpp"
 
 class Goblin : public Entity{
 
@@ -27,5 +28,6 @@ public:
         ));
 
         this->add_component(std::make_unique<PathfindingComponent>());
+        this->add_component(std::make_unique<AIComponent>(AIComponent::ModeWandering));
     }
 };
