@@ -37,8 +37,8 @@ void AISystem::handle_entity_ai(Entity& entity){
         bool valid = false;
         Vec2 target = {-1, -1};
         while(!valid){
-            target.x = random_float_in_range(0, world.get_width()) + 0.5;
-            target.y = random_float_in_range(0, world.get_height()) + 0.5;
+            target.x = random_float_in_range(0, world.get_width());
+            target.y = random_float_in_range(0, world.get_height());
 
             if (world.get_closest_tile_to(target).get_type() == Tile::TypeFloor){
                 valid = true;
@@ -46,6 +46,6 @@ void AISystem::handle_entity_ai(Entity& entity){
         }
 
         // Set this entity to move there
-        pathfinding.go_to_target(target);
+        pathfinding.go_to_target(target + 0.5);
     }
 }

@@ -65,7 +65,7 @@ void PathfindingSystem::handle_waypoint(TransformComponent &transform, Pathfindi
     // If we reach here we need to move to the next waypoint
     Vec2 direction = (next_waypoint - transform.position);
     direction /= sqrt(direction.x*direction.x + direction.y*direction.y);
-    transform.speed = direction * 1;    // Hardcoded speed
+    transform.speed = direction * 5;    // Hardcoded speed
 }
 
 void PathfindingSystem::handle_pathfinding(TransformComponent &transform, PathfindingComponent &pathfinding){
@@ -157,6 +157,17 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
                 continue;
             }
 
+            // Are we trying to move diagonal accross a wall?
+            if (!dx || dy){
+                if (
+                    world[parent->x + dx][parent->y].get_type() == Tile::TypeWall ||
+                    world[parent->x][parent->y + dy].get_type() == Tile::TypeWall
+                ){
+                    // Not valid. Trying to move accross a tile on a diagonal
+                    continue;
+                }
+            }
+
             // Update the <g> weight
             child->g = parent->g + (abs(dx) || abs(dy) ? 1.0 : 2.0);   // The square distance
 
@@ -185,7 +196,7 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
             // Is this child already in the CLOSE list with lower <f>?
             valid = true;
             for (auto & node : closed_nodes){
-                if (child->x == node->x && child->y == node->y && child->f > node->f){
+                if (child->x == node->x && child->y == node->y /*&& child->f > node->f*/){
                     // This child has already been tried! Skip it!
                     valid = false;
                     continue;
@@ -211,7 +222,7 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
 #ifdef DBG_SHOW_PATHFINDING_COLOURS
         Renderable &renderable = static_cast<Renderable&>(world[parent->x][parent->y].get_component(RenderComponentID));
         renderable.set_colour_mod(MColour(255, 0, 0));
-        // m_pgame.get_render_system().update(0);  // Force update (Can be commented out)
+        m_pgame.get_render_system().update(0);  // Force update (Can be commented out)
 #endif
         closed_nodes.push_front(std::move(parent));
     }

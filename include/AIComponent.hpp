@@ -9,6 +9,8 @@ public:
     static constexpr Mode ModeIdle = 0;
     static constexpr Mode ModeWandering = 1;
 
+    double wondering_speed = 5;
+
 private:
     Mode m_mode;
 
