@@ -114,6 +114,7 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
     while(!open_nodes.empty()){
 
         // Find the node with the lowest <f>
+        // Loop from the front, where the most recent nodes are stored
         double lowest_f = INT_MAX;
         auto lowest_iter = open_nodes.begin(); // We're going to keep track of the iterator
         for (auto iter = open_nodes.begin(); iter != open_nodes.end(); iter++){
@@ -180,6 +181,7 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
             child->f = child->g + child->h;
 
             // Is this child already in the OPEN list with lower <f>?
+            // Loop from the front, where the most recent nodes are stored
             bool valid = true;
             for (auto & node : open_nodes){
                 if (child->x == node->x && child->y == node->y && child->f > node->f){
@@ -194,6 +196,7 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
             }
 
             // Is this child already in the CLOSE list with lower <f>?
+            // Loop from the front, where the most recent nodes are stored
             valid = true;
             for (auto & node : closed_nodes){
                 if (child->x == node->x && child->y == node->y /*&& child->f > node->f*/){
@@ -208,12 +211,13 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
             }
 
             // This child is valid. (It won't reach here if it isn't)
-            // Add to open list
+            // Add to the front of open list.
 #ifdef DBG_SHOW_PATHFINDING_COLOURS
             Renderable &renderable = static_cast<Renderable&>(world[child->x][child->y].get_component(RenderComponentID));
             renderable.set_colour_mod(MColour(0, 255, 0));
 #endif
             open_nodes.push_front(std::move(child));
+
         }
 
         // Add this current parent to the closed list so we don't check it again

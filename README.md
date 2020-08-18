@@ -1,7 +1,7 @@
 # Dwarfs Of Light
 This is an implementation from scratch of a Entity Component System based game engine, with a game built on top of it. The game is about dwarfs walking around in a dark cave with torches and dynamic lighting. The goal is to learn more about C++ containers, smart pointers, memory management, and hopefully templates.
 
-Below is a quick video showing the current progress. Note that any stuttering in the video simply irregular movement with the keyboard, and not the game engine stuttering. My favourite parts of the video is the Goblin glowing green and all the shadows in the big room.
+Below is a quick video showing the current progress. Note pathfinding of the wandering goblins, and the raytracing creating dark shadows.
 
 ![](gifs/eg.gif)
 
@@ -118,6 +118,7 @@ My goal was to implement the pathfinding, and optimize later. The pathfinding in
 - For `h` use the Manhatten distance, or approximate the hypotenuse.
 
 <img src="gifs/pathfinding.jpg" alt="drawing" width="600"/>
+<sup><b>Example of pathfinding calculation. It has been adapted to not go diagonally accross corners, which is more visible in the gif below.</b></sup>
 
 This is also where the ECS architecture excels, because I can finely adjust how and when the engine does pathfinding. Currently I can limit the amount of pathfinding calculations per `update` easily. The process for a entity to pathfind is as follows:
 
@@ -125,6 +126,10 @@ This is also where the ECS architecture excels, because I can finely adjust how 
 2. This sets the pathfinding `component` to `pathfind requested`.
 3. The pathfinding `system` then loops through all pathfinding `components`, and calculates a specified amount
 4. Any pathfinding requests thats left will be calculated in the next update.
+
+![](gifs/pathfinding_eg.gif)
+
+<sup><b>A lonely Goblin wandering around aimlessly.</b></sup>
 
 ## TODO
 1. Convert software to store data serially, which is one of the goals of ECS. For example, *all* `components` stored serially, with references to which `entity` they belong. The `systems` will then loop through the `components`, not caring to which `entity` it belongs to.
