@@ -1,5 +1,9 @@
 #include "Renderer.hpp"
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+
 Renderer::Renderer(int width, int height)
      : width(width), height(height)
 {

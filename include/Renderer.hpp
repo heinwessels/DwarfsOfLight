@@ -3,10 +3,13 @@
 #include <string>
 #include <vector>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
+#include "SDL2/SDL_events.h"
 #include <SDL2/SDL_ttf.h>
 
+struct SDL_Renderer;
+struct SDL_Window;
+struct SDL_Rect;
+struct SDL_Texture;
 class Renderer{
     /*
     This handles all things rendering. It's heavily based on this guide:

@@ -1,8 +1,5 @@
 #pragma once
 
-#include <unistd.h>
-#include <chrono>
-
 #include "Game.hpp"
 
 class Application{

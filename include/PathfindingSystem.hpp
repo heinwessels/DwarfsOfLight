@@ -3,6 +3,7 @@
 #include <list>
 
 #include "System.hpp"
+#include "Vec2.hpp"
 
 class TransformComponent;
 class PathfindingComponent;

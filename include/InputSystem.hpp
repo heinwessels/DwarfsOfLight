@@ -1,12 +1,12 @@
 #pragma once
+#include "System.hpp"
+#include "SDL2/SDL_events.h"
 
 #include <vector>
 
-#include "System.hpp"
-#include "RenderSystem.hpp"
-#include "TransformComponent.hpp"
-#include "ControllerComponent.hpp"
-
+class TransformComponent;
+class ControllerComponent;
+class RenderSystem;
 class Game;
 class InputSystem : public System {
 
@@ -20,5 +20,4 @@ public:
 
 private:
     void handle_entity_movement(SDL_Event &event, TransformComponent &move, ControllerComponent &controller);
-
 };

@@ -1,8 +1,13 @@
 #include "AISystem.hpp"
 #include "Game.hpp"
+#include "World.hpp"
 
 #include "RNG.hpp"
+#include "Vec2.hpp"
 
+#include "TransformComponent.hpp"
+#include "PathfindingComponent.hpp"
+#include "AIComponent.hpp"
 
 AISystem::AISystem(Game& game)
     : System(game, std::string("AI System"))

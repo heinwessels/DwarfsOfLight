@@ -2,6 +2,7 @@
 
 #include "PathfindingSystem.hpp"
 #include "Game.hpp"
+#include "World.hpp"
 
 #include <queue>
 

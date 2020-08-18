@@ -1,8 +1,18 @@
 #include "World.hpp"
 
+#include "Renderable.hpp"
+
+#include <cmath>
+#include <iostream>
+#include <fstream>
+#include <iterator>
+#include <algorithm>
+#include <boost/algorithm/string.hpp>
+
 World::World (int width, int height)
         : m_width(width), m_height(height), m_lightmap(width, height)
 {
+    printf("Real");
     clear();
     resize(width, height);
 
@@ -26,6 +36,26 @@ World::World (int width, int height)
         }
     ////////////////////////////////////////////////////////
 }
+
+World::World (std::string map_path)
+    : World(0, 0)
+{
+    printf("path");
+    load_world(map_path);
+}
+
+
+std::vector<std::vector<Tile>>& World::get_tiles() { return m_world; }
+Tile& World::get_closest_tile_to(Vec2 point){ return m_world[floor(point.x )][floor(point.y)]; };
+
+LightMap& World::get_light_map() { return m_lightmap; }
+void World::set_global_lighting(MColour global_lighting) { m_global_lighting = global_lighting; }
+MColour World::get_global_lighting() { return m_global_lighting; }
+
+int World::get_width() const { return m_width; }
+int World::get_height()const { return m_height; }
+
+
 void World::add_tile_at(int x, int y, Tile::Type type) {
     m_world[x][y] = Tile(
         type,

@@ -1,14 +1,24 @@
 #include "Game.hpp"
 
-Game::Game()
-    : m_world (40, 22)
-{
+#include "RenderSystem.hpp"
+#include "InputSystem.hpp"
+#include "MovementSystem.hpp"
+#include "CollisionSystem.hpp"
+#include "LightSystem.hpp"
+#include "PathfindingSystem.hpp"
+#include "AISystem.hpp"
 
-    m_world.load_world("maps/map_test_1.csv");
-    // m_world.load_world("maps/empty_world.csv");
-    // m_world.load_world("maps/SmallFlat.csv");
-    // m_world.load_world("maps/thin_line.csv");
+#include "Timing.hpp"
+#include "World.hpp"
 
+#include "Entity.hpp"
+#include "Dwarf.hpp"
+#include "Goblin.hpp"
+#include "Tile.hpp"
+
+Game::Game(){
+
+    m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
     printf("World loaded.\n");
 
     load_systems();
@@ -93,4 +103,12 @@ void Game::init_systems(){
     for (auto &system : m_systems){
         system->init();
     }
+}
+
+std::vector<Entity*> &Game::get_entities() { return m_entities; }
+World& Game::get_world() { return *m_pWorld; }
+void Game::quit(){ m_state = e_quit; }
+RenderSystem& Game::get_render_system() {
+    // For debugging stuff
+    return *m_rendersystem;
 }

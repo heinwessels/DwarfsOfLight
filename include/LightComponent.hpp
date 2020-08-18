@@ -3,7 +3,6 @@
 #include "Component.hpp"
 #include "MColour.hpp"
 
-
 class LightComponent : public Component{
 public:
     MColour base_colour;

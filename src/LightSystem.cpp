@@ -1,5 +1,13 @@
 #include "LightSystem.hpp"
 #include "Game.hpp"
+#include "World.hpp"
+
+#include "RNG.hpp"
+
+#include "LightMap.hpp"
+#include "Entity.hpp"
+#include "Renderable.hpp"
+#include "LightComponent.hpp"
 
 LightSystem::LightSystem(Game &game)
     :   System(game, std::string("Lighting System"))
@@ -126,7 +134,7 @@ void LightSystem::ray_trace_source(Vec2 origin, LightComponent &light, LightMap 
 void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, LightComponent &light){
 
     Vec2 current_position = origin;
-    World &world = m_pgame.get_world().get_tiles();
+    auto &world = m_pgame.get_world().get_tiles();
 
     // Get the current tile we're working with
     Vec2 current_tile = ray_get_propogating_tile(current_position, direction);

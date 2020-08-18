@@ -1,21 +1,13 @@
 #pragma once
 
-#include <list>
-#include <utility>
-
-#include "RNG.hpp"
-
-#include "Tile.hpp"
-#include "LightMap.hpp"
 #include "System.hpp"
-#include "Entity.hpp"
-#include "Renderable.hpp"
-#include "LightComponent.hpp"
+#include "MColour.hpp"
+#include "Vec2.hpp"
 
+class LightMap;
+class LightComponent;
 class Game;
 class LightSystem : public System{
-
-    using World = std::vector<std::vector<Tile>>;
 
 public:
     LightSystem(Game &game);
@@ -29,7 +21,7 @@ private:
     void update_lightsource(LightComponent &light, double dT);
     void populate_lightmap();
 
-    void ray_trace_source(Vec2 origin, LightComponent &light, LightMap & lightmap);
+    void ray_trace_source(Vec2 origin, LightComponent &light, LightMap &lightmap);
     void ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, LightComponent &light);
     Vec2 ray_get_next_intersection(Vec2 position, Vec2 direction);
     Vec2 ray_get_propogating_tile(Vec2 position, Vec2 direction);

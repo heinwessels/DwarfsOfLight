@@ -1,4 +1,5 @@
 #include "TexturePool.hpp"
+#include "Renderer.hpp"
 
 TexturePool::TexturePool(Renderer &renderer)
     : m_pRenderer(renderer)

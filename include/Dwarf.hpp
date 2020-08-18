@@ -5,9 +5,11 @@
 
 #include "Entity.hpp"
 
+#include "Component.hpp"
 #include "Renderable.hpp"
 #include "TransformComponent.hpp"
 #include "LightComponent.hpp"
+#include "ControllerComponent.hpp"
 
 class Dwarf : public Entity{
 

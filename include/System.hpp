@@ -1,12 +1,11 @@
 #pragma once
 
 #include <string>
-#include <chrono>
 
 #include "Timing.hpp"
 #include "Types.hpp"
-#include "Entity.hpp"
 
+class Entity;
 class Game;
 class System{
 
@@ -14,18 +13,17 @@ protected:
     Game &m_pgame;
     ComponentListSignature m_signature = 0;
     std::string m_name;
-
     Timing m_timing;
 
 public:
-    System (Game &game, std::string name) : m_pgame(game), m_name(name) { }
-    virtual ~System() { };
+    System (Game &game, std::string name);
+    virtual ~System();
     void update_timed(double dT);
-    bool has_valid_signature(const Entity &entity){ return entity.contains_signature(m_signature); }
+    bool has_valid_signature(const Entity &entity);
 
     virtual void init() = 0;
     virtual void update(double dT) = 0;
 
-    std::string get_name() { return m_name; }
-    Timing get_timing() { return m_timing; }
+    std::string get_name();
+    Timing get_timing();
 };

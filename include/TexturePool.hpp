@@ -2,17 +2,15 @@
 
 #include <string>
 #include <unordered_map>
-
 #include "MTexture.hpp"
-#include "Renderer.hpp"
 
+class Renderer;
 class TexturePool{
 
     std::unordered_map<std::string, MTexture> m_texturepool;
     Renderer &m_pRenderer;
 
 public:
-
     TexturePool(Renderer &renderer);
 
     bool is_texture_in_pool(std::string path);

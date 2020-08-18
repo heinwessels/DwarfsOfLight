@@ -1,7 +1,11 @@
 #include "Application.hpp"
 
+#include "SDL2/SDL_timer.h"
+#include <unistd.h>
+#include <chrono>
+
 Application::Application()
-    : m_game(Game())
+    : m_game()
 {
 }
 

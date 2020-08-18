@@ -1,16 +1,9 @@
 #pragma once
 
-#include <vector>
-#include <stdio.h>
-
 #include "Vec2.hpp"
-
 #include "System.hpp"
-#include "CollisionSystem.hpp"
 
-#include "TransformComponent.hpp"
-#include "CollisionBoxComponent.hpp"
-
+class CollisionBox;
 class Game;
 class CollisionSystem : public System {
 

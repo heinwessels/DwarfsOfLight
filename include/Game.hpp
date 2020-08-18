@@ -1,29 +1,18 @@
-#include "RenderSystem.hpp"
-#include "InputSystem.hpp"
-#include "MovementSystem.hpp"
-#include "CollisionSystem.hpp"
-#include "LightSystem.hpp"
-#include "PathfindingSystem.hpp"
-#include "AISystem.hpp"
-
 #pragma once
 
+#include <memory>
 #include <vector>
 
-#include "Timing.hpp"
-#include "Entity.hpp"
-#include "World.hpp"
-
-#include "Dwarf.hpp"
-#include "Goblin.hpp"
-#include "Tile.hpp"
-
+class World;
+class Entity;
+class System;
+class RenderSystem;
 class Game{
     // This is the main manager of the game.
 
     int screen_width = 1280, screen_height = 740;
 
-    World m_world;
+    std::unique_ptr<World> m_pWorld;
     std::vector<std::unique_ptr<System>> m_systems;
     std::vector<Entity*> m_entities;
 
@@ -38,11 +27,11 @@ public:
     ~Game();
     bool update(double dT);
 
-    std::vector<Entity*> &get_entities() { return m_entities; }
-    World& get_world() {return m_world; }
-    RenderSystem& get_render_system() { return *m_rendersystem; }   // For debugging stuff
+    std::vector<Entity*> &get_entities();
+    World& get_world();
+    RenderSystem& get_render_system();
 
-    void quit(){m_state = e_quit;}
+    void quit();
 
 private:
     void load_systems();

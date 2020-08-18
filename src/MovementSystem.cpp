@@ -1,6 +1,9 @@
 #include "MovementSystem.hpp"
 #include "Game.hpp"
 
+#include "Entity.hpp"
+#include "TransformComponent.hpp"
+
 MovementSystem::MovementSystem(Game &game)
     :   System(game, std::string("Moving System"))
 {

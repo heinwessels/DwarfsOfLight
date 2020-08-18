@@ -1,5 +1,10 @@
 #include "InputSystem.hpp"
 #include "Game.hpp"
+#include "Entity.hpp"
+
+#include "RenderSystem.hpp"
+#include "TransformComponent.hpp"
+#include "ControllerComponent.hpp"
 
 InputSystem::InputSystem(Game &game, RenderSystem &render_sytem)
     :   System(game, std::string("Input System")),

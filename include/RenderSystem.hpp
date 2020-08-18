@@ -1,5 +1,8 @@
 #pragma once
 
+#include "System.hpp"
+
+#include <memory>
 #include <vector>
 #include <string>
 
@@ -11,26 +14,23 @@
 #include "Camera.hpp"
 #include "TexturePool.hpp"
 
-#include "System.hpp"
-#include "Entity.hpp"
-#include "Renderable.hpp"
-
+class Renderable;
 class Game;
 class RenderSystem : public System{
 
-    Renderer m_Renderer;
-    Camera m_camera;
-    TexturePool m_texturepool;
+    std::unique_ptr<Renderer> m_pRenderer;
+    std::unique_ptr<Camera> m_pCamera;
+    std::unique_ptr<TexturePool> m_pTexturepool;
 
 public:
     RenderSystem(Game &game, int width, int height);
-    std::vector<SDL_Event> get_input_events() { return m_Renderer.get_input_events(); }
+    std::vector<SDL_Event> get_input_events();
 
     virtual void init() override;
     virtual void update(double dT) override;
 
-    void set_camera_zoom(double zoom) { m_camera.set_zoom(zoom); }
-    void set_camera_target(Vec2 *target) { m_camera.set_target(target); }
+    void set_camera_zoom(double zoom);
+    void set_camera_target(Vec2 *target);
 
 private:
     void draw_renderable(double x, double y, Renderable &renderable);

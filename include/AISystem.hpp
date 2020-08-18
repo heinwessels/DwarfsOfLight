@@ -2,11 +2,6 @@
 
 #include "System.hpp"
 
-#include "Vec2.hpp"
-
-#include "TransformComponent.hpp"
-#include "CollisionBoxComponent.hpp"
-
 class Game;
 class AISystem : public System {
 

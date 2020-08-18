@@ -5,10 +5,9 @@
 #include <string>
 
 #include "Vec2.hpp"
-
 #include "Types.hpp"
-#include "Component.hpp"
 
+class Component;
 class Entity{
 
     bool m_is_alive = true; // To trigger deletion by game
@@ -21,12 +20,12 @@ class Entity{
     std::string m_name;     // This is only for debugging purposes
 
 public:
-    Entity(std::string name) { m_name = name; }
-    bool contains_signature (ComponentListSignature signature) const {return (m_signature & signature) == signature;}
-    Component& get_component(ComponentID component_id){return *m_pComponents[component_id];}
-    bool has_component(ComponentID component_id) const { return m_signature & Component::get_component_signature(component_id); }
+    Entity(std::string name);
+    bool contains_signature (ComponentListSignature signature) const;
+    Component& get_component(ComponentID component_id);
+    bool has_component(ComponentID component_id) const;
 
-    bool is_still_alive(){ return m_is_alive; }
+    bool is_still_alive();
 
 protected:
     void add_component(std::unique_ptr<Component> component);

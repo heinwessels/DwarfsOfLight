@@ -1,9 +1,7 @@
 #pragma once
 
 #include <vector>
-
 #include "System.hpp"
-#include "TransformComponent.hpp"
 
 class Game;
 class MovementSystem : public System {
