@@ -26,15 +26,16 @@ void AISystem::update(double dT){
 }
 
 void AISystem::handle_entity_ai(Entity& entity){
+    // TODO This is probably temporary
+
     // TransformComponent &transform = static_cast<TransformComponent&>(entity.get_component(TransformComponentID));
     PathfindingComponent &pathfinding = static_cast<PathfindingComponent&>(entity.get_component(PathfindingComponentID));
     AIComponent &ai = static_cast<AIComponent&>(entity.get_component(AIComponentID));
 
-
     auto &world = m_pgame.get_world();
 
     if(ai.get_mode() == AIComponent::ModeWandering &&
-        !(pathfinding.is_path_requested() || pathfinding.is_moving_to_target())
+        !(pathfinding.path_requested || pathfinding.moving_to_target)
     ){
         // Wonder randomly to some location
 
@@ -51,6 +52,7 @@ void AISystem::handle_entity_ai(Entity& entity){
         }
 
         // Set this entity to move there
-        pathfinding.go_to_target(target + 0.5);
+        pathfinding.target = target + 0.5;
+        pathfinding.path_requested = true;
     }
 }

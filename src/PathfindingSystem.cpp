@@ -23,10 +23,10 @@ void PathfindingSystem::update(double dT){
             TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
             PathfindingComponent &pathfinding = static_cast<PathfindingComponent&>(entity->get_component(PathfindingComponentID));
 
-            if (pathfinding.is_path_requested()){
+            if (pathfinding.path_requested){
                 handle_pathfinding(transform, pathfinding);
             }
-            if (pathfinding.is_moving_to_target()){
+            if (pathfinding.moving_to_target){
                 handle_waypoint(transform, pathfinding);
             }
         }
@@ -36,7 +36,7 @@ void PathfindingSystem::update(double dT){
 void PathfindingSystem::handle_waypoint(TransformComponent &transform, PathfindingComponent &pathfinding){
 
     // This is the next point we are aiming for
-    Vec2 next_waypoint = pathfinding.get_waypoints().front();
+    Vec2 next_waypoint = pathfinding.waypoints.front();
 
     // How far are we from there
     Vec2 distance_to_target = next_waypoint - transform.position;
@@ -46,20 +46,19 @@ void PathfindingSystem::handle_waypoint(TransformComponent &transform, Pathfindi
         // We've reached this waypoint
 
         // Remove this waypoint
-        pathfinding.get_waypoints().pop_front();
+        pathfinding.waypoints.pop_front();
 
         // If there's another one, follow. If not, stop moving
-        if (pathfinding.get_waypoints().empty()){
+        if (pathfinding.waypoints.empty()){
             // We reached the target
-            pathfinding.reached_target();
+            pathfinding.moving_to_target = false;
 
             // Stop this function
             return;
         }
         else{
             // Point towards the next one
-
-            next_waypoint = pathfinding.get_waypoints().front();
+            next_waypoint = pathfinding.waypoints.front();
         }
     }
 
@@ -75,17 +74,17 @@ void PathfindingSystem::handle_pathfinding(TransformComponent &transform, Pathfi
     // Attempt pathfinding
     if(astar_search(
         transform.position,
-        pathfinding.get_target(),
-        pathfinding.get_waypoints()
+        pathfinding.target,
+        pathfinding.waypoints
     ))  // This will set the path
     {
         // If it was successful. Follow them!
-        pathfinding.start_following_waypoints();
+        pathfinding.moving_to_target = true;
     }
 
     // Send the path to the component
     // If it was unsuccessful, it will only clear the request
-    pathfinding.clear_pathing_request();
+    pathfinding.path_requested = false;
 }
 
 bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::list<Vec2> &waypoints){
