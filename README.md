@@ -68,11 +68,11 @@ It should also be noted that my implemented architecture is not ideal. Ideally y
 - **Compile Time**: With [this commit](https://github.com/heinwessels/DwarfsOfLight/commit/acd40b6cc2276150c46059bfbf930e58789daf1e) I decreased the compile time from almost **22** seconds to almost **14** seconds. I did this by using `forward declarations` where possible (sometimes forcing it by changing to pointers), and if possible only placing `#includes`s in `.cpp` files. At the start of the project I did not know of the effect of `#includes`, but it has a massive effect on development time, and would have gotten worse the larger the project becomes.
 - **Using Templates to Reduce Errors:** Changed the `entity`to use **templates** when working `components` (instead of `ID`). This not only does more processing at compile time, but removes a possible user error. With the old method it was easy to `static_cast` the pointer to a *invalid* class with no compile or runtime errors. Below is an examples of how this improved the coding style to be more secure, and eliminates the knowledge of `IDs` from the user:
   - **Before**:
-    - `this->add_component(std::make_unique<TransformComponent>(Vec2(x, y)))`
-    - `static_cast<TransformComponent&>(entity.get_component(TransformComponentID))`
+    - create: `this->add_component(std::make_unique<TransformComponent>(Vec2(x, y)))`
+    - get: `static_cast<TransformComponent&>(entity.get_component(TransformComponentID))`
   - **After**:
-    - `this->add_component<TransformComponent>(Vec2(x, y))`
-    - `entity.get_component<TransformComponent>()`
+    - create: `this->add_component<TransformComponent>(Vec2(x, y))`
+    - get: `entity.get_component<TransformComponent>()`
 
 - **Collisions:** Designing a collision system for ECS isn't straight forward, seeing as different systems should be isolated. For example, an entity can have a `CollisionBox`-component. But where should it check collisions? If it's checked while moving it should be done in the `MovementSystem`, but then the `MovementSystem` will dependent on `CollisionBox` as well and not all entities that move will have a `CollisionBox`. Also, it will result in a `O(n^2)` instead of the possible `0.5*O(n^2)`. Therefore I have a `CollisionSystem` that executes *after* the `MovementSystem`. If a CollisionBox collides with another by overlapping, the system will move them apart again (using the shortest distance in one direction).
 - **Storage of Entities, Components and Systems**:
