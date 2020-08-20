@@ -32,8 +32,8 @@ void InputSystem::update(double dT){
             if(has_valid_signature(*entity)){
 
                 // This entity should be moved by this controller
-                TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
-                ControllerComponent &controller = static_cast<ControllerComponent&>(entity->get_component(ControllerComponentID));
+                TransformComponent &transform = entity->get_component<TransformComponent>();
+                ControllerComponent &controller = entity->get_component<ControllerComponent>();
 
                 handle_entity_movement(event, transform, controller);
             }

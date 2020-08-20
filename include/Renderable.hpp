@@ -17,9 +17,11 @@ class Renderable : public Component{
     bool m_hide = false;
 
 public:
+    static constexpr ComponentID ID = RenderComponentID;
+
     double width = 0, height = 0;
     Renderable (std::string texture_path, double width, double height, int texture_rows, int texture_columns, int texture_index_x, int texture_index_y)
-            : Component(RenderComponentID),
+            : Component(ID),
             m_texture_path(texture_path),
             m_texture_rows(texture_rows), m_texture_columns(texture_columns),
             m_texture_index_x(texture_index_x), m_texture_index_y(texture_index_y),

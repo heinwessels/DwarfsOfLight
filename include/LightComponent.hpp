@@ -5,6 +5,8 @@
 
 class LightComponent : public Component{
 public:
+    static constexpr ComponentID ID = LightComponentID;
+
     MColour base_colour;
     MColour current_colour;
 
@@ -17,7 +19,7 @@ public:
     double range;  // How far does this light shine?
 
     LightComponent(MColour base_colour, MColour colour_variation, double period, double range)
-        : Component(LightComponentID),
+        : Component(ID),
         base_colour(base_colour),
         current_colour(base_colour),
 

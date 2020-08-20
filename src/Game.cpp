@@ -28,11 +28,11 @@ Game::Game(){
     ////////////////////////////////////////////////
 
     m_entities.push_back(new Dwarf(7, 7));
-    TransformComponent &positional = static_cast<TransformComponent&>(m_entities.back()->get_component(TransformComponentID));
+    TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     m_rendersystem->set_camera_target(&positional.position);
     // m_rendersystem->set_camera_zoom(40);
     m_entities.push_back(new Goblin(20.255, 14.475));
-    // TransformComponent &positional = static_cast<TransformComponent&>(m_entities.back()->get_component(TransformComponentID));
+    // TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     // m_rendersystem->set_camera_target(&positional.position);
     m_rendersystem->set_camera_zoom(30);
 

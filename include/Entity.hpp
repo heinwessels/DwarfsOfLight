@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 
+#include "Component.hpp"
 #include "Vec2.hpp"
 #include "Types.hpp"
 
@@ -22,8 +23,13 @@ class Entity{
 public:
     Entity(std::string name);
     bool contains_signature (ComponentListSignature signature) const;
-    Component& get_component(ComponentID component_id);
-    bool has_component(ComponentID component_id) const;
+
+    template <class CompType> CompType& get_component(){
+        return static_cast<CompType&>(*m_pComponents[CompType::ID]);
+    };
+    template <class CompType> bool has_component() const{
+        return m_signature & Component::get_component_signature(CompType::ID);
+    };
 
     bool is_still_alive();
 

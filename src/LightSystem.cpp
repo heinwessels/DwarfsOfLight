@@ -31,10 +31,11 @@ void LightSystem::add_lighting_to_world(){
 
     for (auto & column : m_pgame.get_world().get_tiles()){
         for (auto & tile : column){
-            if (tile.has_component(RenderComponentID)){
+            if (tile.has_component<Renderable>()){
 
-                TransformComponent &transform = static_cast<TransformComponent&>(tile.get_component(TransformComponentID));
-                Renderable &renderable = static_cast<Renderable&>(tile.get_component(RenderComponentID));
+                TransformComponent &transform = tile.get_component<TransformComponent>();
+                Renderable &renderable = tile.get_component<Renderable>();
+
                 renderable.set_colour_mod(
                     lightmap.get_lighting_at(transform.position)
                 );
@@ -48,9 +49,9 @@ void LightSystem::add_lighting_to_entities(){
     LightMap& lightmap = m_pgame.get_world().get_light_map();
 
     for(auto const &entity : m_pgame.get_entities()){
-        if (entity->has_component(RenderComponentID)){
-            TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
-            Renderable &renderable = static_cast<Renderable&>(entity->get_component(RenderComponentID));
+        if (entity->has_component<Renderable>()){
+            TransformComponent &transform = entity->get_component<TransformComponent>();
+            Renderable &renderable = entity->get_component<Renderable>();
             renderable.set_colour_mod(
                 lightmap.get_lighting_at(transform.position)
             );
@@ -67,8 +68,8 @@ void LightSystem::populate_lightmap(){
     LightMap new_lightmap = LightMap(lightmap.get_width(), lightmap.get_height());
     for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
-            TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
-            LightComponent &light = static_cast<LightComponent&>(entity->get_component(LightComponentID));
+            TransformComponent &transform = entity->get_component<TransformComponent>();
+            LightComponent &light = entity->get_component<LightComponent>();
 
             // Calculate the lightmap of this lightsource
             new_lightmap.zero();
@@ -85,7 +86,7 @@ void LightSystem::update_all_lightsources(double dT){
     for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
-            LightComponent &light = static_cast<LightComponent&>(entity->get_component(LightComponentID));
+            LightComponent &light = entity->get_component<LightComponent>();
             update_lightsource(light, dT);
         }
     }

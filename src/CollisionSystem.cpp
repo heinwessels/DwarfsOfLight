@@ -25,17 +25,17 @@ void CollisionSystem::check_collision_with_world(){
         if(has_valid_signature(**entity)){
             // For each entity with a collision box
 
-            TransformComponent &a_transform = static_cast<TransformComponent&>((*entity)->get_component(TransformComponentID));
-            CollisionBox &a_box = static_cast<CollisionBox&>((*entity)->get_component(CollisionBoxComponentID));
+            TransformComponent &a_transform = (*entity)->get_component<TransformComponent>();;
+            CollisionBox &a_box = (*entity)->get_component<CollisionBox>();;
 
             // Get the closest world tile with a collision component
-            Tile *closest_tile = m_pgame.get_world().get_closest_tile_in_range_with_component(
-                a_transform.position, Vec2(a_box.width, a_box.height), CollisionBoxComponentID
+            Tile *closest_tile = get_closest_tile_in_range_with_collisionbox(
+                a_transform.position, Vec2(a_box.width, a_box.height)
             );
             if (closest_tile != nullptr){
 
-                TransformComponent &tile_transform = static_cast<TransformComponent&>(closest_tile->get_component(TransformComponentID));
-                CollisionBox &tile_box = static_cast<CollisionBox&>(closest_tile->get_component(CollisionBoxComponentID));
+                TransformComponent &tile_transform = closest_tile->get_component<TransformComponent>();;
+                CollisionBox &tile_box = closest_tile->get_component<CollisionBox>();;
 
                 repel_if_collision(
                     a_transform.position, a_box,
@@ -54,11 +54,11 @@ void CollisionSystem::check_collision_with_entities(){
             for( auto b = a + 1; b != entities.end(); b++ ){
                 if(has_valid_signature(**b)){
 
-                    TransformComponent &a_transform = static_cast<TransformComponent&>((*a)->get_component(TransformComponentID));
-                    TransformComponent &b_transform = static_cast<TransformComponent&>((*b)->get_component(TransformComponentID));
+                    TransformComponent &a_transform = (*a)->get_component<TransformComponent>();
+                    TransformComponent &b_transform = (*b)->get_component<TransformComponent>();
 
-                    CollisionBox &a_box = static_cast<CollisionBox&>((*a)->get_component(CollisionBoxComponentID));
-                    CollisionBox &b_box = static_cast<CollisionBox&>((*b)->get_component(CollisionBoxComponentID));
+                    CollisionBox &a_box = (*a)->get_component<CollisionBox>();
+                    CollisionBox &b_box = (*b)->get_component<CollisionBox>();
 
                     repel_if_collision(
                         a_transform.position, a_box,
@@ -123,4 +123,33 @@ Vec2 CollisionSystem::get_shortest_distance_resolve_conflict(
     Vec2 r = b - a;
     Vec2 u = {r.x > 0.0f ? 1.0f : -1.0f, r.y > 0.0f ? 1.0f : -1.0f};
     return (b - (u * b_size * 0.5f)) - (a + (u * a_size * 0.5f));
+}
+
+
+Tile* CollisionSystem::get_closest_tile_in_range_with_collisionbox(Vec2 point, Vec2 range){
+    // <range> is size of square around <point>
+    // Returns <nullptr> if none found.
+
+    auto &tiles = m_pgame.get_world().get_tiles();
+
+    Tile* closest_tile = nullptr; // Empty tile
+    double closest_distance_sq = 1e8;
+    Vec2 bottom_left = point - range / 2;
+    Vec2 top_right = point + range / 2;
+    for (int x = floor(bottom_left.x); x <= ceil(top_right.x); x ++){
+        for (int y = floor(bottom_left.y); y <= ceil(top_right.y); y ++){
+
+            if(tiles[x][y].has_component<CollisionBox>()){
+
+                double dist_sq = Vec2::dist_sq(point, Vec2(x+0.5, y+0.5));
+
+                if(dist_sq < closest_distance_sq){
+                    closest_distance_sq = dist_sq;
+                    closest_tile = &tiles[x][y];
+                }
+            }
+        }
+    }
+
+    return closest_tile;
 }

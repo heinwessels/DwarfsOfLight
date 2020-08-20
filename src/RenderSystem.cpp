@@ -38,8 +38,8 @@ void RenderSystem::update_entities(){
     for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
-            TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
-            Renderable &renderable = static_cast<Renderable&>(entity->get_component(RenderComponentID));
+            TransformComponent &transform = entity->get_component<TransformComponent>();
+            Renderable &renderable = entity->get_component<Renderable>();
 
             draw_renderable(transform.position.x, transform.position.y, renderable);
         }
@@ -50,10 +50,10 @@ void RenderSystem::update_world(){
 
     for(auto &column : m_pgame.get_world().get_tiles()){
         for (auto &tile : column){
-            if (tile.has_component(RenderComponentID)){
+            if (tile.has_component<Renderable>()){
 
-                TransformComponent &transform = static_cast<TransformComponent&>(tile.get_component(TransformComponentID));
-                Renderable &renderable = static_cast<Renderable&>(tile.get_component(RenderComponentID));
+                TransformComponent &transform = tile.get_component<TransformComponent>();
+                Renderable &renderable = tile.get_component<Renderable>();
 
                 draw_renderable(transform.position.x, transform.position.y, renderable);
             }
@@ -100,14 +100,14 @@ void RenderSystem::draw_renderable(double x, double y, Renderable &renderable){
 void RenderSystem::load_all_textures(){
     for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
-            Renderable &renderable = static_cast<Renderable&>(entity->get_component(RenderComponentID));
+            Renderable &renderable = entity->get_component<Renderable>();
             load_texture_if_not_loaded(renderable);
         }
     }
     for(auto &column : m_pgame.get_world().get_tiles()){
         for (auto &tile : column){
-            if (tile.has_component(RenderComponentID)){
-                Renderable &renderable = static_cast<Renderable&>(tile.get_component(RenderComponentID));
+            if (tile.has_component<Renderable>()){
+                Renderable &renderable = tile.get_component<Renderable>();
                 load_texture_if_not_loaded(renderable);
             }
         }

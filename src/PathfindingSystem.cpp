@@ -3,6 +3,7 @@
 #include "PathfindingSystem.hpp"
 #include "Game.hpp"
 #include "World.hpp"
+#include "Entity.hpp"
 
 #include <queue>
 
@@ -20,8 +21,8 @@ void PathfindingSystem::update(double dT){
     for(auto const entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
-            TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
-            PathfindingComponent &pathfinding = static_cast<PathfindingComponent&>(entity->get_component(PathfindingComponentID));
+            TransformComponent &transform = entity->get_component<TransformComponent>();
+            PathfindingComponent &pathfinding = entity->get_component<PathfindingComponent>();
 
             if (pathfinding.path_requested){
                 handle_pathfinding(transform, pathfinding);

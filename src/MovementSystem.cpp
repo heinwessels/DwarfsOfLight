@@ -14,7 +14,7 @@ void MovementSystem::update(double dT){
     for(auto const entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
-            TransformComponent &transform = static_cast<TransformComponent&>(entity->get_component(TransformComponentID));
+            TransformComponent &transform = entity->get_component<TransformComponent>();
 
             transform.position += transform.speed * dT;
         }

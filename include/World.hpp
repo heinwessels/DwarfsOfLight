@@ -25,7 +25,6 @@ public:
 
     std::vector<std::vector<Tile>>& get_tiles();
     Tile& get_closest_tile_to(Vec2 point);
-    Tile* get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, ComponentID component_ID);
 
     LightMap& get_light_map();
     void set_global_lighting(MColour global_lighting);

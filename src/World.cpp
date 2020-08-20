@@ -64,32 +64,6 @@ void World::add_tile_at(int x, int y, Tile::Type type) {
     );  // + 0.5 to center the tile in the middle of the grid.
 }
 
-Tile* World::get_closest_tile_in_range_with_component(Vec2 point, Vec2 range, ComponentID component_ID){
-    // <range> is size of square around <point>
-    // Returns <nullptr> if none found.
-
-    Tile* closest_tile = nullptr; // Empty tile
-    double closest_distance_sq = 1e8;
-    Vec2 bottom_left = point - range / 2;
-    Vec2 top_right = point + range / 2;
-    for (int x = floor(bottom_left.x); x <= ceil(top_right.x); x ++){
-        for (int y = floor(bottom_left.y); y <= ceil(top_right.y); y ++){
-
-            if(m_world[x][y].has_component(component_ID)){
-
-                double dist_sq = Vec2::dist_sq(point, Vec2(x+0.5, y+0.5));
-
-                if(dist_sq < closest_distance_sq){
-                    closest_distance_sq = dist_sq;
-                    closest_tile = &m_world[x][y];
-                }
-            }
-        }
-    }
-
-    return closest_tile;
-}
-
 void World::clear(){
     for (auto & column : m_world){
         column.clear();

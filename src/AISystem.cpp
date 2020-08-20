@@ -29,8 +29,8 @@ void AISystem::handle_entity_ai(Entity& entity){
     // TODO This is probably temporary
 
     // TransformComponent &transform = static_cast<TransformComponent&>(entity.get_component(TransformComponentID));
-    PathfindingComponent &pathfinding = static_cast<PathfindingComponent&>(entity.get_component(PathfindingComponentID));
-    AIComponent &ai = static_cast<AIComponent&>(entity.get_component(AIComponentID));
+    PathfindingComponent &pathfinding = entity.get_component<PathfindingComponent>();
+    AIComponent &ai = entity.get_component<AIComponent>();
 
     auto &world = m_pgame.get_world();
 
