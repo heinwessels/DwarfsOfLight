@@ -7,7 +7,7 @@
 MovementSystem::MovementSystem(Game &game)
     :   System(game, std::string("Moving System"))
 {
-    m_signature |= Component::get_component_signature(TransformComponentID);
+    m_signature |= Component::get_component_signature<TransformComponent>();
 }
 
 void MovementSystem::update(double dT){

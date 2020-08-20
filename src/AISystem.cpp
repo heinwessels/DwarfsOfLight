@@ -12,9 +12,9 @@
 AISystem::AISystem(Game& game)
     : System(game, std::string("AI System"))
 {
-    m_signature |= Component::get_component_signature(TransformComponentID);
-    m_signature |= Component::get_component_signature(PathfindingComponentID);
-    m_signature |= Component::get_component_signature(AIComponentID);
+    m_signature |= Component::get_component_signature<TransformComponent>();
+    m_signature |= Component::get_component_signature<PathfindingComponent>();
+    m_signature |= Component::get_component_signature<AIComponent>();
 }
 
 void AISystem::update(double dT){

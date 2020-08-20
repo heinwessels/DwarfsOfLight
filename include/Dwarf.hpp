@@ -20,13 +20,10 @@ private:
 
 public:
     Dwarf(double x, double y) : Entity("Dwarf") {
-        this->add_component(std::make_unique<TransformComponent>(Vec2(x, y)));
-        this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
-        this->add_component(std::make_unique<ControllerComponent>(5));
-        this->add_component(std::make_unique<CollisionBox>(width, height));
-        this->add_component(std::make_unique<LightComponent>(
-            // MColour(230, 150, 0), MColour(20, 50, 0), 1, 10
-            MColour(230, 180, 180), MColour(20, 20, 0), 1, 20
-        ));
+        this->add_component<TransformComponent>(Vec2(x, y));
+        this->add_component<Renderable>(m_texture_path, width, height);
+        this->add_component<ControllerComponent>(5);
+        this->add_component<CollisionBox>(width, height);
+        this->add_component<LightComponent>(MColour(230, 180, 180), MColour(20, 20, 0), 1, 20);
     }
 };

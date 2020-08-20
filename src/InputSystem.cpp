@@ -10,8 +10,8 @@ InputSystem::InputSystem(Game &game, RenderSystem &render_sytem)
     :   System(game, std::string("Input System")),
         m_pRender_system(render_sytem)
 {
-    m_signature |= Component::get_component_signature(ControllerComponentID);
-    m_signature |= Component::get_component_signature(TransformComponentID);
+    m_signature |= Component::get_component_signature<ControllerComponent>();
+    m_signature |= Component::get_component_signature<TransformComponent>();
 }
 
 void InputSystem::update(double dT){

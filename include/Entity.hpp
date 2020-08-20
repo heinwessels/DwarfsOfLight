@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <memory>
+#include <utility>
 #include <string>
 
 #include "Component.hpp"
@@ -28,11 +29,21 @@ public:
         return static_cast<CompType&>(*m_pComponents[CompType::ID]);
     };
     template <class CompType> bool has_component() const{
-        return m_signature & Component::get_component_signature(CompType::ID);
+        return m_signature & Component::get_component_signature<CompType>();
     };
 
     bool is_still_alive();
 
 protected:
-    void add_component(std::unique_ptr<Component> component);
+    template <class CompType, class... CompArgs>
+    void add_component(CompArgs&&... arg){
+        this->m_signature |= Component::get_component_signature<CompType>();
+
+        m_pComponents.emplace(
+            CompType::ID,
+            std::make_unique<CompType>(
+                std::forward<CompArgs>(arg)...
+            )
+        );
+    }
 };

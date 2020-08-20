@@ -11,8 +11,8 @@ RenderSystem::RenderSystem(Game &game, int width, int height)
     m_pCamera(std::make_unique<Camera>(Vec2(0, 0), 32, Vec2(width, height))),
     m_pTexturepool(std::make_unique<TexturePool>(*m_pRenderer))
 {
-    m_signature |= Component::get_component_signature(TransformComponentID);
-    m_signature |= Component::get_component_signature(RenderComponentID);
+    m_signature |= Component::get_component_signature<TransformComponent>();
+    m_signature |= Component::get_component_signature<Renderable>();
 }
 
 void RenderSystem::init(){

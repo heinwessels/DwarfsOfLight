@@ -13,8 +13,8 @@
 PathfindingSystem::PathfindingSystem(Game &game)
     :   System(game, std::string("Pathfinding System"))
 {
-    m_signature |= Component::get_component_signature(TransformComponentID);
-    m_signature |= Component::get_component_signature(PathfindingComponentID);
+    m_signature |= Component::get_component_signature<TransformComponent>();
+    m_signature |= Component::get_component_signature<PathfindingComponent>();
 }
 
 void PathfindingSystem::update(double dT){

@@ -9,8 +9,8 @@
 CollisionSystem::CollisionSystem(Game &game)
     : System(game, std::string("Collision System"))
 {
-    m_signature |= Component::get_component_signature(TransformComponentID);
-    m_signature |= Component::get_component_signature(CollisionBoxComponentID);
+    m_signature |= Component::get_component_signature<TransformComponent>();
+    m_signature |= Component::get_component_signature<CollisionBox>();
 }
 
 void CollisionSystem::update(double dT){

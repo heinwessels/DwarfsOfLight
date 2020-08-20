@@ -22,22 +22,22 @@ Below is a UML Class Diagram of how I layed out my ECS architecture:
 Here is an example of how simple it is to define a `Dwarf` with this architecture:
 
 ```
+// Some includes...
+
 class Dwarf : public Entity{
 
 private:
-    double width = 1;
-    double height = 1;
-    std::string m_texture_path = "textures/dwarf.png";
+    double width = 1.5;
+    double height = 1.5;
+    std::string m_texture_path = "textures/dwarf2.jpg";
 
 public:
-    Dwarf(double x, double y) : Entity(Vec2 (x, y)) {
-        this->add_component(std::make_unique<TransformComponent>(Vec2(0.0f, 0.0f)));
-        this->add_component(std::make_unique<Renderable>(m_texture_path, width, height));
-        this->add_component(std::make_unique<ControllerComponent>(5));
-        this->add_component(std::make_unique<CollisionBox>(width, height));
-        this->add_component(std::make_unique<LightComponent>(
-            MColour(200, 50, 0), MColour(10, 10, 10), 0.1, 10
-        ));
+    Dwarf(double x, double y) : Entity("Dwarf") {
+        this->add_component<TransformComponent>(Vec2(x, y));
+        this->add_component<Renderable>(m_texture_path, width, height);
+        this->add_component<ControllerComponent>(5);
+        this->add_component<CollisionBox>(width, height);
+        this->add_component<LightComponent>(MColour(230, 180, 180), MColour(20, 20, 0), 1, 20);
     }
 };
 ```
@@ -66,9 +66,14 @@ It should also be noted that my implemented architecture is not ideal. Ideally y
   - `System.h` forward declares `Game.h` above the header definition.
   - In the `System.cpp` source file `#include "Game.h"` right below the `#include "System.h`.
 - **Compile Time**: With [this commit](https://github.com/heinwessels/DwarfsOfLight/commit/acd40b6cc2276150c46059bfbf930e58789daf1e) I decreased the compile time from almost **22** seconds to almost **14** seconds. I did this by using `forward declarations` where possible (sometimes forcing it by changing to pointers), and if possible only placing `#includes`s in `.cpp` files. At the start of the project I did not know of the effect of `#includes`, but it has a massive effect on development time, and would have gotten worse the larger the project becomes.
-- **Using Templates to Reduce Errors:** Changed the `entity`'s function that returns a specific `component` to use **templates** instead of IDs. With the old method it was easy to `static_cast` the pointer to a *invalid* class with no compile or runtime errors. Using a template completely circumvents this issue, and now there is no room for error. Below is an use case of this function before and after this update:
-  - `static_cast<TransformComponent&>(entity.get_component(TransformComponentID));`
-  - `entity.get_component<TransformComponent>();`
+- **Using Templates to Reduce Errors:** Changed the `entity`to use **templates** when working `components` (instead of `ID`). This not only does more processing at compile time, but removes a possible user error. With the old method it was easy to `static_cast` the pointer to a *invalid* class with no compile or runtime errors. Below is an examples of how this improved the coding style to be more secure, and eliminates the knowledge of `IDs` from the user:
+  - **Before**:
+    - `this->add_component(std::make_unique<TransformComponent>(Vec2(x, y)))`
+    - `static_cast<TransformComponent&>(entity.get_component(TransformComponentID))`
+  - **After**:
+    - `this->add_component<TransformComponent>(Vec2(x, y))`
+    - `entity.get_component<TransformComponent>()`
+
 - **Collisions:** Designing a collision system for ECS isn't straight forward, seeing as different systems should be isolated. For example, an entity can have a `CollisionBox`-component. But where should it check collisions? If it's checked while moving it should be done in the `MovementSystem`, but then the `MovementSystem` will dependent on `CollisionBox` as well and not all entities that move will have a `CollisionBox`. Also, it will result in a `O(n^2)` instead of the possible `0.5*O(n^2)`. Therefore I have a `CollisionSystem` that executes *after* the `MovementSystem`. If a CollisionBox collides with another by overlapping, the system will move them apart again (using the shortest distance in one direction).
 - **Storage of Entities, Components and Systems**:
   - **Entities** will be stored in a `std::list` in the `Game` class. This is good for random inserting, deleting and sorting. `Entities` will almost never be randomly accessed, and will typically be looped through with `iterators`, which is still fast. A possible downside is caching since the data won't be stored serially. However, the `Entity` only contains pointers to `components` (see next point), so it's already not great for caching. This list will also be sorted during rendering (for rendering order), which is very fast with `std::list` since it only changes pointers.

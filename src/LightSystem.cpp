@@ -12,8 +12,8 @@
 LightSystem::LightSystem(Game &game)
     :   System(game, std::string("Lighting System"))
 {
-    m_signature |= Component::get_component_signature(TransformComponentID);
-    m_signature |= Component::get_component_signature(LightComponentID);
+    m_signature |= Component::get_component_signature<TransformComponent>();
+    m_signature |= Component::get_component_signature<LightComponent>();
 }
 
 void LightSystem::update(double dT){
