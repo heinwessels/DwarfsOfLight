@@ -8,12 +8,14 @@
 #include <queue>
 
 #include "TransformComponent.hpp"
+#include "MoveComponent.hpp"
 #include "PathfindingComponent.hpp"
 
 PathfindingSystem::PathfindingSystem(Game &game)
     :   System(game, std::string("Pathfinding System"))
 {
     m_signature |= Component::get_component_signature<TransformComponent>();
+    m_signature |= Component::get_component_signature<MoveComponent>();
     m_signature |= Component::get_component_signature<PathfindingComponent>();
 }
 
@@ -24,17 +26,21 @@ void PathfindingSystem::update(double dT){
             TransformComponent &transform = entity->get_component<TransformComponent>();
             PathfindingComponent &pathfinding = entity->get_component<PathfindingComponent>();
 
+            // Do path finding calculation
             if (pathfinding.path_requested){
                 handle_pathfinding(transform, pathfinding);
             }
+
+            // Handle following of waypoints
             if (pathfinding.moving_to_target){
-                handle_waypoint(transform, pathfinding);
+                MoveComponent &move = entity->get_component<MoveComponent>();
+                handle_waypoint(transform, move, pathfinding);
             }
         }
     }
 }
 
-void PathfindingSystem::handle_waypoint(TransformComponent &transform, PathfindingComponent &pathfinding){
+void PathfindingSystem::handle_waypoint(TransformComponent &transform, MoveComponent &move, PathfindingComponent &pathfinding){
 
     // This is the next point we are aiming for
     Vec2 next_waypoint = pathfinding.waypoints.front();
@@ -43,7 +49,7 @@ void PathfindingSystem::handle_waypoint(TransformComponent &transform, Pathfindi
     Vec2 distance_to_target = next_waypoint - transform.position;
 
     // Are within half a unit of the goal?
-    if(distance_to_target.x*distance_to_target.x + distance_to_target.y*distance_to_target.y < 0.5*0.5){
+    if(distance_to_target.x*distance_to_target.x + distance_to_target.y*distance_to_target.y <= 0.7*0.7){
         // We've reached this waypoint
 
         // Remove this waypoint
@@ -66,7 +72,7 @@ void PathfindingSystem::handle_waypoint(TransformComponent &transform, Pathfindi
     // If we reach here we need to move to the next waypoint
     Vec2 direction = (next_waypoint - transform.position);
     direction /= sqrt(direction.x*direction.x + direction.y*direction.y);
-    transform.speed = direction * 5;    // Hardcoded speed
+    move.target_direction = direction;  // The entity will aim for this direction
 }
 
 void PathfindingSystem::handle_pathfinding(TransformComponent &transform, PathfindingComponent &pathfinding){

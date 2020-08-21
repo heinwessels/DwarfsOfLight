@@ -3,15 +3,15 @@
 #include "Entity.hpp"
 
 #include "RenderSystem.hpp"
-#include "TransformComponent.hpp"
 #include "ControllerComponent.hpp"
+#include "MoveComponent.hpp"
 
 InputSystem::InputSystem(Game &game, RenderSystem &render_sytem)
     :   System(game, std::string("Input System")),
         m_pRender_system(render_sytem)
 {
     m_signature |= Component::get_component_signature<ControllerComponent>();
-    m_signature |= Component::get_component_signature<TransformComponent>();
+    m_signature |= Component::get_component_signature<MoveComponent>();
 }
 
 void InputSystem::update(double dT){
@@ -32,17 +32,17 @@ void InputSystem::update(double dT){
             if(has_valid_signature(*entity)){
 
                 // This entity should be moved by this controller
-                TransformComponent &transform = entity->get_component<TransformComponent>();
+                MoveComponent &move = entity->get_component<MoveComponent>();
                 ControllerComponent &controller = entity->get_component<ControllerComponent>();
 
-                handle_entity_movement(event, transform, controller);
+                handle_entity_movement(event, move, controller);
             }
         }
     }
 }
 
 
-void InputSystem::handle_entity_movement(SDL_Event &event, TransformComponent &move, ControllerComponent &controller){
+void InputSystem::handle_entity_movement(SDL_Event &event, MoveComponent &move, ControllerComponent &controller){
 
     Vec2 direction = {0.0};
 
@@ -102,7 +102,6 @@ void InputSystem::handle_entity_movement(SDL_Event &event, TransformComponent &m
         }
     }
 
-    // Now update speed
-    double magnitude = (direction.x != 0 || direction.y != 0) ? 1 : sqrt(2);
-    move.speed = direction * magnitude * controller.max_speed;
+    // Now update target direction
+    move.target_direction = direction * ((direction.x != 0 || direction.y != 0) ? 1 : 1.0/sqrt(2.0)); // Normalize
 }

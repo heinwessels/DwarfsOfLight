@@ -13,12 +13,15 @@ public:
     Type type;
 
     bool has_target = false;
-    Vec2 target;    // The next point this entity should aim for
+    Vec2 target_direction;    // [unit vector] The direction this entity should aim for
     double speed;
 
-    struct sporadic{
-        double tightness_factor;
-    };
+    // Type specific values
+    struct {
+        Vec2 current_direction = {1, 1};
+        double rotation_speed = 0;
+        double tightness_factor = 3;
+    } sporadic;
 
-    MoveComponent (Type type) : Component(ID), type(type) { }
+    MoveComponent (Type type, double speed) : Component(ID), type(type), speed(speed) { }
 };

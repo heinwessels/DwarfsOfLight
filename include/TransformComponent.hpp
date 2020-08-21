@@ -8,8 +8,6 @@ public:
     static constexpr ComponentID ID = TransformComponentID;
 
     Vec2 position;
-    Vec2 speed;
-    TransformComponent (Vec2 position, Vec2 speed)
-        : Component(ID), position(position), speed(speed) { }
-    TransformComponent (Vec2 position) : TransformComponent(position, Vec2(0, 0)) { };
+    double rotation;
+    TransformComponent (Vec2 position) : Component(ID), position(position) { };
 };
