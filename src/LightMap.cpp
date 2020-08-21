@@ -15,10 +15,11 @@ void LightMap::add_global_lighting(MColour colour){
 }
 
 void LightMap::zero(){
-    m_lightmap.clear();
-    m_changedmap.clear();
-
-    resize(m_width, m_height);
+    for (int x = 0; x < m_width; x++)
+        for (int y = 0; y < m_height; y++){
+            m_lightmap[x][y] = 0;
+            m_changedmap[x][y] = false;
+        }
 }
 
 void LightMap::clamp(){
