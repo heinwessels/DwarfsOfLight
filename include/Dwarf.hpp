@@ -11,6 +11,7 @@
 #include "LightComponent.hpp"
 #include "ControllerComponent.hpp"
 #include "MoveComponent.hpp"
+#include "TeamComponent.hpp"
 
 class Dwarf : public Entity{
 
@@ -27,5 +28,10 @@ public:
         this->add_component<Renderable>(m_texture_path, width, height);
         this->add_component<CollisionBox>(width, height);
         this->add_component<LightComponent>(MColour(230, 180, 180), MColour(20, 20, 0), 1, 15);
+        this->add_component<TeamComponent>(TeamGoblin,
+            std::vector<TeamComponent::TeamID>(),
+            std::vector<TeamComponent::TeamID>(TeamGoblin),
+            0.0
+        );
     }
 };

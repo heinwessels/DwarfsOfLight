@@ -13,17 +13,14 @@ public:
     static constexpr Mode ModeFight = 2;
     static constexpr Mode ModeGraze = 3;
     static constexpr Mode ModeFlee = 4;
+    static constexpr Mode ModeFindMate = 5;
 
     Mode mode;
 
-    bool can_graze;
-    bool can_fight;
-
 public:
-    AIComponent (Mode mode, bool can_graze, bool can_fight)
-        : Component(ID), mode(mode),
-        can_graze(can_graze), can_fight(can_fight)
+    AIComponent (Mode mode)
+        : Component(ID), mode(mode)
         { }
 
-    AIComponent () : AIComponent(ModeWandering, false, false) { }
+    AIComponent () : AIComponent(ModeWandering) { }
 };

@@ -14,4 +14,10 @@ constexpr ComponentID PathfindingComponentID = 7;
 constexpr ComponentID AIComponentID = 8;
 constexpr ComponentID MoveComponentID = 9;
 constexpr ComponentID TeamComponentID = 10;
-constexpr ComponentID PlantComponentID = 11;
+constexpr ComponentID LifeComponentID = 11;
+
+// TODO This should be type TeamID, not int.
+constexpr int TeamBug = 0;
+constexpr int TeamGoblin = 1;
+constexpr int TeamDwarf = 2;
+constexpr int TeamPlant = 3;

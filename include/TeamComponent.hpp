@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Component.hpp"
+#include "Vec2.hpp"
 
 class TeamComponent : public Component{
 public:
@@ -13,14 +14,25 @@ public:
     std::vector<TeamID> flees_from;
     std::vector<TeamID> attacks;
 
-    double vision_radius;
-    double attack_strength; // damage per second
+    double vision_radius = 10;
+    double attack_radius = 3;
 
-    TeamComponent(TeamID id, std::vector<TeamID> flees_from, std::vector<TeamID> attacks, double vision_radius, double attack_strength)
+    double attack_strength; // damage per second
+    bool prefer_flee_not_attack = true;
+
+    // Keep track of closest enemy to flee from that's visible
+    bool enemy_close = false;
+    Vec2 enemy_close_dir = Vec2(0);
+
+    // Keep track of closest enemy to attack from that's visible
+    bool foe_close = false;
+    Vec2 foe_close_dir = Vec2(0);
+
+    TeamComponent(TeamID team, std::vector<TeamID> flees_from, std::vector<TeamID> attacks, double attack_strength)
         :
         Component(ID),
-        my_team(id),
+        my_team(team),
         flees_from(flees_from), attacks(attacks),
-        vision_radius(vision_radius), attack_strength(attack_strength)
+        attack_strength(attack_strength)
         { }
 };

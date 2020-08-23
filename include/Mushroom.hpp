@@ -7,7 +7,7 @@
 #include "Renderable.hpp"
 #include "TransformComponent.hpp"
 #include "LightComponent.hpp"
-#include "PlantComponent.hpp"
+#include "LifeComponent.hpp"
 
 class Mushroom : public Entity{
 
@@ -20,6 +20,6 @@ public:
         this->add_component<TransformComponent>(Vec2(x, y));
         this->add_component<Renderable>("textures/mushroom.png", width, height);
         this->add_component<LightComponent>(MColour(100, 150, 250), MColour(10, 10, 10), 1, 3);
-        this->add_component<PlantComponent>();
+        this->add_component<LifeComponent>(1);
     }
 };
