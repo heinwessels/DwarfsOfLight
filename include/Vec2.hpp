@@ -11,6 +11,9 @@ class Vec2 {
     Vec2(double i) : x(i), y(i) {}
     Vec2(double i, double j) : x(i), y(j) {}
 
+    double sum (){ return x + y; }
+    double norm (){ return sqrt(dot(*this, *this)); }
+
     Vec2& operator += (const Vec2 & v){
         x += v.x;
         y += v.y;
@@ -66,4 +69,14 @@ class Vec2 {
     static Vec2 transpose(const Vec2 &a){
         return Vec2(a.y, a.x);
     }
+
+    static double dot(const Vec2 &a, const Vec2 &b){
+        return a.x*b.x + a.y*b.y;
+    }
+
+    static double cross(const Vec2 &a, const Vec2 &b){
+        return a.x*b.y - a.y*b.x;
+    }
+
+
 };

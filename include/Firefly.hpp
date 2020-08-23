@@ -21,7 +21,7 @@ private:
 public:
     Firefly(double x, double y) : Entity("Firefly") {
         this->add_component<TransformComponent>(Vec2(x, y));
-        this->add_component<MoveComponent>(MoveComponent::TypeSporadic, 1);
+        this->add_component<MoveComponent>(MoveComponent::TypeSporadic, 3);
         this->add_component<Renderable>(m_texture_path, width, height);
         this->add_component<CollisionBox>(width, height);
 

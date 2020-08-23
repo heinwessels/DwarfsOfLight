@@ -49,7 +49,7 @@ void PathfindingSystem::handle_waypoint(TransformComponent &transform, MoveCompo
     Vec2 distance_to_target = next_waypoint - transform.position;
 
     // Are within half a unit of the goal?
-    if(distance_to_target.x*distance_to_target.x + distance_to_target.y*distance_to_target.y <= 0.7*0.7){
+    if(distance_to_target.x*distance_to_target.x + distance_to_target.y*distance_to_target.y <= 0.707*0.707){
         // We've reached this waypoint
 
         // Remove this waypoint

@@ -47,16 +47,26 @@ void MovementSystem::handle_sporadic_movement(TransformComponent &transform, Mov
     // First move in the current direction. Note this is <current>, not <target>.
     transform.position += sporadic.current_direction * move.speed * dT;
 
-    // Update the current direction
+    // Update the current direction using the rotation speed
     Vec2 new_direction = sporadic.current_direction;   // Copy to make rotation safe
-    double angle = sporadic.rotation_speed*dT * random_float_in_range(0.5, 1.5);
+    double angle = sporadic.rotation_speed*dT; // * random_float_in_range(0.5, 1.5);
     new_direction.x = sporadic.current_direction.x * cos(angle) - sporadic.current_direction.y * sin(angle);
     new_direction.y = sporadic.current_direction.x * sin(angle) + sporadic.current_direction.y * cos(angle);
     sporadic.current_direction = new_direction;
 
-    // Now adjust the rotation speed for the next iteration
-    double current_direction = atan2(sporadic.current_direction.y, sporadic.current_direction.x);
-    double target_direction = atan2(move.target_direction.y, move.target_direction.x);
-    double delta_angle = target_direction - current_direction;
-    sporadic.rotation_speed += sporadic.tightness_factor * delta_angle * dT * random_float_in_range(0.5, 1.5);
+    // Should we change the rotation speed?
+    sporadic.time_to_change -= dT;
+    if (sporadic.time_to_change <= 0){
+        // Yes! Enough time has passed
+
+        // Adjust the rotation speed for the next iteration
+        double delta_angle = atan2(
+            Vec2::cross(sporadic.current_direction, move.target_direction),
+            Vec2::dot(sporadic.current_direction, move.target_direction)
+        );
+        sporadic.rotation_speed = (delta_angle > 0 ? 1.0 : -1.0) * sporadic.tightness_factor * random_float_in_range(0.5, 1.5);
+
+        // Set new timer
+        sporadic.time_to_change = sporadic.period * random_float_in_range(0.5, 1.5);
+    }
 }
