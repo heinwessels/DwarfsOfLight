@@ -19,8 +19,10 @@
 
 Game::Game(){
 
-    // m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
-    m_pWorld = std::make_unique<World>("maps/arena.csv");
+    m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
+    // m_pWorld = std::make_unique<World>("maps/arena.csv");
+
+    m_pWorld->set_global_lighting(MColour(10, 10, 10));
 
     printf("World loaded.\n");
 
@@ -34,18 +36,18 @@ Game::Game(){
     TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     m_rendersystem->set_camera_target(&positional.position);
     // m_rendersystem->set_camera_zoom(40);
-    // m_entities.push_back(new Goblin(20.255, 14.475));
+    m_entities.push_back(new Goblin(20.255, 14.475));
     // TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     // m_rendersystem->set_camera_target(&positional.position);
     m_rendersystem->set_camera_zoom(30);
 
-    // m_entities.push_back(new Goblin(20.255, 28.475));
-    // m_entities.push_back(new Goblin(30.255, 14.475));
-    // m_entities.push_back(new Goblin(40.255, 14.475));
+    m_entities.push_back(new Goblin(20.255, 28.475));
+    m_entities.push_back(new Goblin(30.255, 14.475));
+    m_entities.push_back(new Goblin(40.255, 14.475));
 
     m_entities.push_back(new Firefly(20, 20));
-    // m_entities.push_back(new Firefly(20, 21));
-    // m_entities.push_back(new Firefly(20, 22));
+    m_entities.push_back(new Firefly(20, 21));
+    m_entities.push_back(new Firefly(20, 22));
 
     ////////////////////////////////////////////////
 

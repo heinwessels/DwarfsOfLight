@@ -15,8 +15,8 @@
 class Goblin : public Entity{
 
 private:
-    double width = 1;
-    double height = 1;
+    double width = 0.8;
+    double height = 0.8;
     std::string m_texture_path = "textures/goblin.jpg";
 
 public:
@@ -25,7 +25,6 @@ public:
         this->add_component<MoveComponent>(MoveComponent::TypeStraight, 5);
         this->add_component<Renderable>(m_texture_path, width, height);
         this->add_component<CollisionBox>(width, height, false, false);
-        this->add_component<LightComponent>(MColour(0, 200, 100, 0), MColour(0, 50, 30), 1, 4);
         this->add_component<PathfindingComponent>();
         this->add_component<AIComponent>(AIComponent::ModeWandering);
     }

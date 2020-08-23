@@ -15,8 +15,8 @@
 class Dwarf : public Entity{
 
 private:
-    double width = 1.5;
-    double height = 1.5;
+    double width = 1;
+    double height = 1;
     std::string m_texture_path = "textures/dwarf2.jpg";
 
 public:

@@ -25,11 +25,6 @@ void MovementSystem::update(double dT){
                 handle_straight_movement(transform, move, dT);
             }
             else if (move.type == MoveComponent::TypeSporadic){
-
-                //////////
-                // move.target_direction = Vec2(1, 0);
-                //////////
-
                 handle_sporadic_movement(transform, move, dT);
             }
         }
