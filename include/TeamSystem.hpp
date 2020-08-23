@@ -13,5 +13,5 @@ public:
     virtual void update(double dT) override;
 
 private:
-
+    void handle_entity(Entity &entity);
 };

@@ -9,7 +9,7 @@ public:
     static constexpr ComponentID ID = TeamComponentID;
 
     typedef int TeamID;
-    TeamID my_team;
+    TeamID team;
 
     std::vector<TeamID> flees_from;
     std::vector<TeamID> attacks;
@@ -31,8 +31,16 @@ public:
     TeamComponent(TeamID team, std::vector<TeamID> flees_from, std::vector<TeamID> attacks, double attack_strength)
         :
         Component(ID),
-        my_team(team),
+        team(team),
         flees_from(flees_from), attacks(attacks),
         attack_strength(attack_strength)
         { }
+
+    TeamComponent(TeamID team, double attack_strength)
+        : TeamComponent(
+            team,
+            std::vector<TeamComponent::TeamID>({}),
+            std::vector<TeamComponent::TeamID>({}),
+            attack_strength
+        ) { }
 };

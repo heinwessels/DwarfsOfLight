@@ -7,6 +7,7 @@
 #include "LightSystem.hpp"
 #include "PathfindingSystem.hpp"
 #include "AISystem.hpp"
+#include "TeamSystem.hpp"
 
 #include "Timing.hpp"
 #include "World.hpp"
@@ -20,8 +21,8 @@
 
 Game::Game(){
 
-    m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
-    // m_pWorld = std::make_unique<World>("maps/arena.csv");
+    // m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
+    m_pWorld = std::make_unique<World>("maps/arena.csv");
 
     m_pWorld->set_global_lighting(MColour(10, 10, 10));
 
@@ -37,7 +38,7 @@ Game::Game(){
     TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     m_rendersystem->set_camera_target(&positional.position);
     // m_rendersystem->set_camera_zoom(40);
-    // m_entities.push_back(new Goblin(20.255, 14.475));
+    m_entities.push_back(new Goblin(20.255, 14.475));
     // TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     // m_rendersystem->set_camera_target(&positional.position);
     m_rendersystem->set_camera_zoom(40);
@@ -107,6 +108,7 @@ void Game::load_systems(){
     m_rendersystem = static_cast<RenderSystem*>(m_systems.back().get());    // TODO This is hacky.
 
     m_systems.push_back(std::make_unique<InputSystem>(*this, *m_rendersystem));   // This requires the RenderSystem
+    m_systems.push_back(std::make_unique<TeamSystem>(*this));
     m_systems.push_back(std::make_unique<AISystem>(*this));
     m_systems.push_back(std::make_unique<PathfindingSystem>(*this));
     m_systems.push_back(std::make_unique<MovementSystem>(*this));

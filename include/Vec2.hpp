@@ -12,8 +12,6 @@ class Vec2 {
     Vec2(double i, double j) : x(i), y(j) {}
 
     double sum (){ return x + y; }
-    double norm (){ return sqrt(dot(*this, *this)); }
-
     Vec2& operator += (const Vec2 & v){
         x += v.x;
         y += v.y;
@@ -78,5 +76,8 @@ class Vec2 {
         return a.x*b.y - a.y*b.x;
     }
 
-
+    static Vec2 norm(const Vec2 &a){
+        Vec2 t (a);
+        return t / sqrt(dot(a, a));
+    }
 };
