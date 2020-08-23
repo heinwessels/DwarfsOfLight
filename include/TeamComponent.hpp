@@ -18,7 +18,6 @@ public:
     double attack_radius = 3;
 
     double attack_strength; // damage per second
-    bool prefer_flee_not_attack = true;
 
     // Keep track of closest enemy to flee from that's visible
     bool enemy_close = false;

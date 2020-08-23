@@ -10,8 +10,7 @@ public:
     typedef int Mode;
     static constexpr Mode ModeIdle = 0;
     static constexpr Mode ModeWandering = 1;
-    static constexpr Mode ModeFight = 2;
-    static constexpr Mode ModeGraze = 3;
+    static constexpr Mode ModeAttack = 2;
     static constexpr Mode ModeFlee = 4;
     static constexpr Mode ModeFindMate = 5;
 

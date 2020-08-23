@@ -2,6 +2,7 @@
 
 #include "System.hpp"
 
+class PathfindingComponent;
 class Game;
 class AISystem : public System {
 
@@ -12,4 +13,5 @@ public:
 
 private:
     void handle_entity_ai(Entity& entity);
+    void wandering_continue(PathfindingComponent &pathfinding);
 };
