@@ -49,7 +49,7 @@ void MovementSystem::handle_sporadic_movement(TransformComponent &transform, Mov
 
     // Update the current direction using the rotation speed
     Vec2 new_direction = sporadic.current_direction;   // Copy to make rotation safe
-    double angle = sporadic.rotation_speed*dT; // * random_float_in_range(0.5, 1.5);
+    double angle = sporadic.current_rotation_speed*dT; // * random_float_in_range(0.5, 1.5);
     new_direction.x = sporadic.current_direction.x * cos(angle) - sporadic.current_direction.y * sin(angle);
     new_direction.y = sporadic.current_direction.x * sin(angle) + sporadic.current_direction.y * cos(angle);
     sporadic.current_direction = new_direction;
@@ -64,7 +64,7 @@ void MovementSystem::handle_sporadic_movement(TransformComponent &transform, Mov
             Vec2::cross(sporadic.current_direction, move.target_direction),
             Vec2::dot(sporadic.current_direction, move.target_direction)
         );
-        sporadic.rotation_speed = (delta_angle > 0 ? 1.0 : -1.0) * sporadic.tightness_factor * random_float_in_range(0.5, 1.5);
+        sporadic.current_rotation_speed = (delta_angle > 0 ? 1.0 : -1.0) * sporadic.rotation_speed * random_float_in_range(0.5, 1.5);
 
         // Set new timer
         sporadic.time_to_change = sporadic.period * random_float_in_range(0.5, 1.5);

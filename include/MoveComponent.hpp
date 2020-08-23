@@ -18,12 +18,23 @@ public:
 
     // Type specific values
     struct {
-        Vec2 current_direction = {0.707, 0.707};
-        double rotation_speed = 0;
-        double tightness_factor = 6;
+        Vec2 current_direction = {1, 0};
+        double current_rotation_speed = 0;
+        double rotation_speed = 6;
         double period = 0.2;
         double time_to_change = 0;
     } sporadic;
 
     MoveComponent (Type type, double speed) : Component(ID), type(type), speed(speed) { }
+};
+
+
+class SporadicMoveComponent : public MoveComponent{
+public:
+    SporadicMoveComponent(double speed, double rotation_speed, double period)
+        : MoveComponent(MoveComponent::TypeSporadic, speed)
+    {
+        sporadic.rotation_speed = rotation_speed;
+        sporadic.period = period;
+    }
 };

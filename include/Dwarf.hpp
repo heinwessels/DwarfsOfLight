@@ -26,6 +26,6 @@ public:
         this->add_component<MoveComponent>(MoveComponent::TypeStraight, 5);
         this->add_component<Renderable>(m_texture_path, width, height);
         this->add_component<CollisionBox>(width, height);
-        this->add_component<LightComponent>(MColour(230, 180, 180), MColour(20, 20, 0), 1, 20);
+        this->add_component<LightComponent>(MColour(230, 180, 180), MColour(20, 20, 0), 1, 15);
     }
 };
