@@ -10,14 +10,20 @@ public:
     typedef int Mode;
     static constexpr Mode ModeIdle = 0;
     static constexpr Mode ModeWandering = 1;
+    static constexpr Mode ModeFight = 2;
+    static constexpr Mode ModeGraze = 3;
+    static constexpr Mode ModeFlee = 4;
 
-    double wondering_speed = 5;
+    Mode mode;
 
-private:
-    Mode m_mode;
+    bool can_graze;
+    bool can_fight;
 
 public:
-    AIComponent (Mode mode) : Component(ID), m_mode(mode) { }
+    AIComponent (Mode mode, bool can_graze, bool can_fight)
+        : Component(ID), mode(mode),
+        can_graze(can_graze), can_fight(can_fight)
+        { }
 
-    Mode get_mode(){ return m_mode; }
+    AIComponent () : AIComponent(ModeWandering, false, false) { }
 };

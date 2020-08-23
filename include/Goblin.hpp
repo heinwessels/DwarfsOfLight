@@ -26,6 +26,6 @@ public:
         this->add_component<Renderable>(m_texture_path, width, height);
         this->add_component<CollisionBox>(width, height, false, false);
         this->add_component<PathfindingComponent>();
-        this->add_component<AIComponent>(AIComponent::ModeWandering);
+        this->add_component<AIComponent>();
     }
 };

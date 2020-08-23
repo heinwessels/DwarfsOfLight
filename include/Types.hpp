@@ -13,3 +13,5 @@ constexpr ComponentID LightComponentID = 6;
 constexpr ComponentID PathfindingComponentID = 7;
 constexpr ComponentID AIComponentID = 8;
 constexpr ComponentID MoveComponentID = 9;
+constexpr ComponentID TeamComponentID = 10;
+constexpr ComponentID PlantComponentID = 11;

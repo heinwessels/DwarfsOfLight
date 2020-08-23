@@ -34,7 +34,7 @@ void AISystem::handle_entity_ai(Entity& entity){
 
     auto &world = m_pgame.get_world();
 
-    if(ai.get_mode() == AIComponent::ModeWandering &&
+    if(ai.mode == AIComponent::ModeWandering &&
         !(pathfinding.path_requested || pathfinding.moving_to_target)
     ){
         // Wonder randomly to some location

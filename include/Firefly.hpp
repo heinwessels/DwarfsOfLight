@@ -24,7 +24,7 @@ public:
         this->add_component<Renderable>("textures/firefly_simple.jpg", width, height, 3, 3, 1, 1);
         this->add_component<CollisionBox>(width, height);
         this->add_component<PathfindingComponent>();
-        this->add_component<AIComponent>(AIComponent::ModeWandering);
+        this->add_component<AIComponent>();
         this->add_component<LightComponent>(MColour(100, 150, 250), MColour(10, 10, 10), 1, 5);
     }
 };
