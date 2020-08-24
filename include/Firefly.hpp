@@ -33,6 +33,6 @@ public:
             std::vector<TeamComponent::TeamID>({TeamPlant}),
             3.0
         );
-        this->add_component<BugLifeComponent>(10, 1, 30, 10*60);
+        // this->add_component<BugLifeComponent>(10, 1, 30, 10*60);
     }
 };

@@ -39,22 +39,22 @@ Game::Game(){
     TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     m_rendersystem->set_camera_target(&positional.position);
     // m_rendersystem->set_camera_zoom(40);
-    m_entities.push_back(new Goblin(23, 20));
+    // m_entities.push_back(new Goblin(23, 20));
     // TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     // m_rendersystem->set_camera_target(&positional.position);
     m_rendersystem->set_camera_zoom(40);
 
-    m_entities.push_back(new Goblin(20.255, 28.475));
-    m_entities.push_back(new Goblin(30.255, 14.475));
-    m_entities.push_back(new Goblin(40.255, 14.475));
+    // m_entities.push_back(new Goblin(20.255, 28.475));
+    // m_entities.push_back(new Goblin(30.255, 14.475));
+    // m_entities.push_back(new Goblin(40.255, 14.475));
 
-    m_entities.push_back(new Firefly(20, 20));
-    m_entities.push_back(new Firefly(20, 21));
-    m_entities.push_back(new Firefly(20, 22));
+    // m_entities.push_back(new Firefly(20, 20));
+    // m_entities.push_back(new Firefly(20, 21));
+    // m_entities.push_back(new Firefly(20, 22));
 
     m_entities.push_back(new Mushroom(20, 22.8));
-    m_entities.push_back(new Mushroom(19.8, 23.3));
-    m_entities.push_back(new Mushroom(20.4, 23.1));
+    // m_entities.push_back(new Mushroom(19.8, 23.3));
+    // m_entities.push_back(new Mushroom(20.4, 23.1));
 
     ////////////////////////////////////////////////
 
@@ -109,7 +109,7 @@ void Game::load_systems(){
 
     m_systems.push_back(std::make_unique<InputSystem>(*this, *m_rendersystem));   // This requires the RenderSystem
     m_systems.push_back(std::make_unique<TeamSystem>(*this));
-    // m_systems.push_back(std::make_unique<LifeSystem>(*this));
+    m_systems.push_back(std::make_unique<LifeSystem>(*this));
     m_systems.push_back(std::make_unique<AISystem>(*this));
     m_systems.push_back(std::make_unique<PathfindingSystem>(*this));
     m_systems.push_back(std::make_unique<MovementSystem>(*this));

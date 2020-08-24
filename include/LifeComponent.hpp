@@ -3,10 +3,20 @@
 #include <vector>
 #include "Component.hpp"
 #include "RNG.hpp"
+#include "NamedType.hpp"
 
 class LifeComponent : public Component{
 public:
     static constexpr ComponentID ID = LifeComponentID;
+
+    typedef int Type;
+    Type type;
+    static constexpr Type TypeFungi = 0;
+    static constexpr Type TypeBug = 0;
+    static constexpr Type TypeGoblin = 0;
+    using CreateTypeFungi = UniqueType<struct TypeFungiPhantom>;
+    using CreateTypeBug = UniqueType<struct TypeBugPhantom>;
+    using CreateTypeGoblin = UniqueType<struct TypeGoblinPhantom>;
 
     double health;
 
@@ -24,14 +34,38 @@ public:
     bool can_die_of_age = false;
     double time_till_death = 0;
 
-    LifeComponent(double health) : Component(ID), health(health) { }
-};
+private:
+    LifeComponent(Type type, double health) : Component(ID), type(type), health(health) { }
 
-
-class AnimalLifeComponent : public LifeComponent{
 public:
-    AnimalLifeComponent(double health, double food_consumption_rate, double reproduce_every, double lifetime)
-        : LifeComponent(health)
+    LifeComponent(CreateTypeFungi t, double health, double food_value, double reproduce_every)
+        : LifeComponent(TypeFungi, health)
+    {
+        this->reproduce_every = reproduce_every;
+        this->food = food_value;
+
+        can_reproduce = true;
+        max_number_of_offspring = 3;
+        time_till_reproduce = reproduce_every * random_float_in_range(0.8, 1.5);
+    }
+
+    LifeComponent(CreateTypeBug t, double health, double food_consumption_rate, double reproduce_every, double lifetime)
+        : LifeComponent(TypeBug, health)
+    {
+        this->reproduce_every = reproduce_every;
+        this->food_consumption_rate = food_consumption_rate;
+        food = food_consumption_rate * 60;  // Can survive for 1 minute from birth TODO Configurable
+
+        can_reproduce = true;
+        max_number_of_offspring = 3;
+        time_till_reproduce = reproduce_every * random_float_in_range(0.8, 1.5);
+
+        // can_die_of_age = age;
+        time_till_death = lifetime;
+    }
+
+    LifeComponent(CreateTypeGoblin t, double health, double food_consumption_rate, double reproduce_every, double lifetime)
+        : LifeComponent(TypeGoblin, health)
     {
         this->reproduce_every = reproduce_every;
         this->food_consumption_rate = food_consumption_rate;
@@ -43,37 +77,5 @@ public:
 
         // can_die_of_age = age;
         time_till_death = lifetime;
-    }
-};
-
-class BugLifeComponent : public LifeComponent{
-public:
-    BugLifeComponent(double health, double food_consumption_rate, double reproduce_every, double lifetime)
-        : LifeComponent(health)
-    {
-        this->reproduce_every = reproduce_every;
-        this->food_consumption_rate = food_consumption_rate;
-        food = food_consumption_rate * 60;  // Can survive for 1 minute from birth TODO Configurable
-
-        can_reproduce = true;
-        max_number_of_offspring = 3;
-        time_till_reproduce = reproduce_every * random_float_in_range(0.8, 1.5);
-
-        // can_die_of_age = age;
-        time_till_death = lifetime;
-    }
-};
-
-class PlantLifeComponent : public LifeComponent{
-public:
-    PlantLifeComponent(double health, double food_value, double reproduce_every)
-        : LifeComponent(health)
-    {
-        this->reproduce_every = reproduce_every;
-        this->food = food_value;
-
-        can_reproduce = true;
-        max_number_of_offspring = 3;
-        time_till_reproduce = reproduce_every * random_float_in_range(0.8, 1.5);
     }
 };

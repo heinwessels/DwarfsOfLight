@@ -74,6 +74,7 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
 
             // Reset the timer
             life.time_till_reproduce = life.reproduce_every * random_float_in_range(0.8, 1.5);
+            life.ready_to_reproduce = false;
         }
     }
 }
