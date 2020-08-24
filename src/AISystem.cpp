@@ -117,6 +117,7 @@ void AISystem::handle_entity_ai(Entity& entity){
 
 void AISystem::wandering_continue(PathfindingComponent &pathfinding){
     // Just let the entity continue to wander randomly
+    // If AI mode just changed, it will create a new path.
 
     if (!(pathfinding.path_requested || pathfinding.moving_to_target)){
         // It need a new place to walk to
@@ -137,9 +138,5 @@ void AISystem::wandering_continue(PathfindingComponent &pathfinding){
         // Set this entity to move there
         pathfinding.target = target + 0.5;
         pathfinding.path_requested = true;
-    }
-    else{
-        // Make sure it's wandering
-        pathfinding.moving_to_target = true;
     }
 }
