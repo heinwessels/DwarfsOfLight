@@ -8,6 +8,7 @@
 #include "PathfindingSystem.hpp"
 #include "AISystem.hpp"
 #include "TeamSystem.hpp"
+#include "LifeSystem.hpp"
 
 #include "Timing.hpp"
 #include "World.hpp"
@@ -51,7 +52,7 @@ Game::Game(){
     m_entities.push_back(new Firefly(20, 21));
     m_entities.push_back(new Firefly(20, 22));
 
-    m_entities.push_back(new Mushroom(20, 30));
+    m_entities.push_back(new Mushroom(20, 22.8));
     m_entities.push_back(new Mushroom(19.8, 23.3));
     m_entities.push_back(new Mushroom(20.4, 23.1));
 
@@ -108,6 +109,7 @@ void Game::load_systems(){
 
     m_systems.push_back(std::make_unique<InputSystem>(*this, *m_rendersystem));   // This requires the RenderSystem
     m_systems.push_back(std::make_unique<TeamSystem>(*this));
+    // m_systems.push_back(std::make_unique<LifeSystem>(*this));
     m_systems.push_back(std::make_unique<AISystem>(*this));
     m_systems.push_back(std::make_unique<PathfindingSystem>(*this));
     m_systems.push_back(std::make_unique<MovementSystem>(*this));

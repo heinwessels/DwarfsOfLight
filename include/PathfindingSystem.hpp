@@ -22,7 +22,7 @@ struct Node{
 
 class Game;
 class PathfindingSystem : public System {
-
+    static const int max_pathfinding_calcs_per_iter = 3;
 public:
     PathfindingSystem(Game &game);
     virtual void init() override { };

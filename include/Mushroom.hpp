@@ -23,5 +23,6 @@ public:
         this->add_component<LightComponent>(MColour(100, 150, 250), MColour(10, 10, 10), 1, 3);
         this->add_component<LifeComponent>(1);
         this->add_component<TeamComponent>(TeamPlant, 1);
+        this->add_component<PlantLifeComponent>(1, 1, 30);
     }
 };

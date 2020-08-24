@@ -12,7 +12,7 @@
 World::World (int width, int height)
         : m_width(width), m_height(height), m_lightmap(width, height)
 {
-    printf("Real");
+
     clear();
     resize(width, height);
 
@@ -40,7 +40,6 @@ World::World (int width, int height)
 World::World (std::string map_path)
     : World(0, 0)
 {
-    printf("path");
     load_world(map_path);
 }
 

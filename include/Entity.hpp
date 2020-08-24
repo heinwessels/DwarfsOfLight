@@ -32,14 +32,15 @@ public:
         return m_signature & Component::get_component_signature<CompType>();
     };
 
-    std::string get_name() { return m_name; }
+    void kill(){ m_is_alive = false; }
     bool is_still_alive();
+
+    std::string get_name() { return m_name; }
 
 protected:
     template <class CompType, class... CompArgs>
     void add_component(CompArgs&&... arg){
         this->m_signature |= Component::get_component_signature<CompType>();
-
         m_pComponents.emplace(
             CompType::ID,
             std::make_unique<CompType>(

@@ -20,6 +20,9 @@ PathfindingSystem::PathfindingSystem(Game &game)
 }
 
 void PathfindingSystem::update(double dT){
+
+    int count_pathfind_calcs = 0;
+
     for(auto const entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
@@ -27,8 +30,9 @@ void PathfindingSystem::update(double dT){
             PathfindingComponent &pathfinding = entity->get_component<PathfindingComponent>();
 
             // Do path finding calculation
-            if (pathfinding.path_requested){
+            if (pathfinding.path_requested && count_pathfind_calcs < max_pathfinding_calcs_per_iter){
                 handle_pathfinding(transform, pathfinding);
+                count_pathfind_calcs++; // Make sure we don't do too much pathfinding calculations
             }
 
             // Handle following of waypoints

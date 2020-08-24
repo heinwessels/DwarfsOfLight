@@ -11,6 +11,7 @@
 #include "AIComponent.hpp"
 #include "MoveComponent.hpp"
 #include "TeamComponent.hpp"
+#include "LifeComponent.hpp"
 
 class Goblin : public Entity{
 
@@ -26,11 +27,11 @@ public:
         this->add_component<CollisionBox>(width, height, false, false);
         this->add_component<PathfindingComponent>();
         this->add_component<AIComponent>();
-
         this->add_component<TeamComponent>(TeamGoblin,
             std::vector<TeamComponent::TeamID>({TeamDwarf}),
             std::vector<TeamComponent::TeamID>({TeamBug}),
-            0.0
+            5.0
         );
+        this->add_component<AnimalLifeComponent>(30, 1, 2*60, 20*60);
     }
 };

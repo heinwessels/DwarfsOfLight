@@ -11,6 +11,7 @@
 #include "CollisionBoxComponent.hpp"
 #include "MoveComponent.hpp"
 #include "TeamComponent.hpp"
+#include "LifeComponent.hpp"
 
 class Firefly : public Entity{
 
@@ -30,7 +31,8 @@ public:
         this->add_component<TeamComponent>(TeamBug,
             std::vector<TeamComponent::TeamID>({TeamGoblin}),
             std::vector<TeamComponent::TeamID>({TeamPlant}),
-            0.0
+            3.0
         );
+        this->add_component<BugLifeComponent>(10, 1, 30, 10*60);
     }
 };
