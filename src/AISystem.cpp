@@ -138,4 +138,8 @@ void AISystem::wandering_continue(PathfindingComponent &pathfinding){
         pathfinding.target = target + 0.5;
         pathfinding.path_requested = true;
     }
+    else{
+        // Make sure it's wandering
+        pathfinding.moving_to_target = true;
+    }
 }
