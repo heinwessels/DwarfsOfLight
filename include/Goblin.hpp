@@ -21,7 +21,7 @@ private:
 public:
     Goblin(double x, double y) : Entity("Goblin") {
         this->add_component<TransformComponent>(Vec2(x, y));
-        this->add_component<MoveComponent>(MoveComponent::TypeStraight, 5);
+        this->add_component<MoveComponent>(MoveComponent::TypeStraight, 3);
         this->add_component<Renderable>("textures/goblin.jpg", width, height);
         this->add_component<CollisionBox>(width, height, false, false);
         this->add_component<PathfindingComponent>();

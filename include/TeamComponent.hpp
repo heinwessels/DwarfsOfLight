@@ -11,21 +11,21 @@ public:
     typedef int TeamID;
     TeamID team;
 
+    // Keep track of closest enemy to flee from that's visible
     std::vector<TeamID> flees_from;
-    std::vector<TeamID> attacks;
+    bool enemy_flee_close = false;
+    Vec2 enemy_flee_dir = Vec2(0);
 
-    double vision_radius = 10;
+    // Keep track of closest enemy to attack from that's visible
+    std::vector<TeamID> attacks;
+    bool enemy_attack_close = false;
+    Vec2 enemy_attack_dir = Vec2(0);
+
+    double vision_radius = 5;
     double attack_radius = 3;
 
     double attack_strength; // damage per second
 
-    // Keep track of closest enemy to flee from that's visible
-    bool enemy_close = false;
-    Vec2 enemy_close_dir = Vec2(0);
-
-    // Keep track of closest enemy to attack from that's visible
-    bool foe_close = false;
-    Vec2 foe_close_dir = Vec2(0);
 
     TeamComponent(TeamID team, std::vector<TeamID> flees_from, std::vector<TeamID> attacks, double attack_strength)
         :

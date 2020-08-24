@@ -29,8 +29,8 @@ void TeamSystem::handle_entity(Entity &entity){
     auto &team = entity.get_component<TeamComponent>();
 
     // Reset variables by default
-    team.enemy_close = false;
-    team.foe_close = false;
+    team.enemy_flee_close = false;
+    team.enemy_attack_close = false;
 
     if (!team.flees_from.size() && !team.attacks.size())
         return; // This entity does not care about other entities
@@ -58,8 +58,8 @@ void TeamSystem::handle_entity(Entity &entity){
                             distance_square < closest_distance_square
                         ){
                             // We must fear this enemy
-                            team.enemy_close = true;
-                            team.enemy_close_dir = Vec2::norm(transform.position - stranger_transform.position);
+                            team.enemy_flee_close = true;
+                            team.enemy_flee_dir = Vec2::norm(stranger_transform.position - transform.position);
                         }
                     }
                 }
@@ -74,9 +74,9 @@ void TeamSystem::handle_entity(Entity &entity){
                             distance_square < team.vision_radius*team.vision_radius &&
                             distance_square < closest_distance_square
                         ){
-                            // We must fear this enemy
-                            team.foe_close = true;
-                            team.foe_close_dir = Vec2::norm(transform.position - stranger_transform.position);
+                            // We must attack this enemy
+                            team.enemy_attack_close = true;
+                            team.enemy_attack_dir = Vec2::norm(stranger_transform.position - transform.position);
                         }
                     }
                 }

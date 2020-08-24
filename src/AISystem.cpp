@@ -1,3 +1,5 @@
+// #define DBG_PRINT_BASIC_INFO
+
 #include "AISystem.hpp"
 #include "Game.hpp"
 #include "World.hpp"
@@ -45,13 +47,19 @@ void AISystem::handle_entity_ai(Entity& entity){
     if(ai.mode == AIComponent::ModeWandering){
 
         // First see if we should rather flee or attack
-        if (team && team->enemy_close){
+        if (team && team->enemy_flee_close){
             // We should flee! (rather priority over attack)
             ai.mode = AIComponent::ModeFlee;
+#ifdef DBG_PRINT_BASIC_INFO
+            printf("%15s is now fleeing.\n", entity.get_name().c_str());
+#endif
         }
-        else if (team->foe_close){
+        else if (team->enemy_attack_close){
             // We should attack!
             ai.mode = AIComponent::ModeAttack;
+#ifdef DBG_PRINT_BASIC_INFO
+            printf("%15s is now attacking.\n", entity.get_name().c_str());
+#endif
         }
         else{
             // Nothing is going on. Just continue wandering
@@ -61,20 +69,49 @@ void AISystem::handle_entity_ai(Entity& entity){
     else if (ai.mode == AIComponent::ModeAttack){
 
         // First see if we should rather flee
-        if (team && team->enemy_close){
+        if (team && team->enemy_flee_close){
             // We should flee! (rather priority over attack)
             ai.mode = AIComponent::ModeFlee;
+#ifdef DBG_PRINT_BASIC_INFO
+            printf("%15s is now fleeing.\n", entity.get_name().c_str());
+#endif
+        }
+        else if (team && team->enemy_attack_close){
+            // The enemy is still close
+
+            // Charge the target!
+            move.target_direction = team->enemy_attack_dir;
+
+            // Disable pathfinding
+            pathfinding.moving_to_target = false;
         }
         else{
-            // Charge the target!
-            move.target_direction = team->foe_close_dir;
+            // Start wandering again
+            ai.mode = AIComponent::ModeWandering;
+            wandering_continue(pathfinding);
+#ifdef DBG_PRINT_BASIC_INFO
+            printf("%15s is now wandering.\n", entity.get_name().c_str());
+#endif
         }
     }
     else if (ai.mode == AIComponent::ModeFlee){
 
-        // Run in the opposite way of the danger
-        // TODO: Handle when running into walls
-        move.target_direction = Vec2(0) - team->enemy_close_dir;
+        if (team && team->enemy_flee_close){
+            // Run in the opposite way of the danger
+            // TODO: Handle when running into walls
+            move.target_direction = Vec2(0) - team->enemy_flee_dir;
+
+            // Disable pathfinding
+            pathfinding.moving_to_target = false;
+        }
+        else{
+            // No more threat. Start wandering again.
+            ai.mode = AIComponent::ModeWandering;
+            wandering_continue(pathfinding);
+#ifdef DBG_PRINT_BASIC_INFO
+            printf("%15s is now wandering.\n", entity.get_name().c_str());
+#endif
+        }
     }
 }
 

@@ -130,7 +130,8 @@ Tile* CollisionSystem::get_closest_tile_in_range_with_collisionbox(Vec2 point, V
     // <range> is size of square around <point>
     // Returns <nullptr> if none found.
 
-    auto &tiles = m_pgame.get_world().get_tiles();
+    auto &world = m_pgame.get_world();
+    auto &tiles = world.get_tiles();
 
     Tile* closest_tile = nullptr; // Empty tile
     double closest_distance_sq = 1e8;
@@ -139,13 +140,15 @@ Tile* CollisionSystem::get_closest_tile_in_range_with_collisionbox(Vec2 point, V
     for (int x = floor(bottom_left.x); x <= ceil(top_right.x); x ++){
         for (int y = floor(bottom_left.y); y <= ceil(top_right.y); y ++){
 
-            if(tiles[x][y].has_component<CollisionBox>()){
+            if (x >= 0 && x < world.get_width() && y >= 0 && y < world.get_height()){
+                if(tiles[x][y].has_component<CollisionBox>()){
 
-                double dist_sq = Vec2::dist_sq(point, Vec2(x+0.5, y+0.5));
+                    double dist_sq = Vec2::dist_sq(point, Vec2(x+0.5, y+0.5));
 
-                if(dist_sq < closest_distance_sq){
-                    closest_distance_sq = dist_sq;
-                    closest_tile = &tiles[x][y];
+                    if(dist_sq < closest_distance_sq){
+                        closest_distance_sq = dist_sq;
+                        closest_tile = &tiles[x][y];
+                    }
                 }
             }
         }

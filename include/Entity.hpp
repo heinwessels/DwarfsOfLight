@@ -32,6 +32,7 @@ public:
         return m_signature & Component::get_component_signature<CompType>();
     };
 
+    std::string get_name() { return m_name; }
     bool is_still_alive();
 
 protected:
