@@ -142,4 +142,4 @@ This is also where the ECS architecture excels, because I can finely adjust how 
 
 ## TODO
 1. Convert software to store data serially, which is one of the goals of ECS. For example, *all* `components` stored serially, with references to which `entity` they belong. The `systems` will then loop through the `components`, not caring to which `entity` it belongs to.
-
+2. Other things.

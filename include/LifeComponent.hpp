@@ -3,7 +3,6 @@
 #include <vector>
 #include "Component.hpp"
 #include "RNG.hpp"
-#include "NamedType.hpp"
 
 class LifeComponent : public Component{
 public:
@@ -14,9 +13,6 @@ public:
     static constexpr Type TypeFungi = 0;
     static constexpr Type TypeBug = 0;
     static constexpr Type TypeGoblin = 0;
-    using CreateTypeFungi = UniqueType<struct TypeFungiPhantom>;
-    using CreateTypeBug = UniqueType<struct TypeBugPhantom>;
-    using CreateTypeGoblin = UniqueType<struct TypeGoblinPhantom>;
 
     double health;
 
@@ -34,11 +30,13 @@ public:
     bool can_die_of_age = false;
     double time_till_death = 0;
 
-private:
+protected:
     LifeComponent(Type type, double health) : Component(ID), type(type), health(health) { }
+};
 
+class FungiLifeComponent : public LifeComponent{
 public:
-    LifeComponent(CreateTypeFungi t, double health, double food_value, double reproduce_every)
+    FungiLifeComponent(double health, double food_value, double reproduce_every)
         : LifeComponent(TypeFungi, health)
     {
         this->reproduce_every = reproduce_every;
@@ -48,8 +46,10 @@ public:
         max_number_of_offspring = 3;
         time_till_reproduce = reproduce_every * random_float_in_range(0.8, 1.5);
     }
+};
 
-    LifeComponent(CreateTypeBug t, double health, double food_consumption_rate, double reproduce_every, double lifetime)
+class BugLifeComponent : public LifeComponent{
+    BugLifeComponent(double health, double food_consumption_rate, double reproduce_every, double lifetime)
         : LifeComponent(TypeBug, health)
     {
         this->reproduce_every = reproduce_every;
@@ -63,8 +63,11 @@ public:
         // can_die_of_age = age;
         time_till_death = lifetime;
     }
+};
 
-    LifeComponent(CreateTypeGoblin t, double health, double food_consumption_rate, double reproduce_every, double lifetime)
+
+class GoblinLifeComponent : public LifeComponent{
+    GoblinLifeComponent(double health, double food_consumption_rate, double reproduce_every, double lifetime)
         : LifeComponent(TypeGoblin, health)
     {
         this->reproduce_every = reproduce_every;

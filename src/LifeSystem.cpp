@@ -70,7 +70,7 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
         if (can_reproduce){
             // We can reproduce! Woohoo.
 
-            printf("%10s should have kids now!", entity.get_name().c_str());
+            printf("%10s should have kids now!\n", entity.get_name().c_str());
 
             // Reset the timer
             life.time_till_reproduce = life.reproduce_every * random_float_in_range(0.8, 1.5);
