@@ -23,8 +23,8 @@
 
 Game::Game(){
 
-    // m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
-    m_pWorld = std::make_unique<World>("maps/arena.csv");
+    m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
+    // m_pWorld = std::make_unique<World>("maps/arena.csv");
 
     m_pWorld->set_global_lighting(MColour(10, 10, 10));
 
@@ -37,26 +37,25 @@ Game::Game(){
     ////////////////////////////////////////////////
 
     add_entity(std::make_unique<Dwarf>(25, 20));
+    TransformComponent &positional = m_entity_entry_queue.back()->get_component<TransformComponent>();
+    m_rendersystem->set_camera_target(&positional.position);
+    m_rendersystem->set_camera_zoom(40);
+    add_entity(std::make_unique<Goblin>(23, 20));
     // TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     // m_rendersystem->set_camera_target(&positional.position);
     // m_rendersystem->set_camera_zoom(40);
-    // add_entity(std::make_unique<Goblin>(23, 20));
-    // TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
-    // m_rendersystem->set_camera_target(&positional.position);
-    m_rendersystem->set_camera_zoom(40);
 
-    // add_entity(std::make_unique<Goblin>(20.255, 28.475));
-    // add_entity(std::make_unique<Goblin>(30.255, 14.475));
-    // add_entity(std::make_unique<Goblin>(40.255, 14.475));
+    add_entity(std::make_unique<Goblin>(20.255, 28.475));
+    add_entity(std::make_unique<Goblin>(30.255, 14.475));
+    add_entity(std::make_unique<Goblin>(40.255, 14.475));
 
-    // add_entity(std::make_unique<Firefly>(20, 20));
-    // add_entity(std::make_unique<Firefly>(20, 21));
-    // add_entity(std::make_unique<Firefly>(20, 22));
+    add_entity(std::make_unique<Firefly>(20, 20));
+    add_entity(std::make_unique<Firefly>(20, 21));
+    add_entity(std::make_unique<Firefly>(20, 22));
 
-    // add_entity(std::make_unique<Mushroom>(20, 22.8));
-    // add_entity(std::make_unique<Mushroom>(19.8, 23.3));
-    add_entity(std::make_unique<Mushroom>(20, 20));
-    m_rendersystem->set_camera_position(Vec2(20, 20));
+    add_entity(std::make_unique<Mushroom>(20, 22.8));
+    add_entity(std::make_unique<Mushroom>(19.8, 23.3));
+    add_entity(std::make_unique<Mushroom>(21, 23.2));
 
     ////////////////////////////////////////////////
 
