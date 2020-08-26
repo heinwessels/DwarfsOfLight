@@ -34,6 +34,9 @@ public:
     void set_camera_position(Vec2 position) { m_pCamera->set_position(position); }
 
 private:
+    void sort_entities_for_rendering();
+    static bool entity_sort_first(const std::unique_ptr<Entity> &a, const std::unique_ptr<Entity> &b);
+
     void draw_renderable(double x, double y, Renderable &renderable);
     void load_texture_if_not_loaded(Renderable &renderable);
     void load_all_textures();

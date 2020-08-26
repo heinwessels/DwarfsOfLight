@@ -16,7 +16,6 @@ class Game{
     std::unique_ptr<World> m_pWorld;
     std::vector<std::unique_ptr<System>> m_systems;
     std::list<std::unique_ptr<Entity>> m_entities;
-
     std::list<std::unique_ptr<Entity>> m_entity_entry_queue; // Temporarily store new entities added during update
 
     RenderSystem *m_rendersystem;   // We use this a lot, so keep reference to it

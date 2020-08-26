@@ -35,6 +35,11 @@ void RenderSystem::set_camera_zoom(double zoom) { m_pCamera->set_zoom(zoom); }
 void RenderSystem::set_camera_target(Vec2 *target) { m_pCamera->set_target(target); }
 
 void RenderSystem::update_entities(){
+
+    // First make sure they are in the right order
+    sort_entities_for_rendering();
+
+    // Now draw them!
     for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
@@ -44,6 +49,31 @@ void RenderSystem::update_entities(){
             draw_renderable(transform.position.x, transform.position.y, renderable);
         }
     }
+}
+
+void RenderSystem::sort_entities_for_rendering(){
+    // Sort entities so that entities in front (>y) is drawn on top
+    // This is safe, because it only changes list pointers.
+    // No entity location in memory is changed
+    // If it's sorted already, it's O(1).... Right? Probably not.
+    // If this becomes an issue, then more investigation will be done.
+    // Currently it doesn't take much time (with few entities)
+
+    // thelist.sort([](const ipair & a, const ipair & b) { return a.first < b.first; });
+    m_pgame.get_entities().sort(entity_sort_first);
+}
+
+bool RenderSystem::entity_sort_first(const std::unique_ptr<Entity> &a, const std::unique_ptr<Entity> &b){
+    if (a->has_component<TransformComponent>() && a->has_component<Renderable>()){
+        if(b->has_component<TransformComponent>() && b->has_component<Renderable>()){
+            auto &a_trans = a->get_component<TransformComponent>();
+            auto &b_trans = b->get_component<TransformComponent>();
+
+            if (a_trans.position.y < b_trans.position.y)
+                return true;
+        }
+    }
+    return false;
 }
 
 void RenderSystem::update_world(){
