@@ -23,7 +23,7 @@ AISystem::AISystem(Game& game)
 }
 
 void AISystem::update(double dT){
-    for(auto const entity : m_pgame.get_entities()){
+    for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
             handle_entity_ai(*entity);
         }

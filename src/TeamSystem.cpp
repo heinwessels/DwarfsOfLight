@@ -16,7 +16,7 @@ TeamSystem::TeamSystem(Game &game)
 }
 
 void TeamSystem::update(double dT){
-    for(auto const entity : m_pgame.get_entities()){
+    for(auto &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
             handle_entity(*entity);
         }
@@ -35,10 +35,10 @@ void TeamSystem::handle_entity(Entity &entity){
     if (!team.flees_from.size() && !team.attacks.size())
         return; // This entity does not care about other entities
 
-    for(auto const stranger : m_pgame.get_entities()){
+    for(auto const &stranger : m_pgame.get_entities()){
         // For every entity in the world
 
-        if (&entity != stranger){
+        if (&entity != stranger.get()){
             // He is not a stranger to himself
 
             if (has_valid_signature(*stranger)){

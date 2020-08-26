@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <list>
 
 class World;
 class Entity;
@@ -14,7 +15,7 @@ class Game{
 
     std::unique_ptr<World> m_pWorld;
     std::vector<std::unique_ptr<System>> m_systems;
-    std::vector<Entity*> m_entities;    // Why not unique pointer?
+    std::list<std::unique_ptr<Entity>> m_entities;
 
     RenderSystem *m_rendersystem;   // We use this a lot, so keep reference to it
 
@@ -27,13 +28,12 @@ public:
     ~Game();
     bool update(double dT);
 
-    void add_entity(Entity* entity);
+    void add_entity(std::unique_ptr<Entity> entity);
 
-    std::vector<Entity*> &get_entities();
-    World& get_world();
-    RenderSystem& get_render_system();
-
-    void quit();
+    std::list<std::unique_ptr<Entity>> &get_entities(){ return m_entities; };
+    World& get_world() { return *m_pWorld; }
+    void quit(){ m_state = e_quit; }
+    RenderSystem& get_render_system() { return *m_rendersystem; /* For debugging */}
 
 private:
     void load_systems();

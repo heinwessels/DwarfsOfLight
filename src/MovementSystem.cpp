@@ -15,7 +15,7 @@ MovementSystem::MovementSystem(Game &game)
 }
 
 void MovementSystem::update(double dT){
-    for(auto const entity : m_pgame.get_entities()){
+    for(auto &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
             TransformComponent &transform = entity->get_component<TransformComponent>();

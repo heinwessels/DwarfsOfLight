@@ -23,7 +23,7 @@ void PathfindingSystem::update(double dT){
 
     int count_pathfind_calcs = 0;
 
-    for(auto const entity : m_pgame.get_entities()){
+    for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
 
             TransformComponent &transform = entity->get_component<TransformComponent>();

@@ -21,7 +21,7 @@ LifeSystem::LifeSystem(Game& game)
 }
 
 void LifeSystem::update(double dT){
-    for(auto const entity : m_pgame.get_entities()){
+    for(auto const &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
             handle_entity_life(*entity, dT);
         }
@@ -76,12 +76,12 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
 
         if (can_reproduce){
             // We can reproduce! Woohoo.
-            m_pgame.add_entity(create_offspring(life,
+            m_pgame.add_entity(std::move(create_offspring(life,
                 transform.position + Vec2(
                     random_sign() * random_float_in_range(0.1, 1),
                     random_sign() * random_float_in_range(0.1, 1)
                 )
-            ));
+            )));
 
             // Reset the timer
             life.time_till_reproduce = life.reproduce_every * random_float_in_range(0.8, 1.5);
@@ -90,11 +90,11 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
     }
 }
 
-Entity* LifeSystem::create_offspring(LifeComponent& life, const Vec2& pos){
+std::unique_ptr<Entity> LifeSystem::create_offspring(LifeComponent& life, const Vec2& pos){
     switch (life.type)
     {
     case LifeComponent::TypeFungi:
-        return new Mushroom(pos.x, pos.y);
+        return std::make_unique<Mushroom>(pos.x, pos.y);
         break;
 
     default:

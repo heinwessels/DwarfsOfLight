@@ -35,26 +35,26 @@ Game::Game(){
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
 
-    m_entities.push_back(new Dwarf(20, 25));
+    add_entity(std::make_unique<Dwarf>(20, 25));
     TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     m_rendersystem->set_camera_target(&positional.position);
     // m_rendersystem->set_camera_zoom(40);
-    // m_entities.push_back(new Goblin(23, 20));
+    // add_entity(std::make_unique<Goblin>(23, 20));
     // TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     // m_rendersystem->set_camera_target(&positional.position);
     m_rendersystem->set_camera_zoom(40);
 
-    // m_entities.push_back(new Goblin(20.255, 28.475));
-    // m_entities.push_back(new Goblin(30.255, 14.475));
-    // m_entities.push_back(new Goblin(40.255, 14.475));
+    add_entity(std::make_unique<Goblin>(20.255, 28.475));
+    add_entity(std::make_unique<Goblin>(30.255, 14.475));
+    add_entity(std::make_unique<Goblin>(40.255, 14.475));
 
-    // m_entities.push_back(new Firefly(20, 20));
-    // m_entities.push_back(new Firefly(20, 21));
-    // m_entities.push_back(new Firefly(20, 22));
+    add_entity(std::make_unique<Firefly>(20, 20));
+    add_entity(std::make_unique<Firefly>(20, 21));
+    add_entity(std::make_unique<Firefly>(20, 22));
 
-    m_entities.push_back(new Mushroom(20, 22.8));
-    // m_entities.push_back(new Mushroom(19.8, 23.3));
-    // m_entities.push_back(new Mushroom(20.4, 23.1));
+    add_entity(std::make_unique<Mushroom>(20, 22.8));
+    add_entity(std::make_unique<Mushroom>(19.8, 23.3));
+    add_entity(std::make_unique<Mushroom>(20.4, 23.1));
 
     ////////////////////////////////////////////////
 
@@ -63,9 +63,7 @@ Game::Game(){
 }
 
 Game::~Game(){
-    for (auto entity : m_entities){
-        delete entity;
-    }
+    // Shouldn't have to delete anyting
 }
 
 bool Game::update(double dT){
@@ -123,15 +121,7 @@ void Game::init_systems(){
     }
 }
 
-void Game::add_entity(Entity* entity){
+void Game::add_entity(std::unique_ptr<Entity> entity){
     if (entity)
-        m_entities.push_back(entity);
-}
-
-std::vector<Entity*> &Game::get_entities() { return m_entities; }
-World& Game::get_world() { return *m_pWorld; }
-void Game::quit(){ m_state = e_quit; }
-RenderSystem& Game::get_render_system() {
-    // For debugging stuff
-    return *m_rendersystem;
+        m_entities.push_back(std::move(entity));
 }

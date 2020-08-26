@@ -1,6 +1,7 @@
 #pragma once
 
 #include "System.hpp"
+#include <memory>
 
 class Vec2;
 class LifeComponent;
@@ -15,5 +16,5 @@ public:
 private:
     void handle_entity_life(Entity &entity, double dT);
     void attempt_reproduce(Entity &entity, double dT);
-    Entity* create_offspring(LifeComponent& life, const Vec2& pos);
+    std::unique_ptr<Entity> create_offspring(LifeComponent& life, const Vec2& pos);
 };

@@ -20,7 +20,7 @@ void CollisionSystem::update(double dT){
 
 
 void CollisionSystem::check_collision_with_world(){
-    auto entities = m_pgame.get_entities();
+    auto &entities = m_pgame.get_entities();
     for( auto entity = entities.begin(); entity != entities.end(); entity++ ){
         if(has_valid_signature(**entity)){
             // For each entity with a collision box
@@ -47,12 +47,11 @@ void CollisionSystem::check_collision_with_world(){
 }
 
 void CollisionSystem::check_collision_with_entities(){
-    auto entities = m_pgame.get_entities();
-    for( auto a = entities.begin(); a != entities.end()-1; a++ ){
+    auto &entities = m_pgame.get_entities();
+    for( auto a = entities.begin(); a != entities.end(); a++ ){
         if(has_valid_signature(**a)){
-
-            for( auto b = a + 1; b != entities.end(); b++ ){
-                if(has_valid_signature(**b)){
+            for( auto b = a; b != entities.end(); b++ ){
+                if(a != b && has_valid_signature(**b)){
 
                     TransformComponent &a_transform = (*a)->get_component<TransformComponent>();
                     TransformComponent &b_transform = (*b)->get_component<TransformComponent>();

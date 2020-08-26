@@ -28,7 +28,7 @@ void InputSystem::update(double dT){
         // Handle the camera
 
         // Handle any movement controllers
-        for(auto const entity : m_pgame.get_entities()){
+        for(auto &entity : m_pgame.get_entities()){
             if(has_valid_signature(*entity)){
 
                 // This entity should be moved by this controller
