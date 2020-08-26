@@ -31,6 +31,7 @@ public:
 
     void set_camera_zoom(double zoom);
     void set_camera_target(Vec2 *target);
+    void set_camera_position(Vec2 position) { m_pCamera->set_position(position); }
 
 private:
     void draw_renderable(double x, double y, Renderable &renderable);

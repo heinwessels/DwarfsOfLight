@@ -36,7 +36,7 @@ Game::Game(){
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
 
-    add_entity(std::make_unique<Dwarf>(20, 25));
+    add_entity(std::make_unique<Dwarf>(25, 20));
     // TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
     // m_rendersystem->set_camera_target(&positional.position);
     // m_rendersystem->set_camera_zoom(40);
@@ -55,7 +55,8 @@ Game::Game(){
 
     // add_entity(std::make_unique<Mushroom>(20, 22.8));
     // add_entity(std::make_unique<Mushroom>(19.8, 23.3));
-    add_entity(std::make_unique<Mushroom>(20.4, 23.1));
+    add_entity(std::make_unique<Mushroom>(20, 20));
+    m_rendersystem->set_camera_position(Vec2(20, 20));
 
     ////////////////////////////////////////////////
 

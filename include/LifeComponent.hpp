@@ -26,6 +26,7 @@ public:
     double time_till_reproduce = 0;
     int max_number_of_offspring = 1;
     double reproduce_minimum_food = 10;
+    int max_neighbours_for_reproduction = 3;
 
     bool can_die_of_age = false;
     double time_till_death = 0;
@@ -45,6 +46,7 @@ public:
         can_reproduce = true;
         max_number_of_offspring = 3;
         time_till_reproduce = reproduce_every * random_float_in_range(0.8, 1.5);
+        max_neighbours_for_reproduction = 1;
     }
 };
 

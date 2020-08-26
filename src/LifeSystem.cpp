@@ -65,12 +65,20 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
             can_reproduce = false;
         }
 
+        // Count the amount of neighbours of the same type of life
         auto &transform = entity.get_component<TransformComponent>();
+        int neighbours = count_lifetype_in_range(life, transform.position, Vec2(3, 3));
+        neighbours -= 1;    // Counting yourself as a neighbour during reproduction is cheating.
 
         if(life.need_mate_to_reproduce){
             // We need a mate. Are we close enough to reproduce?
 
             // TODO
+            can_reproduce = false;
+        }
+
+        if (neighbours >= life.max_neighbours_for_reproduction){
+            // There is too much neighbours to reproduce
             can_reproduce = false;
         }
 
@@ -90,8 +98,39 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
     }
 }
 
-int LifeSystem::count_lifetype_in_range(LifeComponent& life, double range){
-    return 0;
+int LifeSystem::count_lifetype_in_range(LifeComponent& life, Vec2 position, Vec2 range){
+    // Count enities around <position> in a rectangle of size <range>
+    int count = 0;
+    auto &map = m_pgame.get_world().get_occupancy_map().get_map();
+
+    Vec2 lower_left = {
+        std::min(0.0, floor(position.x - range.x/2.0)),
+        std::min(0.0, floor(position.y - range.y/2.0))
+    };
+    Vec2 upper_right = {
+        std::max(floor(position.x + range.x/2.0), (double) m_pgame.get_world().get_width()),
+        std::max(floor(position.y + range.y/2.0), (double) m_pgame.get_world().get_height())
+    };
+
+    for (int x = lower_left.x; x < upper_right.x; x ++)
+        for (int y = lower_left.y; y < upper_right.y; y ++){
+            // For every tile in the map
+
+            for (auto entity : map[x][y]){
+                // For every entity on this tile
+
+                if(entity->has_component<LifeComponent>()){
+                    auto &other_life = entity->get_component<LifeComponent>();
+                    if (other_life.type == life.type){
+                        // If entity contains the life we are looking for
+
+                        count++;
+                    }
+                }
+            }
+        }
+
+    return count;
 }
 
 std::unique_ptr<Entity> LifeSystem::create_offspring(LifeComponent& life, const Vec2& pos){

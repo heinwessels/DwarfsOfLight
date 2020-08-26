@@ -16,6 +16,6 @@ public:
 private:
     void handle_entity_life(Entity &entity, double dT);
     void attempt_reproduce(Entity &entity, double dT);
-    int count_lifetype_in_range(LifeComponent& life, double range);
+    int count_lifetype_in_range(LifeComponent& life, Vec2 position, Vec2 range);
     std::unique_ptr<Entity> create_offspring(LifeComponent& life, const Vec2& pos);
 };

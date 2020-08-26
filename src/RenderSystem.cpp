@@ -8,7 +8,7 @@
 RenderSystem::RenderSystem(Game &game, int width, int height)
     : System(game, std::string("Render System")),
     m_pRenderer(std::make_unique<Renderer>(width, height)),
-    m_pCamera(std::make_unique<Camera>(Vec2(width/2/32, height/2/32), 32, Vec2(width, height))),
+    m_pCamera(std::make_unique<Camera>(Vec2(width/2.0, height/2.0), 32, Vec2(width, height))),
     m_pTexturepool(std::make_unique<TexturePool>(*m_pRenderer))
 {
     m_signature |= Component::get_component_signature<TransformComponent>();
