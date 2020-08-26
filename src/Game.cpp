@@ -123,6 +123,11 @@ void Game::init_systems(){
     }
 }
 
+void Game::add_entity(Entity* entity){
+    if (entity)
+        m_entities.push_back(entity);
+}
+
 std::vector<Entity*> &Game::get_entities() { return m_entities; }
 World& Game::get_world() { return *m_pWorld; }
 void Game::quit(){ m_state = e_quit; }

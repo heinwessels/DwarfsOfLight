@@ -14,7 +14,7 @@ class Game{
 
     std::unique_ptr<World> m_pWorld;
     std::vector<std::unique_ptr<System>> m_systems;
-    std::vector<Entity*> m_entities;
+    std::vector<Entity*> m_entities;    // Why not unique pointer?
 
     RenderSystem *m_rendersystem;   // We use this a lot, so keep reference to it
 
@@ -26,6 +26,8 @@ public:
     Game();
     ~Game();
     bool update(double dT);
+
+    void add_entity(Entity* entity);
 
     std::vector<Entity*> &get_entities();
     World& get_world();

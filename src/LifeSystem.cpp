@@ -2,11 +2,16 @@
 #include "Game.hpp"
 #include "World.hpp"
 
+#include <vector>
+#include <memory>
+
 #include "RNG.hpp"
 #include "Vec2.hpp"
 
 #include "TransformComponent.hpp"
 #include "LifeComponent.hpp"
+
+#include "Mushroom.hpp"
 
 LifeSystem::LifeSystem(Game& game)
     : System(game, std::string("Life System"))
@@ -59,22 +64,43 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
             // Are we too hungry?
             can_reproduce = false;
         }
-        else if(life.need_mate_to_reproduce){
+
+        auto &transform = entity.get_component<TransformComponent>();
+
+        if(life.need_mate_to_reproduce){
             // We need a mate. Are we close enough to reproduce?
 
             // TODO
             can_reproduce = false;
         }
 
-
         if (can_reproduce){
             // We can reproduce! Woohoo.
-
-            printf("%10s should have kids now!\n", entity.get_name().c_str());
+            m_pgame.add_entity(create_offspring(life,
+                transform.position + Vec2(
+                    random_sign() * random_float_in_range(0.1, 1),
+                    random_sign() * random_float_in_range(0.1, 1)
+                )
+            ));
 
             // Reset the timer
             life.time_till_reproduce = life.reproduce_every * random_float_in_range(0.8, 1.5);
             life.ready_to_reproduce = false;
         }
     }
+}
+
+Entity* LifeSystem::create_offspring(LifeComponent& life, const Vec2& pos){
+    switch (life.type)
+    {
+    case LifeComponent::TypeFungi:
+        return new Mushroom(pos.x, pos.y);
+        break;
+
+    default:
+        break;
+        raise;
+    }
+
+    return nullptr;
 }
