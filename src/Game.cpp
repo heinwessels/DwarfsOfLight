@@ -36,8 +36,8 @@ Game::Game(){
     ////////////////////////////////////////////////
 
     add_entity(std::make_unique<Dwarf>(20, 25));
-    TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
-    m_rendersystem->set_camera_target(&positional.position);
+    // TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
+    // m_rendersystem->set_camera_target(&positional.position);
     // m_rendersystem->set_camera_zoom(40);
     // add_entity(std::make_unique<Goblin>(23, 20));
     // TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
@@ -92,6 +92,8 @@ bool Game::update(double dT){
     }
     //////////////////////////////////////////////////////////////////
 
+    add_queued_entities_to_world();
+
     return m_state != e_quit;   // This state can be changed by systems
 }
 
@@ -123,5 +125,9 @@ void Game::init_systems(){
 
 void Game::add_entity(std::unique_ptr<Entity> entity){
     if (entity)
-        m_entities.push_back(std::move(entity));
+        m_entity_entry_queue.push_back(std::move(entity));
+}
+
+void Game::add_queued_entities_to_world(){
+    m_entities.splice(m_entities.end(), m_entity_entry_queue);
 }

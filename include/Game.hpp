@@ -17,6 +17,8 @@ class Game{
     std::vector<std::unique_ptr<System>> m_systems;
     std::list<std::unique_ptr<Entity>> m_entities;
 
+    std::list<std::unique_ptr<Entity>> m_entity_entry_queue; // Temporarily store new entities added during update
+
     RenderSystem *m_rendersystem;   // We use this a lot, so keep reference to it
 
     enum State {e_start, e_running, e_paused, e_quit};
@@ -38,4 +40,6 @@ public:
 private:
     void load_systems();
     void init_systems();
+
+    void add_queued_entities_to_world();
 };
