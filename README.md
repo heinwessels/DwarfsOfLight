@@ -142,4 +142,5 @@ This is also where the ECS architecture excels, because I can finely adjust how 
 
 ## TODO
 1. Convert software to store data serially, which is one of the goals of ECS. For example, *all* `components` stored serially, with references to which `entity` they belong. The `systems` will then loop through the `components`, not caring to which `entity` it belongs to.
-2. Other things.
+2. Make `Tile` more standalone and flexable. For example, a `tile` could have a light level, store current entities placed on it, etc. Currently it related too close to entities, and sometimes causes bloated code to compensate.
+3. Make it better.

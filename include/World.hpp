@@ -5,6 +5,7 @@
 
 #include "Tile.hpp"
 #include "LightMap.hpp"
+#include "OccupancyMapSystem.hpp"
 
 class World{
 
@@ -19,6 +20,8 @@ class World{
     LightMap m_lightmap;
     MColour m_global_lighting = {0, 0, 0};
 
+    OccupancyMap m_occupancymap;
+
 public:
     World (int width, int height);
     World (std::string map_path);
@@ -29,6 +32,8 @@ public:
     LightMap& get_light_map();
     void set_global_lighting(MColour global_lighting);
     MColour get_global_lighting();
+
+    OccupancyMap &get_occupancy_map(){ return m_occupancymap; }
 
     void load_world(std::string path);
     void add_tile_at(int x, int y, Tile::Type type);

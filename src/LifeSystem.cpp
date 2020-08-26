@@ -76,18 +76,22 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
 
         if (can_reproduce){
             // We can reproduce! Woohoo.
-            m_pgame.add_entity(std::move(create_offspring(life,
+            m_pgame.add_entity(create_offspring(life,
                 transform.position + Vec2(
                     random_sign() * random_float_in_range(0.1, 1),
                     random_sign() * random_float_in_range(0.1, 1)
                 )
-            )));
+            ));
 
             // Reset the timer
             life.time_till_reproduce = life.reproduce_every * random_float_in_range(0.8, 1.5);
             life.ready_to_reproduce = false;
         }
     }
+}
+
+int LifeSystem::count_lifetype_in_range(LifeComponent& life, double range){
+    return 0;
 }
 
 std::unique_ptr<Entity> LifeSystem::create_offspring(LifeComponent& life, const Vec2& pos){

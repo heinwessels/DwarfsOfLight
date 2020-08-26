@@ -9,6 +9,7 @@
 #include "AISystem.hpp"
 #include "TeamSystem.hpp"
 #include "LifeSystem.hpp"
+#include "OccupancyMapSystem.hpp"
 
 #include "Timing.hpp"
 #include "World.hpp"
@@ -44,16 +45,16 @@ Game::Game(){
     // m_rendersystem->set_camera_target(&positional.position);
     m_rendersystem->set_camera_zoom(40);
 
-    add_entity(std::make_unique<Goblin>(20.255, 28.475));
-    add_entity(std::make_unique<Goblin>(30.255, 14.475));
-    add_entity(std::make_unique<Goblin>(40.255, 14.475));
+    // add_entity(std::make_unique<Goblin>(20.255, 28.475));
+    // add_entity(std::make_unique<Goblin>(30.255, 14.475));
+    // add_entity(std::make_unique<Goblin>(40.255, 14.475));
 
-    add_entity(std::make_unique<Firefly>(20, 20));
-    add_entity(std::make_unique<Firefly>(20, 21));
-    add_entity(std::make_unique<Firefly>(20, 22));
+    // add_entity(std::make_unique<Firefly>(20, 20));
+    // add_entity(std::make_unique<Firefly>(20, 21));
+    // add_entity(std::make_unique<Firefly>(20, 22));
 
-    add_entity(std::make_unique<Mushroom>(20, 22.8));
-    add_entity(std::make_unique<Mushroom>(19.8, 23.3));
+    // add_entity(std::make_unique<Mushroom>(20, 22.8));
+    // add_entity(std::make_unique<Mushroom>(19.8, 23.3));
     add_entity(std::make_unique<Mushroom>(20.4, 23.1));
 
     ////////////////////////////////////////////////
@@ -101,6 +102,7 @@ void Game::load_systems(){
     // The order in which systems are added to this vector
     // will determine in which order they will execute
 
+    m_systems.push_back(std::make_unique<OccupancySystem>(*this));
     m_systems.push_back(std::make_unique<LightSystem>(*this));
     m_systems.push_back(std::make_unique<RenderSystem>(*this, screen_width, screen_height));
 

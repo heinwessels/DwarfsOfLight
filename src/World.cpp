@@ -10,7 +10,9 @@
 #include <boost/algorithm/string.hpp>
 
 World::World (int width, int height)
-        : m_width(width), m_height(height), m_lightmap(width, height)
+        : m_width(width), m_height(height),
+        m_lightmap(width, height),
+        m_occupancymap(width, height)
 {
 
     clear();
@@ -78,6 +80,7 @@ void World::resize(int width, int height){
         column.resize(height);
     }
     m_lightmap.resize(width, height);
+    m_occupancymap.resize(m_width, m_height);
 }
 
 
@@ -110,4 +113,5 @@ void World::load_world(std::string path){
             );
         }
     }
+
 }
