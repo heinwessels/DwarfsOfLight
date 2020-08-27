@@ -16,4 +16,6 @@ public:
 private:
     void handle_straight_movement(TransformComponent &transform, MoveComponent &move, double dT);
     void handle_sporadic_movement(TransformComponent &transform, MoveComponent &move, double dT);
+
+    void catch_if_out_of_bounds(TransformComponent &transform);
 };

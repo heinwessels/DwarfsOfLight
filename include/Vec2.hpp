@@ -80,4 +80,8 @@ class Vec2 {
         Vec2 t (a);
         return t / sqrt(dot(a, a));
     }
+
+    static Vec2 sign(const Vec2 &a){
+        return Vec2 (a.x > 0 ? 1.0 : -1.0, a.y > 0 ? 1.0 : -1.0);;
+    }
 };

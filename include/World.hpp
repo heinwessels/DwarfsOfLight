@@ -41,6 +41,10 @@ public:
     int get_width() const;
     int get_height() const;
 
+    bool within_bounds(int x, int y){
+        return 0 <= x && x < m_width && 0 <= y && y < m_height;
+    }
+
 private:
     void clear();
     void resize(int width, int height);

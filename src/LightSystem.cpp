@@ -52,9 +52,13 @@ void LightSystem::add_lighting_to_entities(){
         if (entity->has_component<Renderable>()){
             TransformComponent &transform = entity->get_component<TransformComponent>();
             Renderable &renderable = entity->get_component<Renderable>();
-            renderable.set_colour_mod(
-                lightmap.get_lighting_at(transform.position)
-            );
+            if (m_pgame.get_world().within_bounds(floor(transform.position.x), floor(transform.position.y))){
+                // First make sure this entity didn't wander off the map (it happens)
+
+                renderable.set_colour_mod(
+                    lightmap.get_lighting_at(transform.position)
+                );
+            }
         }
     }
 }
@@ -87,7 +91,7 @@ void LightSystem::update_all_lightsources(double dT){
         if(has_valid_signature(*entity)){
 
             LightComponent &light = entity->get_component<LightComponent>();
-            update_lightsource(light, dT);
+            update_lightsource(light, dT);  // TODO Move this to <populate_lightmap>
         }
     }
 }
@@ -107,7 +111,7 @@ void LightSystem::update_lightsource(LightComponent &light, double dT){
         target_colour.clamp();  // Make sure it's valid
 
         // Calculate the new period
-        light.time_to_gradient_change = light.period + random_float_in_range(-1, 1) * light.period * 0.5;   // 30% variation
+        light.time_to_gradient_change = light.period + random_float_in_range(-1, 1) * light.period * 0.5;   // Some variation
 
         // Calculate the new
         light.current_gradient = (target_colour - light.current_colour) / light.time_to_gradient_change;
@@ -125,7 +129,7 @@ void LightSystem::ray_trace_source(Vec2 origin, LightComponent &light, LightMap 
 
         ray_trace(
             origin,
-            Vec2(cosf(angle), sinf(angle)),
+            Vec2(cos(angle), sin(angle)),
             lightmap,
             light
         );
@@ -141,9 +145,14 @@ void LightSystem::ray_trace(Vec2 origin, Vec2 direction, LightMap &lightmap, Lig
     Vec2 current_tile = ray_get_propogating_tile(current_position, direction);
     int current_x = floor(current_tile.x);
     int current_y = floor(current_tile.y);
+    if(!m_pgame.get_world().within_bounds(current_x, current_y)){
+        // This light component somehow got outside world bounds
+        return;   // Skip this
+    }
 
     // We might not trigger the source block, so ensure it's coloured in.
     attempt_to_set_colour(current_x, current_y, lightmap, light, 0);    // Assume zero distance
+    //      TODO This can go out of bounds if the entity escaped the world!
 
     bool end_ray = false;
     while(!end_ray){

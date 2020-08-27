@@ -1,5 +1,6 @@
 #include "MovementSystem.hpp"
 #include "Game.hpp"
+#include "World.hpp"
 
 #include "RNG.hpp"
 
@@ -27,6 +28,9 @@ void MovementSystem::update(double dT){
             else if (move.type == MoveComponent::TypeSporadic){
                 handle_sporadic_movement(transform, move, dT);
             }
+
+            // Make sure this entity didn't wander off the world
+            catch_if_out_of_bounds(transform);
         }
     }
 }
@@ -64,4 +68,10 @@ void MovementSystem::handle_sporadic_movement(TransformComponent &transform, Mov
         // Set new timer
         sporadic.time_to_change = sporadic.period * random_float_in_range(0.5, 1.5);
     }
+}
+
+void MovementSystem::catch_if_out_of_bounds(TransformComponent &transform){
+    const auto &world = m_pgame.get_world();
+    transform.position.x = std::max(std::min(transform.position.x, (double) world.get_width()-1), 0.0);
+    transform.position.y = std::max(std::min(transform.position.y, (double) world.get_height()-1), 0.0);
 }

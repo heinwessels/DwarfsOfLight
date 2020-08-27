@@ -163,6 +163,12 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
                 return true;
             }
 
+            // Is this child still within world boundaries?
+            if (!m_pgame.get_world().within_bounds(child->x, child->y)){
+                // It's outside bounds.
+                continue;
+            }
+
             // Is this child inside a wall?
             if (world[child->x][child->y].get_type() == Tile::TypeWall){
                 // Yup. It's not valid.

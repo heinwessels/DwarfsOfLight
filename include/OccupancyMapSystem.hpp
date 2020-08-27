@@ -7,10 +7,12 @@
 */
 
 #include "System.hpp"
+#include "Vec2.hpp"
 
 #include <vector>
 #include <list>
 
+class World;
 class OccupancyMap{
     int m_width, m_height;
 
@@ -35,6 +37,7 @@ public:
     void clear();
     void resize(int width, int height);
 
+    std::list<Entity*> find_entities_in_range(World &world, Vec2 position, Vec2 range);
 };
 
 class Game;
