@@ -104,7 +104,6 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
             }
             else{
                 // This was an failed attempt
-                printf("%s failed to find a suitable spot to reproduce.\n", entity.get_name().c_str());
             }
 
             // Reset the timer
@@ -138,7 +137,7 @@ Vec2 LifeSystem::find_spot_to_reproduce(Vec2 position, Vec2 size, double maximum
     int tries = 10;  // Amount of times we will try a new starting point
     bool found_valid = false;
 
-    while(!found_valid && --tries){
+    while(!found_valid && tries--){
 
         // Try a new location
         Vec2 new_position = position + Vec2(
@@ -147,7 +146,7 @@ Vec2 LifeSystem::find_spot_to_reproduce(Vec2 position, Vec2 size, double maximum
         );
 
         int inner_tries = 3;
-        while(--inner_tries){
+        while(inner_tries--){
             // Loop through entities, and see if there is a collision
             bool collision = false;
             for (const auto &entity : entities){
@@ -185,10 +184,13 @@ Vec2 LifeSystem::find_spot_to_reproduce(Vec2 position, Vec2 size, double maximum
             // Was this position clear?
             if(!collision){
 
-                if(false){
-                    // Are we on a wall tile?
-
-                    // TODO?
+                if(!world.within_bounds(floor(new_position.x), floor(new_position.y))){
+                    // We are outside world limits somehow.
+                    inner_tries = 0;    // Start from a new location.
+                }
+                else if(world.get_tile_type_at(floor(new_position.x), floor(new_position.y)) == Tile::TypeWall){
+                    // We reached a wall tile
+                    inner_tries = 0;    // Start from a new location.
                 }
                 else if (Vec2::dist_sq(position, new_position) > maximum_range*maximum_range){
                     // Too far from center

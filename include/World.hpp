@@ -28,10 +28,11 @@ public:
 
     std::vector<std::vector<Tile>>& get_tiles();
     Tile& get_closest_tile_to(Vec2 point);
+    Tile::Type get_tile_type_at(int x, int y) const { return m_world[x][y].get_type(); }
 
     LightMap& get_light_map();
     void set_global_lighting(MColour global_lighting);
-    MColour get_global_lighting();
+    MColour get_global_lighting() const { return m_global_lighting; }
 
     OccupancyMap &get_occupancy_map(){ return m_occupancymap; }
 
@@ -41,7 +42,7 @@ public:
     int get_width() const;
     int get_height() const;
 
-    bool within_bounds(int x, int y){
+    bool within_bounds(int x, int y) const {
         return 0 <= x && x < m_width && 0 <= y && y < m_height;
     }
 

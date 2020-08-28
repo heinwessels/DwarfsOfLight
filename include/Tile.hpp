@@ -46,5 +46,5 @@ public:
     }
     Tile() : Tile(TypeEmpty, 0, 0) { }  // For empty world tiles
 
-    Type get_type(){ return m_type; }
+    Type get_type() const { return m_type; }
 };

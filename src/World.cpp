@@ -51,7 +51,6 @@ Tile& World::get_closest_tile_to(Vec2 point){ return m_world[floor(point.x )][fl
 
 LightMap& World::get_light_map() { return m_lightmap; }
 void World::set_global_lighting(MColour global_lighting) { m_global_lighting = global_lighting; }
-MColour World::get_global_lighting() { return m_global_lighting; }
 
 int World::get_width() const { return m_width; }
 int World::get_height()const { return m_height; }
