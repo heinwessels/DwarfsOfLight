@@ -90,10 +90,13 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
 
         if (can_reproduce){
             // We can reproduce! Woohoo.
+            neighbours = world.get_occupancy_map().find_entities_in_range(
+                world, transform.position, Vec2(5, 5)
+            );  // Looking a little further for collisions
             Vec2 new_born_position = find_spot_to_reproduce(
                 transform.position,
                 Vec2(0.3, 0.3), // Size of entities (TODO Make configurable)
-                1.5,
+                2.5,
                 neighbours
             );
 
@@ -141,8 +144,8 @@ Vec2 LifeSystem::find_spot_to_reproduce(Vec2 position, Vec2 size, double maximum
 
         // Try a new location
         Vec2 new_position = position + Vec2(
-            random_sign() * random_float_in_range(size.x, 2*size.x),
-            random_sign() * random_float_in_range(size.y, 2*size.y)
+            random_sign() * random_float_in_range(size.x, 3*size.x),
+            random_sign() * random_float_in_range(size.y, 3*size.y)
         );
 
         int inner_tries = 3;
@@ -154,25 +157,28 @@ Vec2 LifeSystem::find_spot_to_reproduce(Vec2 position, Vec2 size, double maximum
                     const auto &transform = entity->get_component<TransformComponent>();
 
                     // Find the shortest distance between two squares
-                    Vec2 shortest_distance = get_shortest_distance_resolve_conflict(
+                    if (has_collision(
                         new_position, size,
                         transform.position, size
-                    );
-
-                    // There was a collision. Move the distance.
-                    if (shortest_distance.x < 0 && shortest_distance.y < 0){
+                    )){
                         collision = true;   // Remember
 
-                        // Translate the position this shortest distance
-                        // Hopefully it resolves the conflict
-                        // Can only move in directions away from <position>
-                        if(shortest_distance.x < 0){
+                        // Now attempt to resolve this conflict.
+                        Vec2 shortest_distance = get_shortest_distance_resolve_conflict(
+                            new_position, size,
+                            transform.position, size
+                        );
+
+                        // Try to resolve the conflict.
+                        // TODO: I don't understand this problem well enough.
+                        // There must be a better way!
+                        if(shortest_distance.x < shortest_distance.y){
                             // We need to move x direction
-                            position.x += Vec2::sign(new_position-position).x * shortest_distance.x;
+                            position.x += shortest_distance.x * random_float_in_range(1, 1.3) * random_sign();
                         }
                         else{
                             // We need to move y direction
-                            position.y += Vec2::sign(new_position-position).y * shortest_distance.y;
+                            position.y += shortest_distance.y * random_float_in_range(1, 1.3) * random_sign();
                         }
 
                         // Stop the loop
@@ -220,15 +226,22 @@ Vec2 LifeSystem::get_shortest_distance_resolve_conflict(
     const Vec2 b, const Vec2 b_size
 ){
     // Calculates the shortest distance to move to resolve collision
-    // This is an adaptation from formulate used in CollisionSystem.
-    // Multiplying by <u> means, if both delta axis is negative,
-    // then there's a collision
-
+    // This is copy-and-pasted from CollisionSystem.
     Vec2 r = b - a;
     Vec2 u = {r.x > 0.0f ? 1.0f : -1.0f, r.y > 0.0f ? 1.0f : -1.0f};
-    return u * ((b - (u * b_size * 0.5f)) - (a + (u * a_size * 0.5f)));
+    return (b - (u * b_size * 0.5f)) - (a + (u * a_size * 0.5f));
 }
 
+bool LifeSystem::has_collision(
+    const Vec2 a, const Vec2 a_size,
+    const Vec2 b, const Vec2 b_size
+){
+    // Returns true if the collision boxes overlap
+    return  (a.x - a_size.x / 2 )   < (b.x + b_size.x / 2) &&
+            (a.x + a_size.x / 2 )   > (b.x - b_size.x / 2) &&
+            (a.y - a_size.y / 2 )   < (b.y + b_size.y / 2) &&
+            (a.y + a_size.y / 2 )   > (b.y - b_size.y / 2);
+}
 
 
 std::unique_ptr<Entity> LifeSystem::create_offspring(LifeComponent& life, const Vec2& pos){

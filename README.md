@@ -149,4 +149,5 @@ This is also where the ECS architecture excels, because I can finely adjust how 
    - Entities warp through wall tiles. Choose correction translation beter.
    - Fleeing entities get's stuck in corners. Just check for walls.
    - Firefly's seem to prefer bottom-most mushroom. Why? Randomize?
+6. Large numbers of mushrooms will tank the frame rate due to the light calculation. Change so that light component can by calculated by tile if required, meaning if tile contains one or more mushrooms, do light calculation once. Will be easy using occupancy map.
 5. Make it better...

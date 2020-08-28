@@ -21,4 +21,5 @@ private:
     std::unique_ptr<Entity> create_offspring(LifeComponent& life, const Vec2& pos);
     Vec2 find_spot_to_reproduce(Vec2 position, Vec2 size, double maximum_range, std::list<Entity*> entities);
     Vec2 get_shortest_distance_resolve_conflict(const Vec2 a, const Vec2 a_size, const Vec2 b, const Vec2 b_size);
+    bool has_collision(const Vec2 a, const Vec2 a_size, const Vec2 b, const Vec2 b_size);
 };

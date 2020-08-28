@@ -46,7 +46,7 @@ public:
         can_reproduce = true;
         max_number_of_offspring = 3;
         time_till_reproduce = reproduce_every * random_float_in_range(0.8, 1.5);
-        max_neighbours_for_reproduction = 5;
+        max_neighbours_for_reproduction = 10;
     }
 };
 
