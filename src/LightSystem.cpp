@@ -83,7 +83,7 @@ void LightSystem::populate_lightmap(){
             LightMap::Range range = {
                 (int)floor(transform.position.x - light.range - 1),
                 (int)floor(transform.position.y - light.range - 1),
-                (int)light.range*2 + 2, (int)light.range*2 + 2
+                (int)light.range*2 + 3, (int)light.range*2 + 3
             };
             lightmap.add_other_light_map_range(
                 new_lightmap, range
