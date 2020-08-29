@@ -41,4 +41,5 @@ private:
     void init_systems();
 
     void add_queued_entities_to_world();
+    void remove_dead_entities();
 };

@@ -22,8 +22,6 @@ public:
         this->add_component<Renderable>("textures/mushroom.png", width, height);
         this->add_component<LightComponent>(MColour(100, 150, 250), MColour(10, 10, 10), 1, 3);
         this->add_component<TeamComponent>(TeamPlant, 1);
-
-        // this->add_component<LifeComponent>(LifeComponent::CreateTypeFungi(), 5, 10, 2);
-        this->add_component<FungiLifeComponent>(5, 10, 2);
+        this->add_component<FungiLifeComponent>(10, 10, 2);
     }
 };

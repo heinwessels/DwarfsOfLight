@@ -9,6 +9,7 @@
 #include "Component.hpp"
 #include "TransformComponent.hpp"
 #include "TeamComponent.hpp"
+#include "LifeComponent.hpp"
 
 TeamSystem::TeamSystem(Game &game)
     :   System(game, std::string("Team System"))
@@ -20,12 +21,12 @@ TeamSystem::TeamSystem(Game &game)
 void TeamSystem::update(double dT){
     for(auto &entity : m_pgame.get_entities()){
         if(has_valid_signature(*entity)){
-            handle_entity(*entity);
+            handle_entity(*entity, dT);
         }
     }
 }
 
-void TeamSystem::handle_entity(Entity &entity){
+void TeamSystem::handle_entity(Entity &entity, double dT){
 
     auto &transform = entity.get_component<TransformComponent>();
     auto &team = entity.get_component<TeamComponent>();
@@ -60,6 +61,8 @@ void TeamSystem::handle_entity(Entity &entity){
                     if (stranger_team.team == enemy){
 
                         double distance_square = Vec2::dist_sq(transform.position, stranger_transform.position);
+
+                        // Is this the closest one? We might need to run the other way
                         if (
                             distance_square < team.vision_radius*team.vision_radius &&
                             distance_square < distance_sq_closest_enemy_flee
@@ -77,6 +80,8 @@ void TeamSystem::handle_entity(Entity &entity){
                     if (stranger_team.team == enemy){
 
                         double distance_square = Vec2::dist_sq(transform.position, stranger_transform.position);
+
+                        // Is this the closest enemy we can attack? We might need to run towards it.
                         if (
                             distance_square < team.vision_radius*team.vision_radius &&
                             distance_square < distance_sq_closest_enemy_attack
@@ -85,6 +90,18 @@ void TeamSystem::handle_entity(Entity &entity){
                             team.enemy_attack_close = true;
                             team.enemy_attack_dir = Vec2::norm(stranger_transform.position - transform.position);
                             distance_sq_closest_enemy_attack = distance_square;
+                        }
+
+                        // Are we close enough to actually hurt it?
+                        if (distance_square < team.attack_radius*team.attack_radius){
+                            // Yes! We can hurt it!
+                            if (stranger->has_component<LifeComponent>()){
+                                // We can only hurt it if it can die though (it should)
+                                auto &stranger_life = stranger->get_component<LifeComponent>();
+
+                                // Hurt it!
+                                stranger_life.health -= team.attack_strength * dT;
+                            }
                         }
                     }
                 }

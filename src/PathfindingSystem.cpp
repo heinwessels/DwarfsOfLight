@@ -99,16 +99,16 @@ void PathfindingSystem::handle_pathfinding(TransformComponent &transform, Pathfi
 }
 
 bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::list<Vec2> &waypoints){
-
     waypoints.clear();   // Make sure there's nothing in here
 
-    auto &world = m_pgame.get_world().get_tiles();
+    auto &world = m_pgame.get_world();
+    auto &world_tiles = world.get_tiles();
 
     Node goal { nullptr,
         static_cast<int>(floor(goal_point.x)),
         static_cast<int>(floor(goal_point.y))
     };
-    if (world[goal.x][goal.y].get_type() == Tile::TypeWall){
+    if (world_tiles[goal.x][goal.y].get_type() == Tile::TypeWall){
         // This goal is inside a wall. Won't work.
         return false;
     }
@@ -122,7 +122,8 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
     ));
 
     // Loop through open nodes. If it runs out it means no path
-    while(!open_nodes.empty()){
+    int steps_left = 2 * std::max(world.get_width(), world.get_height()); // Sanity check
+    while(!open_nodes.empty() && steps_left--){
 
         // Find the node with the lowest <f>
         // Loop from the front, where the most recent nodes are stored
@@ -170,7 +171,7 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
             }
 
             // Is this child inside a wall?
-            if (world[child->x][child->y].get_type() == Tile::TypeWall){
+            if (world_tiles[child->x][child->y].get_type() == Tile::TypeWall){
                 // Yup. It's not valid.
                 continue;
             }
@@ -178,8 +179,8 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
             // Are we trying to move diagonal accross a wall?
             if (!dx || dy){
                 if (
-                    world[parent->x + dx][parent->y].get_type() == Tile::TypeWall ||
-                    world[parent->x][parent->y + dy].get_type() == Tile::TypeWall
+                    world_tiles[parent->x + dx][parent->y].get_type() == Tile::TypeWall ||
+                    world_tiles[parent->x][parent->y + dy].get_type() == Tile::TypeWall
                 ){
                     // Not valid. Trying to move accross a tile on a diagonal
                     continue;
@@ -246,6 +247,11 @@ bool PathfindingSystem::astar_search(Vec2 start_point, Vec2 goal_point, std::lis
         m_pgame.get_render_system().update(0);  // Force update (Can be commented out)
 #endif
         closed_nodes.push_front(std::move(parent));
+    }
+
+    if (!steps_left){
+        // We ran into a bad loop
+        printf("Pathfinding failed.");
     }
 
     // We didn't reach the goal

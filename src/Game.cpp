@@ -46,17 +46,20 @@ Game::Game(){
     // m_rendersystem->set_camera_target(&positional.position);
     // m_rendersystem->set_camera_zoom(40);
 
-    // add_entity(std::make_unique<Goblin>(20.255, 28.475));
-    // add_entity(std::make_unique<Goblin>(30.255, 14.475));
-    // add_entity(std::make_unique<Goblin>(40.255, 14.475));
+    add_entity(std::make_unique<Goblin>(20.255, 28.475));
+    add_entity(std::make_unique<Goblin>(30.255, 14.475));
+    add_entity(std::make_unique<Goblin>(40.255, 14.475));
 
     add_entity(std::make_unique<Firefly>(20, 20));
     add_entity(std::make_unique<Firefly>(20, 21));
     add_entity(std::make_unique<Firefly>(20, 22));
-    add_entity(std::make_unique<Firefly>(21, 21));
-    add_entity(std::make_unique<Firefly>(21, 22));
+    // add_entity(std::make_unique<Firefly>(21, 21));
+    // add_entity(std::make_unique<Firefly>(21, 22));
 
-    add_entity(std::make_unique<Mushroom>(20, 22.8));
+    // add_entity(std::make_unique<Mushroom>(20, 22.8));
+    // add_entity(std::make_unique<Mushroom>(21, 22.8));
+    // add_entity(std::make_unique<Mushroom>(20.5, 22.8));
+    // add_entity(std::make_unique<Mushroom>(21.5, 22.8));
 
     ////////////////////////////////////////////////
 
@@ -95,6 +98,7 @@ bool Game::update(double dT){
     //////////////////////////////////////////////////////////////////
 
     add_queued_entities_to_world();
+    remove_dead_entities();
 
     return m_state != e_quit;   // This state can be changed by systems
 }
@@ -133,4 +137,8 @@ void Game::add_entity(std::unique_ptr<Entity> entity){
 
 void Game::add_queued_entities_to_world(){
     m_entities.splice(m_entities.end(), m_entity_entry_queue);
+}
+
+void Game::remove_dead_entities(){
+    m_entities.remove_if([](std::unique_ptr<Entity> &entity){ return !entity->is_still_alive(); });
 }

@@ -22,7 +22,7 @@ public:
     Vec2 enemy_attack_dir = Vec2(0);
 
     double vision_radius = 5;
-    double attack_radius = 3;
+    double attack_radius = 1;
 
     double attack_strength; // damage per second
 

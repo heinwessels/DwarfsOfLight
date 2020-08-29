@@ -24,7 +24,7 @@ public:
     bool need_mate_to_reproduce = false;
     double reproduce_every = 0;         // Every how many seconds
     double time_till_reproduce = 0;
-    int max_number_of_offspring = 1;
+    int max_number_of_offspring = 1;    // TODO Unused
     double reproduce_minimum_food = 10;
     int max_neighbours_for_reproduction = 3;
 
@@ -46,11 +46,12 @@ public:
         can_reproduce = true;
         max_number_of_offspring = 3;
         time_till_reproduce = reproduce_every * random_float_in_range(0.8, 1.5);
-        max_neighbours_for_reproduction = 10;
+        max_neighbours_for_reproduction = 5;
     }
 };
 
 class BugLifeComponent : public LifeComponent{
+public:
     BugLifeComponent(double health, double food_consumption_rate, double reproduce_every, double lifetime)
         : LifeComponent(TypeBug, health)
     {
@@ -69,6 +70,7 @@ class BugLifeComponent : public LifeComponent{
 
 
 class GoblinLifeComponent : public LifeComponent{
+public:
     GoblinLifeComponent(double health, double food_consumption_rate, double reproduce_every, double lifetime)
         : LifeComponent(TypeGoblin, health)
     {

@@ -2,6 +2,7 @@
 #include "Game.hpp"
 #include "World.hpp"
 
+#include <stdio.h>
 #include <vector>
 #include <memory>
 
@@ -43,6 +44,17 @@ void LifeSystem::handle_entity_life(Entity &entity, double dT){
     // Handle reproduction
     if (life.can_reproduce){
         attempt_reproduce(entity, dT);
+    }
+
+    // Should this entity die?
+    if (
+        die ||
+        life.health < 0
+    ){
+        // Mark this entity to be killed.
+        entity.kill();
+
+        printf("%s died from %s", entity.get_name().c_str(), die ? "hunger." : "murder!");
     }
 }
 
@@ -218,8 +230,6 @@ Vec2 LifeSystem::find_spot_to_reproduce(Vec2 position, Vec2 size, double maximum
     // We didn't find a valid spot
     return Vec2(NAN, NAN);
 }
-
-
 
 Vec2 LifeSystem::get_shortest_distance_resolve_conflict(
     const Vec2 a, const Vec2 a_size,
