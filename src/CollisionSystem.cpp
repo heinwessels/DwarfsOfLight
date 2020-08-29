@@ -18,7 +18,6 @@ void CollisionSystem::update(double dT){
     check_collision_with_world();
 };
 
-
 void CollisionSystem::check_collision_with_world(){
     auto &entities = m_pgame.get_entities();
     for( auto entity = entities.begin(); entity != entities.end(); entity++ ){
@@ -47,6 +46,7 @@ void CollisionSystem::check_collision_with_world(){
 }
 
 void CollisionSystem::check_collision_with_entities(){
+
     auto &entities = m_pgame.get_entities();
     for( auto a = entities.begin(); a != entities.end(); a++ ){
         if(has_valid_signature(**a)){

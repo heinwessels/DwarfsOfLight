@@ -23,9 +23,11 @@ void LightMap::zero(){
 }
 
 void LightMap::zero_range(Range range){
-    for(int x = range.x; x <= range.x + range.w; x++){
-        std::fill(m_lightmap[x].begin() + range.y, m_lightmap[x].begin() + range.y + range.h, 0);
-        std::fill(m_changedmap[x].begin() + range.y, m_changedmap[x].begin() + range.y + range.h, 0);
+    for (int x = std::max(0, range.x); x < std::min(range.x + range.w, m_width); x++){
+        for (int y = std::max(0, range.y); y < std::min(range.y + range.h, m_height); y++){
+            m_lightmap[x][y] = 0;
+            m_changedmap[x][y] = 0;
+        }
     }
 }
 

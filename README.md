@@ -90,7 +90,7 @@ The optimization strategy is to implement the code so that it works well while k
 
 ### Light System
 This is probably the largest load on the software. Running `kcachegrind` during this [commit](https://github.com/heinwessels/DwarfsOfLight/commit/899be58b134c4c1bf4eac7628c63089466bd259d) shows that `LightMap::zero` (35%) and `LightMap::operator+=` (30%) is the largest influences on the lighting system. Therefore I will do the following:
-- Changed `LightMap::zero` to use `fill` instead of a `for-loop`, this changed the usage to 30%.
+- ~~Changed `LightMap::zero` to use `fill` instead of a `for-loop`, this changed the usage 35% to 30%.~~ This was undone during the next step to rather have readability, since the problem was circumvented.
 - `Lightmap` operations is the bottleneck because it was assumed every lightsource could possibly illuminate the entire map. This means for a `100x100` sized map it would require 10000 copy and 10000 zero operations for **every** lightsource. This was changed to only copy and zero a small range that the lights *could* illuminate, where the majority would be a `≈30` tiles for `Mushrooms` light. This took `LightMap` operations (zero and add) from being 70% of a global light update to 6%!
 - **(TODO)** A bigger effect would be to add a flag to light components to calculate them by tile. This means looping over all tiles, only ray-trace light from the first *by-tile* lightsource it finds.
 - Lastly, reduce the amount of rays to trace, although the actual ray-tracing algorithm does is only about 15% of time used.

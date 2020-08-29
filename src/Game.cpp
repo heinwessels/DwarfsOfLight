@@ -25,8 +25,8 @@ Game::Game(){
 
     srand(time(NULL));
 
-    // m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
-    m_pWorld = std::make_unique<World>("maps/arena.csv");
+    m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
+    // m_pWorld = std::make_unique<World>("maps/arena.csv");
 
     // m_pWorld->set_global_lighting(MColour(50, 50, 50));
 
