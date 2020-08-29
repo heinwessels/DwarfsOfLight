@@ -16,6 +16,14 @@ class LightMap{
     int m_width, m_height;
 
 public:
+
+    struct Range{
+        int x, y;
+        int w, h;
+        Range(int x, int y, int w, int h)
+             : x(x), y(y), w(w), h(h) { }
+    };
+
     LightMap (int width, int height);
 
     void set_lighting_at(int x, int y, MColour c) { m_lightmap[x][y] = c; m_changedmap[x][y] = true; }
@@ -24,6 +32,7 @@ public:
 
     void add_global_lighting(MColour colour);
     void zero();
+    void zero_range(Range range);
     void clamp();
     void scale_to_max_channel();
 
@@ -31,17 +40,6 @@ public:
     int get_width() { return m_width; }
     int get_height() { return m_height; }
 
-
-    LightMap& operator += (const LightMap & lightmap){
-        add_other_light_map(lightmap);
-        return *this;
-    }
-    LightMap operator + (const LightMap &v) const{
-        LightMap t (*this);
-        t += v;
-        return t;
-    }
-
-private:
     void add_other_light_map(const LightMap & other_map);
+    void add_other_light_map_range(const LightMap & other_map, Range range);
 };

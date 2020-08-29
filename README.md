@@ -58,7 +58,7 @@ My implementation is not a *pure* ECS implementation, although I try to stay clo
 
 It should also be noted that my implemented architecture is not ideal. Ideally you would want all `components` stored in `Game` (and not in `Entity`). Then the `System` would simply loop through these `Components`, not caring to which `entity` it belongs. A big advantage to this would be that most of the data (which typically lives in `Components`) will be stored **serially**, making it much faster to read because cache will be on your side. In my system `components` are scattered throughout memory. However, on the small scale of **this** project this effect will hardly be measurable.
 
-
+---
 ## Problems Solved
 - **Circular Dependancy** between `Game` and `Systems`, where both need to access the other's members. The solution was to tell the compiler how much memory to allocate in the header using a forward declaration. Then, with the implementation a simple `include` can be used, since the memory is already allocated and the circular dependancy is solved.
   - Only store pointer or reference to the other class.
@@ -82,6 +82,22 @@ It should also be noted that my implemented architecture is not ideal. Ideally y
 - **Global Texture Pool:** If possible entities should share textures (e.g. floor/wall tiles). Therefore, I implemented a texture pool from a `std::unordered_map` located in the `Render System`, with the `texture_path` as key and a texture-wrapper class as element. Each time a texture is requested it checks if it's in the texture pool. If it's not, then it creates a new entry with that path as key and loads the texture into `VRAM` (I think). This way a `Renderable Component` only needs to know it's texture's path and location on that texture (using index and number of row/columns), while the `system` handles the rest, which is true ECS design philosophy.
 - **Occupancy Map:** In this game entity's proximity to one another is required often (collision, attack, reproduce, etc), and checking every entity each time in each system will become a lot of processing. Therefore, I implemented an occupancy map that stores a `std::list` or raw pointers to all entities on that specific tile. this makes it easier to all entities in a close region. A better way in the future could be to use a `quad_tree`.
 
+---
+## Optimizations Done
+
+The optimization strategy is to implement the code so that it works well while keeping performance in mind, but not doing any optmizing. Then, if a certain system is starting to take too much time, run `kcachegrind` and determine which aspect of that system is the problem. Only then optimize.
+
+
+### Light System
+This is probably the largest load on the software. Running `kcachegrind` during this [commit](https://github.com/heinwessels/DwarfsOfLight/commit/899be58b134c4c1bf4eac7628c63089466bd259d) shows that `LightMap::zero` (35%) and `LightMap::operator+=` (30%) is the largest influences on the lighting system. Therefore I will do the following:
+- Changed `LightMap::zero` to use `fill` instead of a `for-loop`, this changed the usage to 30%.
+- `Lightmap` operations is the bottleneck because it was assumed every lightsource could possibly illuminate the entire map. This means for a `100x100` sized map it would require 10000 copy and 10000 zero operations for **every** lightsource. This was changed to only copy and zero a small range that the lights *could* illuminate, where the majority would be a `≈30` tiles for `Mushrooms` light. This took `LightMap` operations (zero and add) from being 70% of a global light update to 6%!
+- **(TODO)** A bigger effect would be to add a flag to light components to calculate them by tile. This means looping over all tiles, only ray-trace light from the first *by-tile* lightsource it finds.
+- Lastly, reduce the amount of rays to trace, although the actual ray-tracing algorithm does is only about 15% of time used.
+  - The number of rays to emit will depend on how far the light will travel. This will ensure a small enough arc-step is used to light up all tiles far away. I found 200 rays at 15 blocks distance works well, which means I need an arclength of`(2π/200)*15 ≈	0.5 blocks`. This only increased the speed by about 4%.
+
+
+---
 ## Detailed Descriptions
 
 ### Lighting Simulation

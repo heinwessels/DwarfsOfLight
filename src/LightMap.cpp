@@ -15,11 +15,18 @@ void LightMap::add_global_lighting(MColour colour){
 }
 
 void LightMap::zero(){
-    for (int x = 0; x < m_width; x++)
-        for (int y = 0; y < m_height; y++){
-            m_lightmap[x][y] = 0;
-            m_changedmap[x][y] = false;
-        }
+    for (int x = 0; x < m_width; x++){
+        std::fill(m_lightmap[x].begin(), m_lightmap[x].end(), 0);
+        std::fill(m_changedmap[x].begin(), m_changedmap[x].end(), 0);
+    }
+    // Fill is aparently quicker than for-loop
+}
+
+void LightMap::zero_range(Range range){
+    for(int x = range.x; x <= range.x + range.w; x++){
+        std::fill(m_lightmap[x].begin() + range.y, m_lightmap[x].begin() + range.y + range.h, 0);
+        std::fill(m_changedmap[x].begin() + range.y, m_changedmap[x].begin() + range.y + range.h, 0);
+    }
 }
 
 void LightMap::clamp(){
@@ -59,4 +66,12 @@ void LightMap::add_other_light_map(const LightMap & other_map){
         for (int y = 0; y < m_height; y++){
             m_lightmap[x][y] += other_map.get_lighting_at(Vec2(x, y));
         }
+}
+
+void LightMap::add_other_light_map_range(const LightMap & other_map, Range range){
+    for (int x = std::max(0, range.x); x < std::min(range.x + range.w, m_width); x++){
+        for (int y = std::max(0, range.y); y < std::min(range.y + range.h, m_height); y++){
+            m_lightmap[x][y] += other_map.get_lighting_at(Vec2(x, y));
+        }
+    }
 }

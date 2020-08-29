@@ -28,7 +28,7 @@ Game::Game(){
     // m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
     m_pWorld = std::make_unique<World>("maps/arena.csv");
 
-    m_pWorld->set_global_lighting(MColour(10, 10, 10));
+    // m_pWorld->set_global_lighting(MColour(50, 50, 50));
 
     printf("World loaded.\n");
 
@@ -51,13 +51,19 @@ Game::Game(){
     add_entity(std::make_unique<Goblin>(30.255, 14.475));
     add_entity(std::make_unique<Goblin>(40.255, 14.475));
 
-    add_entity(std::make_unique<Firefly>(20, 20));
-    add_entity(std::make_unique<Firefly>(20, 21));
-    add_entity(std::make_unique<Firefly>(20, 22));
+    // add_entity(std::make_unique<Firefly>(20, 20));
+    // add_entity(std::make_unique<Firefly>(20, 21));
+    // add_entity(std::make_unique<Firefly>(20, 22));
 
     add_entity(std::make_unique<Mushroom>(20, 22.8));
-    // add_entity(std::make_unique<Mushroom>(19.8, 23.3));
-    // add_entity(std::make_unique<Mushroom>(21, 23.2));
+    add_entity(std::make_unique<Mushroom>(19.8, 23.3));
+    add_entity(std::make_unique<Mushroom>(21, 23.2));
+    add_entity(std::make_unique<Mushroom>(23, 22.8));
+    add_entity(std::make_unique<Mushroom>(14.8, 23.3));
+    add_entity(std::make_unique<Mushroom>(25, 23.2));
+    add_entity(std::make_unique<Mushroom>(20, 23.8));
+    add_entity(std::make_unique<Mushroom>(19.8, 24.3));
+    add_entity(std::make_unique<Mushroom>(21, 25.2));
 
     ////////////////////////////////////////////////
 

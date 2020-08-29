@@ -76,9 +76,22 @@ void LightSystem::populate_lightmap(){
             LightComponent &light = entity->get_component<LightComponent>();
 
             // Calculate the lightmap of this lightsource
-            new_lightmap.zero();
             ray_trace_source(transform.position, light, new_lightmap);
-            lightmap += new_lightmap;   // TODO This doesn't merge colours nicely.
+
+            // Now add only the range populated to the global map
+            // (Or a slightly larger block around enity to be safe)
+            LightMap::Range range = {
+                (int)floor(transform.position.x - light.range - 1),
+                (int)floor(transform.position.y - light.range - 1),
+                (int)light.range*2 + 2, (int)light.range*2 + 2
+            };
+            lightmap.add_other_light_map_range(
+                new_lightmap, range
+            );
+
+            // We will zero it now.
+            // This will result in one extra zero operation
+            new_lightmap.zero_range(range);
         }
     }
 
@@ -124,9 +137,11 @@ void LightSystem::update_lightsource(LightComponent &light, double dT){
 
 void LightSystem::ray_trace_source(Vec2 origin, LightComponent &light, LightMap &lightmap){
 
-    static const int num_of_rays = 200;
-    for (double angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / num_of_rays){
+    // First calculate minimum amount of rays to ensure minimum arc lentgh at maximum distance
+    static const double max_arc_length = 0.45;   // At 15 blocks range it will create around 200 rays
+    int num_of_rays = 2 * M_PI * (double)light.range / max_arc_length;
 
+    for (double angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / num_of_rays){
         ray_trace(
             origin,
             Vec2(cos(angle), sin(angle)),
