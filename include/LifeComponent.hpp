@@ -11,8 +11,8 @@ public:
     typedef int Type;
     Type type;
     static constexpr Type TypeFungi = 0;
-    static constexpr Type TypeBug = 0;
-    static constexpr Type TypeGoblin = 0;
+    static constexpr Type TypeBug = 1;
+    static constexpr Type TypeGoblin = 2;
 
     double health;
 

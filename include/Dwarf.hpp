@@ -26,10 +26,10 @@ public:
         this->add_component<Renderable>("textures/dwarf2.jpg", width, height);
         this->add_component<CollisionBox>(width, height);
         this->add_component<LightComponent>(MColour(230, 180, 180), MColour(20, 20, 0), 1, 15);
-        this->add_component<TeamComponent>(TeamDwarf,
-            std::vector<TeamComponent::TeamID>({}),
-            std::vector<TeamComponent::TeamID>({TeamGoblin}),
-            0.0
-        );
+        // this->add_component<TeamComponent>(TeamDwarf,
+        //     std::vector<TeamComponent::TeamID>({}),
+        //     std::vector<TeamComponent::TeamID>({TeamGoblin}),
+        //     0.0
+        // );
     }
 };

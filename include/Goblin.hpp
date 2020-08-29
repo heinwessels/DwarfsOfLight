@@ -32,6 +32,6 @@ public:
             std::vector<TeamComponent::TeamID>({TeamBug}),
             5.0
         );
-        this->add_component<GoblinLifeComponent>(30, 1, 2*60, 20*60);
+        this->add_component<GoblinLifeComponent>(30, 3, 40, 60);
     }
 };

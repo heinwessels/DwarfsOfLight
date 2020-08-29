@@ -53,13 +53,22 @@ Game::Game(){
     add_entity(std::make_unique<Firefly>(20, 20));
     add_entity(std::make_unique<Firefly>(20, 21));
     add_entity(std::make_unique<Firefly>(20, 22));
-    // add_entity(std::make_unique<Firefly>(21, 21));
-    // add_entity(std::make_unique<Firefly>(21, 22));
+    add_entity(std::make_unique<Firefly>(21, 21));
+    add_entity(std::make_unique<Firefly>(21, 22));
 
-    // add_entity(std::make_unique<Mushroom>(20, 22.8));
-    // add_entity(std::make_unique<Mushroom>(21, 22.8));
-    // add_entity(std::make_unique<Mushroom>(20.5, 22.8));
-    // add_entity(std::make_unique<Mushroom>(21.5, 22.8));
+    add_entity(std::make_unique<Mushroom>(20, 22.8));
+    add_entity(std::make_unique<Mushroom>(21, 22.8));
+    add_entity(std::make_unique<Mushroom>(20.5, 22.8));
+    add_entity(std::make_unique<Mushroom>(21.5, 22.8));
+
+
+    add_entity(std::make_unique<Mushroom>(11, 22.8));
+    add_entity(std::make_unique<Mushroom>(10.5, 22.8));
+    add_entity(std::make_unique<Mushroom>(11.5, 22.8));
+
+    // add_entity(std::make_unique<Mushroom>(31, 22.8));
+    // add_entity(std::make_unique<Mushroom>(30.5, 22.8));
+    // add_entity(std::make_unique<Mushroom>(31.5, 22.8));
 
     ////////////////////////////////////////////////
 

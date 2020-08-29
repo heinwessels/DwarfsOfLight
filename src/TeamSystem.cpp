@@ -101,6 +101,12 @@ void TeamSystem::handle_entity(Entity &entity, double dT){
 
                                 // Hurt it!
                                 stranger_life.health -= team.attack_strength * dT;
+
+                                // If we have a life component, add the damage to your food value
+                                if (entity.has_component<LifeComponent>()){
+                                    auto &life = entity.get_component<LifeComponent>();
+                                    life.food += team.attack_strength * dT;
+                                }
                             }
                         }
                     }

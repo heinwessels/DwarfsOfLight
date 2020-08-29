@@ -13,6 +13,8 @@
 #include "LifeComponent.hpp"
 
 #include "Mushroom.hpp"
+#include "Firefly.hpp"
+#include "Goblin.hpp"
 
 LifeSystem::LifeSystem(Game& game)
     : System(game, std::string("Life System"))
@@ -33,12 +35,30 @@ void LifeSystem::handle_entity_life(Entity &entity, double dT){
 
     auto &life = entity.get_component<LifeComponent>();
 
-    bool die = false;
 
     // Handle food situation
+    bool die_hunger = false;
     life.food -= life.food_consumption_rate * dT;
     if (life.food < 0){
-        die = true;
+        printf("%s died from hunger!\n", entity.get_name().c_str());
+        die_hunger = true;
+    }
+
+    // Handle lifetime
+    bool die_age = false;
+    if (life.can_die_of_age){
+        life.time_till_death -= dT;
+        if(life.time_till_death < 0){
+            printf("%s died from old age!\n", entity.get_name().c_str());
+            die_age = true;
+        }
+    }
+
+    // Handle health
+    bool die_health = false;
+    if(life.health < 0){
+        printf("%s died from attack!\n", entity.get_name().c_str());
+        die_health = true;
     }
 
     // Handle reproduction
@@ -48,13 +68,10 @@ void LifeSystem::handle_entity_life(Entity &entity, double dT){
 
     // Should this entity die?
     if (
-        die ||
-        life.health < 0
+        die_hunger || die_age || die_health
     ){
         // Mark this entity to be killed.
         entity.kill();
-
-        printf("%s died from %s", entity.get_name().c_str(), die ? "hunger." : "murder!");
     }
 }
 
@@ -260,7 +277,12 @@ std::unique_ptr<Entity> LifeSystem::create_offspring(LifeComponent& life, const 
     case LifeComponent::TypeFungi:
         return std::make_unique<Mushroom>(pos.x, pos.y);
         break;
-
+    case LifeComponent::TypeBug:
+        return std::make_unique<Firefly>(pos.x, pos.y);
+        break;
+    case LifeComponent::TypeGoblin:
+        return std::make_unique<Goblin>(pos.x, pos.y);
+        break;
     default:
         break;
         raise;
