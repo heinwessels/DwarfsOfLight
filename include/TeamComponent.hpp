@@ -27,19 +27,20 @@ public:
     double attack_strength; // damage per second
 
 
-    TeamComponent(TeamID team, std::vector<TeamID> flees_from, std::vector<TeamID> attacks, double attack_strength)
+    TeamComponent(TeamID team, std::vector<TeamID> flees_from, std::vector<TeamID> attacks, double attack_strength, double vision_radius)
         :
         Component(ID),
         team(team),
         flees_from(flees_from), attacks(attacks),
+        vision_radius(vision_radius),
         attack_strength(attack_strength)
         { }
 
-    TeamComponent(TeamID team, double attack_strength)
+    TeamComponent(TeamID team)
         : TeamComponent(
             team,
             std::vector<TeamComponent::TeamID>({}),
             std::vector<TeamComponent::TeamID>({}),
-            attack_strength
+            0, 0
         ) { }
 };

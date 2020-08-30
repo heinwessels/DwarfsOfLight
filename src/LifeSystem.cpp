@@ -36,29 +36,13 @@ void LifeSystem::handle_entity_life(Entity &entity, double dT){
     auto &life = entity.get_component<LifeComponent>();
 
 
-    // Handle food situation
-    bool die_hunger = false;
-    life.food -= life.food_consumption_rate * dT;
-    if (life.food < 0){
-        printf("%s died from hunger!\n", entity.get_name().c_str());
-        die_hunger = true;
-    }
+    // Update energy
+    bool die_energy = false;
+    life.energy -= life.energy_consumption_rate * dT;
+    if (life.energy <= 0){
+        die_energy = true;
 
-    // Handle lifetime
-    bool die_age = false;
-    if (life.can_die_of_age){
-        life.time_till_death -= dT;
-        if(life.time_till_death < 0){
-            printf("%s died from old age!\n", entity.get_name().c_str());
-            die_age = true;
-        }
-    }
-
-    // Handle health
-    bool die_health = false;
-    if(life.health < 0){
-        printf("%s died from attack!\n", entity.get_name().c_str());
-        die_health = true;
+        printf("%s ran out of energy.\n", entity.get_name().c_str());
     }
 
     // Handle reproduction
@@ -68,7 +52,7 @@ void LifeSystem::handle_entity_life(Entity &entity, double dT){
 
     // Should this entity die?
     if (
-        die_hunger || die_age || die_health
+        die_energy
     ){
         // Mark this entity to be killed.
         entity.kill();
@@ -80,18 +64,15 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
     auto &world = m_pgame.get_world();
 
     // Are we ready?
-    if (life.time_till_reproduce > 0){
-        life.time_till_reproduce -= dT;
-        if (life.time_till_reproduce < 0){
-            life.ready_to_reproduce = true;
-        }
+    if (life.reproduction_time_until > 0){
+        life.reproduction_time_until -= dT;
     }
 
     // Can we reproduce now?
-    if (life.ready_to_reproduce){
+    if (life.reproduction_time_until <= 0){
         bool can_reproduce = true;
-        if (life.food < life.reproduce_minimum_food){
-            // Are we too hungry?
+        if (life.energy < 2 * life.reproduction_energy){
+            // We dont have enough energy to reproduce
             can_reproduce = false;
         }
 
@@ -105,14 +86,7 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
         int family = count_lifetype_in_list(neighbours, life);
         family -= 1;    // Don't count yourself
 
-        if(life.need_mate_to_reproduce){
-            // We need a mate. Are we close enough to reproduce?
-
-            // TODO
-            can_reproduce = false;
-        }
-
-        if (family >= life.max_neighbours_for_reproduction){
+        if (family >= life.reproduction_max_neighbours){
             // There is too much neighbours to reproduce
             can_reproduce = false;
         }
@@ -133,14 +107,16 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
             if (!isnan(new_born_position.x)){
                 // Yes! Create the baby at that location! (There's no such thing as babies in this world)
                 m_pgame.add_entity(create_offspring(life, new_born_position));
+                life.energy -= life.reproduction_energy;
+
+                printf("%s reproduced!!!\n", entity.get_name().c_str());
             }
             else{
                 // This was an failed attempt
             }
 
             // Reset the timer
-            life.time_till_reproduce = life.reproduce_every * random_float_in_range(0.8, 1.5);
-            life.ready_to_reproduce = false;
+            life.reproduction_time_until = life.reproduce_every * random_float_in_range(0.8, 1.2);
         }
     }
 }

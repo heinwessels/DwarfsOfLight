@@ -10,79 +10,47 @@ public:
 
     typedef int Type;
     Type type;
-    static constexpr Type TypeFungi = 0;
-    static constexpr Type TypeBug = 1;
-    static constexpr Type TypeGoblin = 2;
+    static constexpr Type TypeNone = 0; // For reproduction/on-death spawning
+    static constexpr Type TypeFungi = 1;
+    static constexpr Type TypeBug = 2;
+    static constexpr Type TypeGoblin = 3;
 
-    double health;
 
-    double food = 0;
-    double food_consumption_rate = 0;   // per second
+    double energy;
+    double energy_consumption_rate = 0;     // Per second
 
-    bool can_reproduce = false;         // Toggle if can reproduce
-    bool ready_to_reproduce = false;    // Flag for when this component can reproduce
-    bool need_mate_to_reproduce = false;
-    double reproduce_every = 0;         // Every how many seconds
-    double time_till_reproduce = 0;
-    int max_number_of_offspring = 1;    // TODO Unused
-    double reproduce_minimum_food = 10;
-    int max_neighbours_for_reproduction = 3;
-
-    bool can_die_of_age = false;
-    double time_till_death = 0;
+    bool can_reproduce = false;
+    double reproduce_every = 0;  // How long before can reproduce
+    double reproduction_time_until = 0;
+    double reproduction_energy = 0; // How much energy does it cost to reproduce. (Needs at least 2*this)
+    int reproduction_max_neighbours = 1e6;
 
 protected:
-    LifeComponent(Type type, double health) : Component(ID), type(type), health(health) { }
+    LifeComponent(Type type, double energy) : Component(ID), type(type), energy(energy) { }
 };
 
 class FungiLifeComponent : public LifeComponent{
 public:
-    FungiLifeComponent(double health, double food_value, double reproduce_every)
-        : LifeComponent(TypeFungi, health)
+    FungiLifeComponent(double energy, double reproduce_every, int reproduction_max_neighbours)
+        : LifeComponent(TypeFungi, energy)
     {
-        this->reproduce_every = reproduce_every;
-        this->food = food_value;
-
         can_reproduce = true;
-        max_number_of_offspring = 3;
-        time_till_reproduce = reproduce_every * random_float_in_range(0.8, 1.5);
-        max_neighbours_for_reproduction = 5;
+        this->reproduce_every = reproduce_every;
+        reproduction_time_until = reproduce_every;
+        this->reproduction_max_neighbours = reproduction_max_neighbours;
     }
 };
 
-class BugLifeComponent : public LifeComponent{
+class AnimalLifeComponent : public LifeComponent{
 public:
-    BugLifeComponent(double health, double food_consumption_rate, double reproduce_every, double lifetime)
-        : LifeComponent(TypeBug, health)
+    AnimalLifeComponent(Type type, double energy, double energy_consumption, double reproduce_every)
+        : LifeComponent(type, energy)
     {
-        this->reproduce_every = reproduce_every;
-        this->food_consumption_rate = food_consumption_rate;
-        food = food_consumption_rate * 60;  // Can survive for 1 minute from birth TODO Configurable
+        this->energy_consumption_rate = energy_consumption;
 
         can_reproduce = true;
-        max_number_of_offspring = 3;
-        time_till_reproduce = reproduce_every * random_float_in_range(0.8, 1.5);
-
-        // can_die_of_age = age;
-        time_till_death = lifetime;
-    }
-};
-
-
-class GoblinLifeComponent : public LifeComponent{
-public:
-    GoblinLifeComponent(double health, double food_consumption_rate, double reproduce_every, double lifetime)
-        : LifeComponent(TypeGoblin, health)
-    {
         this->reproduce_every = reproduce_every;
-        this->food_consumption_rate = food_consumption_rate;
-        food = food_consumption_rate * 60;  // Can survive for 1 minute from birth TODO Configurable
-
-        can_reproduce = true;
-        need_mate_to_reproduce = true;
-        time_till_reproduce = reproduce_every * random_float_in_range(0.8, 1.5);
-
-        // can_die_of_age = age;
-        time_till_death = lifetime;
+        reproduction_time_until = reproduce_every;
+        this->reproduction_energy = energy; // The starting energy must be equal to energy required to give birth
     }
 };

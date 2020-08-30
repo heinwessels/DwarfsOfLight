@@ -33,8 +33,8 @@ public:
         this->add_component<TeamComponent>(TeamBug,
             std::vector<TeamComponent::TeamID>({TeamGoblin}),
             std::vector<TeamComponent::TeamID>({TeamPlant}),
-            3.0
+            4.0, 6.0
         );
-        this->add_component<BugLifeComponent>(10, 1, 40, 2*60);
+        this->add_component<AnimalLifeComponent>(LifeComponent::TypeBug, 60, 2, 0);
     }
 };

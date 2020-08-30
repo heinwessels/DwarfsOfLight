@@ -22,7 +22,7 @@ private:
 public:
     Goblin(double x, double y) : Entity("Goblin") {
         this->add_component<TransformComponent>(Vec2(x, y));
-        this->add_component<MoveComponent>(MoveComponent::TypeStraight, 3);
+        this->add_component<MoveComponent>(MoveComponent::TypeStraight, 2.6);
         this->add_component<Renderable>("textures/goblin.jpg", width, height);
         this->add_component<CollisionBox>(width, height, false, false);
         this->add_component<PathfindingComponent>();
@@ -30,8 +30,8 @@ public:
         this->add_component<TeamComponent>(TeamGoblin,
             std::vector<TeamComponent::TeamID>({TeamDwarf}),
             std::vector<TeamComponent::TeamID>({TeamBug}),
-            5.0
+            4.0, 7.0
         );
-        this->add_component<GoblinLifeComponent>(30, 3, 40, 60);
+        this->add_component<AnimalLifeComponent>(LifeComponent::TypeGoblin, 200, 4, 0);
     }
 };

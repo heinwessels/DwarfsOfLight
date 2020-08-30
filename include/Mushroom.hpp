@@ -21,7 +21,7 @@ public:
         this->add_component<TransformComponent>(Vec2(x, y));
         this->add_component<Renderable>("textures/mushroom.png", width, height);
         this->add_component<LightComponent>(MColour(100, 150, 250), MColour(10, 10, 10), 1, 3);
-        this->add_component<TeamComponent>(TeamPlant, 1);
-        this->add_component<FungiLifeComponent>(30, 20, 10);
+        this->add_component<TeamComponent>(TeamPlant);
+        this->add_component<FungiLifeComponent>(10, 5, 5);
     }
 };
