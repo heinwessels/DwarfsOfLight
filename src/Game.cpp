@@ -39,7 +39,7 @@ Game::Game(){
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
 
-    add_entity(std::make_unique<Dwarf>(10, 12));
+    add_entity(std::make_unique<Dwarf>(12, 6));
     TransformComponent &positional = m_entity_entry_queue.back()->get_component<TransformComponent>();
     m_rendersystem->set_camera_target(&positional.position);
     m_rendersystem->set_camera_zoom(30);
@@ -48,20 +48,23 @@ Game::Game(){
     // m_rendersystem->set_camera_zoom(40);
 
     add_entity(std::make_unique<Goblin>(5.255, 5.475));
-    // add_entity(std::make_unique<Goblin>(30.255, 14.475));
+    // add_entity(std::make_unique<Goblin>(10.255, 14.475));
     // add_entity(std::make_unique<Goblin>(40.255, 14.475));
 
     add_entity(std::make_unique<Firefly>(10, 3));
     add_entity(std::make_unique<Firefly>(10, 5));
     add_entity(std::make_unique<Firefly>(10, 7));
-    // add_entity(std::make_unique<Firefly>(21, 21));
-    // add_entity(std::make_unique<Firefly>(21, 22));
+    add_entity(std::make_unique<Firefly>(21, 11));
+
 
     add_entity(std::make_unique<Mushroom>(2, 2));
     add_entity(std::make_unique<Mushroom>(7, 3));
     add_entity(std::make_unique<Mushroom>(12, 4));
     add_entity(std::make_unique<Mushroom>(15, 5));
     add_entity(std::make_unique<Mushroom>(18, 6));
+    add_entity(std::make_unique<Mushroom>(3, 12));
+    add_entity(std::make_unique<Mushroom>(5, 13));
+    add_entity(std::make_unique<Mushroom>(16, 13));
 
     // add_entity(std::make_unique<Mushroom>(31, 22.8));
     // add_entity(std::make_unique<Mushroom>(30.5, 22.8));

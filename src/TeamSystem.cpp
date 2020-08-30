@@ -40,7 +40,7 @@ void TeamSystem::handle_entity(Entity &entity, double dT){
 
     // Get closest entities
     std::list<Entity*> entities_in_range = m_pgame.get_world().get_occupancy_map().find_entities_in_range(
-        m_pgame.get_world(), transform.position, Vec2(2*team.vision_radius, 2*team.vision_radius)
+        m_pgame.get_world(), transform.position, Vec2(std::max(team.vision_attack_radius, team.vision_flee_radius))
     );
     double distance_sq_closest_enemy_attack = std::numeric_limits<double>::max();
     double distance_sq_closest_enemy_flee = std::numeric_limits<double>::max();
@@ -64,7 +64,7 @@ void TeamSystem::handle_entity(Entity &entity, double dT){
 
                         // Is this the closest one? We might need to run the other way
                         if (
-                            distance_square < team.vision_radius*team.vision_radius &&
+                            distance_square < team.vision_flee_radius*team.vision_flee_radius &&
                             distance_square < distance_sq_closest_enemy_flee
                         ){
                             // We must fear this enemy
@@ -83,7 +83,7 @@ void TeamSystem::handle_entity(Entity &entity, double dT){
 
                         // Is this the closest enemy we can attack? We might need to run towards it.
                         if (
-                            distance_square < team.vision_radius*team.vision_radius &&
+                            distance_square < team.vision_attack_radius*team.vision_attack_radius &&
                             distance_square < distance_sq_closest_enemy_attack
                         ){
                             // We must attack this enemy

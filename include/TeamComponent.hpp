@@ -21,18 +21,21 @@ public:
     bool enemy_attack_close = false;
     Vec2 enemy_attack_dir = Vec2(0);
 
-    double vision_radius = 5;
+    double vision_attack_radius = 5;
+    double vision_flee_radius = 5;
+
     double attack_radius = 1;
 
     double attack_strength; // damage per second
 
 
-    TeamComponent(TeamID team, std::vector<TeamID> flees_from, std::vector<TeamID> attacks, double attack_strength, double vision_radius)
+    TeamComponent(TeamID team, std::vector<TeamID> flees_from, std::vector<TeamID> attacks,
+        double attack_strength, double vision_attack_radius, double vision_flee_radius)
         :
         Component(ID),
         team(team),
         flees_from(flees_from), attacks(attacks),
-        vision_radius(vision_radius),
+        vision_attack_radius(vision_attack_radius), vision_flee_radius(vision_flee_radius),
         attack_strength(attack_strength)
         { }
 
@@ -41,6 +44,6 @@ public:
             team,
             std::vector<TeamComponent::TeamID>({}),
             std::vector<TeamComponent::TeamID>({}),
-            0, 0
+            0, 0, 0
         ) { }
 };
