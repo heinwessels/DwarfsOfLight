@@ -25,11 +25,9 @@ Game::Game(){
 
     srand(time(NULL));
 
-    // m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
+    m_pWorld = std::make_unique<World>("maps/map_test_1.csv");
     // m_pWorld = std::make_unique<World>("maps/arena.csv");
-    m_pWorld = std::make_unique<World>("maps/arena_small.csv");
-
-    // m_pWorld->set_global_lighting(MColour(50, 50, 50));
+    // m_pWorld = std::make_unique<World>("maps/arena_small.csv");
 
     printf("World loaded.\n");
 
@@ -39,37 +37,40 @@ Game::Game(){
     // THIS IS FOR TESTING
     ////////////////////////////////////////////////
 
-    add_entity(std::make_unique<Dwarf>(12, 6));
+    add_entity(std::make_unique<Dwarf>(m_pWorld->get_width()/2, m_pWorld->get_height()/2));
     TransformComponent &positional = m_entity_entry_queue.back()->get_component<TransformComponent>();
     m_rendersystem->set_camera_target(&positional.position);
-    m_rendersystem->set_camera_zoom(30);
-    // TransformComponent &positional = m_entities.back()->get_component<TransformComponent>();
-    // m_rendersystem->set_camera_target(&positional.position);
-    // m_rendersystem->set_camera_zoom(40);
+    m_rendersystem->set_camera_zoom(40);
+    // m_pWorld->set_global_lighting(MColour(50));
 
-    add_entity(std::make_unique<Goblin>(5.255, 5.475));
-    // add_entity(std::make_unique<Goblin>(10.255, 14.475));
-    // add_entity(std::make_unique<Goblin>(40.255, 14.475));
-
-    add_entity(std::make_unique<Firefly>(10, 3));
-    add_entity(std::make_unique<Firefly>(10, 5));
-    add_entity(std::make_unique<Firefly>(10, 7));
-    add_entity(std::make_unique<Firefly>(21, 11));
-
-
-    add_entity(std::make_unique<Mushroom>(2, 2));
-    add_entity(std::make_unique<Mushroom>(7, 3));
-    add_entity(std::make_unique<Mushroom>(12, 4));
-    add_entity(std::make_unique<Mushroom>(15, 5));
-    add_entity(std::make_unique<Mushroom>(18, 6));
-    add_entity(std::make_unique<Mushroom>(3, 12));
-    add_entity(std::make_unique<Mushroom>(5, 13));
-    add_entity(std::make_unique<Mushroom>(16, 13));
-
-    // add_entity(std::make_unique<Mushroom>(31, 22.8));
-    // add_entity(std::make_unique<Mushroom>(30.5, 22.8));
-    // add_entity(std::make_unique<Mushroom>(31.5, 22.8));
-
+    int num_of_mushrooms = 10;
+    int num_of_fireflys = 30;
+    int num_of_goblins = 10;
+    for (int i = 0; i < num_of_mushrooms + num_of_fireflys + num_of_goblins; i++){
+        Vec2 position = {0};
+        bool position_valid = false;
+        while(!position_valid){
+            position = Vec2(
+                random_float_in_range(2, m_pWorld->get_width() - 3),
+                random_float_in_range(2, m_pWorld->get_height() - 3)
+            );
+            if(
+                m_pWorld->get_tile_type_at(floor(position.x), floor(position.y))
+                == Tile::TypeFloor
+            ){
+                position_valid = true;
+            }
+        }
+        if(i < num_of_mushrooms){
+            add_entity(std::make_unique<Mushroom>(position.x, position.y));
+        }
+        else if (i < num_of_mushrooms + num_of_fireflys){
+            add_entity(std::make_unique<Firefly>(position.x, position.y));
+        }
+        else{
+            add_entity(std::make_unique<Goblin>(position.x, position.y));
+        }
+    }
     ////////////////////////////////////////////////
 
     init_systems();
@@ -89,21 +90,21 @@ bool Game::update(double dT){
 
     // THIS IS HACKY TO SEE TIMINGS
     //////////////////////////////////////////////////////////////////
-    // static int count = 0;
-    // if (++count > 200){
-    //     printf("-----------------------------------------------\n");
-    //     printf("Timing Information (last, min, max) [ms]:\n");
-    //     for (auto &system : m_systems){
-    //         Timing timing = system->get_timing();
-    //         printf("%20s:\t", system->get_name().c_str());
-    //         printf("%5.3f\t%5.3f\t%5.3f\n",
-    //             timing.get_update_time(),
-    //             timing.get_update_time_min(),
-    //             timing.get_update_time_max()
-    //         );
-    //     }
-    //     count = 0;
-    // }
+    static int count = 0;
+    if (++count > 200){
+        printf("-----------------------------------------------\n");
+        printf("Timing Information (last, min, max) [ms]:\n");
+        for (auto &system : m_systems){
+            Timing timing = system->get_timing();
+            printf("%20s:\t", system->get_name().c_str());
+            printf("%5.3f\t%5.3f\t%5.3f\n",
+                timing.get_update_time(),
+                timing.get_update_time_min(),
+                timing.get_update_time_max()
+            );
+        }
+        count = 0;
+    }
     //////////////////////////////////////////////////////////////////
 
     add_queued_entities_to_world();

@@ -30,11 +30,12 @@ public:
         this->add_component<PathfindingComponent>();
         this->add_component<AIComponent>();
         this->add_component<LightComponent>(MColour(100, 150, 250), MColour(10, 10, 10), 1, 5);
-        this->add_component<TeamComponent>(TeamBug,
-            std::vector<TeamComponent::TeamID>({TeamGoblin}),
-            std::vector<TeamComponent::TeamID>({TeamPlant}),
-            4.0, 7.0, 3.0
-        );
-        this->add_component<AnimalLifeComponent>(LifeComponent::TypeBug, 30, 3, 0);
+
+        // this->add_component<TeamComponent>(TeamBug,
+        //     std::vector<TeamComponent::TeamID>({TeamGoblin}),
+        //     std::vector<TeamComponent::TeamID>({TeamPlant}),
+        //     4.0, 7.0, 3.0
+        // );
+        // this->add_component<AnimalLifeComponent>(LifeComponent::TypeBug, 30, 3, 0);
     }
 };

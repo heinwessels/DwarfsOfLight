@@ -24,8 +24,9 @@ public:
         this->add_component<ControllerComponent>();
         this->add_component<MoveComponent>(MoveComponent::TypeStraight, 5);
         this->add_component<Renderable>("textures/dwarf2.jpg", width, height);
+
+        this->add_component<LightComponent>(MColour(230, 150, 150), MColour(20, 20, 0), 1, 10);
         this->add_component<CollisionBox>(width, height);
-        this->add_component<LightComponent>(MColour(230, 180, 180), MColour(20, 20, 0), 1, 15);
         // this->add_component<TeamComponent>(TeamDwarf,
         //     std::vector<TeamComponent::TeamID>({}),
         //     std::vector<TeamComponent::TeamID>({TeamGoblin}),

@@ -22,16 +22,17 @@ private:
 public:
     Goblin(double x, double y) : Entity("Goblin") {
         this->add_component<TransformComponent>(Vec2(x, y));
-        this->add_component<MoveComponent>(MoveComponent::TypeStraight, 2.9);
+        this->add_component<MoveComponent>(MoveComponent::TypeStraight, 2.85);
         this->add_component<Renderable>("textures/goblin.jpg", width, height);
         this->add_component<CollisionBox>(width, height, false, false);
         this->add_component<PathfindingComponent>();
         this->add_component<AIComponent>();
-        this->add_component<TeamComponent>(TeamGoblin,
-            std::vector<TeamComponent::TeamID>({TeamDwarf}),
-            std::vector<TeamComponent::TeamID>({TeamBug}),
-            7.0, 10.0, 3.0
-        );
-        this->add_component<AnimalLifeComponent>(LifeComponent::TypeGoblin, 200, 1, 0);
+
+        // this->add_component<TeamComponent>(TeamGoblin,
+        //     std::vector<TeamComponent::TeamID>({TeamDwarf}),
+        //     std::vector<TeamComponent::TeamID>({TeamBug}),
+        //     8.0, 10.0, 3.0
+        // );
+        // this->add_component<AnimalLifeComponent>(LifeComponent::TypeGoblin, 80, 1, 0);
     }
 };

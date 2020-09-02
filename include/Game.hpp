@@ -11,7 +11,7 @@ class RenderSystem;
 class Game{
     // This is the main manager of the game.
 
-    int screen_width = 800, screen_height = 400;
+    int screen_width = 700, screen_height = 700;
 
     std::unique_ptr<World> m_pWorld;
     std::vector<std::unique_ptr<System>> m_systems;

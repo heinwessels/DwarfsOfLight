@@ -42,7 +42,7 @@ void LifeSystem::handle_entity_life(Entity &entity, double dT){
     if (life.energy <= 0){
         die_energy = true;
 
-        printf("%s ran out of energy.\n", entity.get_name().c_str());
+        // printf("%s ran out of energy.\n", entity.get_name().c_str());
     }
 
     // Handle reproduction
@@ -109,7 +109,7 @@ void LifeSystem::attempt_reproduce(Entity &entity, double dT){
                 m_pgame.add_entity(create_offspring(life, new_born_position));
                 life.energy -= life.reproduction_energy;
 
-                printf("%s reproduced!!!\n", entity.get_name().c_str());
+                // printf("%s reproduced!!!\n", entity.get_name().c_str());
             }
             else{
                 // This was an failed attempt

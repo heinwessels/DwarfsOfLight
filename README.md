@@ -1,11 +1,35 @@
 # Dwarfs Of Light
 This is an from-the-ground-up implementation of a Entity Component System based game engine, with a game built on top of it. The game is about dwarfs walking around in a dark cave with torches and dynamic lighting. The goal is to learn more about C++ containers, smart pointers, memory management, and hopefully templates.
 
-Below is a quick video showing the current progress. Note pathfinding of the wandering goblins, and the raytracing creating dark shadows.
+
+### Below is a quick showcase about the game
+
+
+The **world** where the ecosystem is turned off. Note pathfinding of the wandering goblins, and the raytracing creating dark shadows.
 
 ![](gifs/eg.gif)
 
+The **ecosystem** at `5x` speed. As you might note, this is still unstable. Who though it would be complex to mimic life?
+
+![](gifs/ecosystem.gif)
+
 <sup>The fact that it's based on dwarfs in a cave has nothing to do with the fact that I've been playing a lot of Dwarf Fortress lately.</sup>
+
+
+Below is typical timing information for a fully populated world per update with no optimization.
+```
+Timing Information:     last    min     max    [ms]:
+       Moving System:   0.000   0.000   0.002
+     Lighting System:   0.031   0.002   0.045
+       Render System:   0.014   0.005   0.089
+        Input System:   0.000   0.000   0.004
+         Team System:   0.001   0.000   0.001
+         Life System:   0.004   0.000   0.005
+           AI System:   0.000   0.000   0.000
+  Pathfinding System:   0.001   0.000   0.013
+       Moving System:   0.000   0.000   0.000
+    Collision System:   0.002   0.000   0.003
+```
 
 ## Entity Component System Explained
 
@@ -156,6 +180,52 @@ This is also where the ECS architecture excels, because I can finely adjust how 
 ![](gifs/pathfinding_eg.gif)
 
 <sup><b>A lonely Goblin wandering around aimlessly.</b></sup>
+
+### Ecosystem
+My goal for this program is to have a rough ecosystem running. However, as life is complex, and balancing is an issue. My goal is to have the ecosystem consist of three parts:
+ - **Mushrooms:** Slowly grows and fills the space it's in.
+ - **Fireflys:** Eats the mushrooms and flees from goblins.
+ - **Goblins:** Eats the fireflys. (And optionally flees from the dwarf)
+
+ #### Game-like System
+ My first response to this problem was to simply give each entity `health`, `food` and `reproduce_frequency` variables. I quickly realized this system is *way* too unstable, and is not close to how nature works. If I want the system to be stable, it needs to be simpler to balance.
+
+ #### Energy System
+ I then decided to give each entity `energy`. It needs live to move and reproduce. The goal is to have the worlds `energy` created be equal to the `energy` consumed. Or on average `ΔE=0`. It therefore needs a source and sink of energy.
+  - **Source:** The mushroom reproduction is the source of energy in the world, since it costs nothing for them to reproduce. Other entities uses energy to reproduce by giving it to the offspring.
+  - **Sink:** Energy is consumed by entities constantly to live (except for mushrooms), as it's in real life.
+
+This results in a simple (but deceiving) equation:
+
+```
+ΔE = 0
+=> num_of_mushrooms * f(birthrate, const energy) =
+        num_of_fireflys * firefly_energy_usage +
+        num_of_goblins * goblin_energy_usage
+```
+This equation is decieving because it looks simple to manage, but it does not include other important factors like:
+ - Entity speed relative to enemy
+ - Ability to find food
+ - Size of map
+ - etc...
+
+However, this is used for good baseline to start tweaking the ecosystem. To make this simpler the `birthrate` of entities is solely dependent on available energy and not time (except mushrooms).
+
+After a some working of the equation above I came up with the following values (using the unit Joule (`J`) for ease of reading):
+ - **Ratio** of `5` mushrooms to `3` fireflys to `1` goblin should be equilibrium.
+ - **Mushroom:** Always has `10J`of energy and reproduces every `5` seconds.
+ - **Firefly:** Has an energy consumption rate of `2 J/s`. Costs `60` energy to reproduce.
+ - **Goblin:** Has an energy consumption rate of `4 J/s`. Costs `120` energy to reproduce.
+
+ As expected these values did not work well do to all the factors not accounted for. However, it was much more stable than the previous system. But, it does require a lot of tweaking, especially the values not accounted for. Currently the simulation can run for about 3 minutes before one the species dies out.
+
+ Interesting things / problems:
+  - When entities don't have food within close range they simply wander until they find food again. They typically die of hunger if they don't find food quickly. Might need some better AI.
+  - Firefly birthrates explode as soos as they come across a large mushroom patch, quickly consuming all the mushrooms. Might need to slow it down.
+  - Actions might need to consume energy, such as attacking/fleeing and reproducing.
+  - The battle characteristics between the firefly and goblins is vital, and should be balanced. It's very easy to have all goblins die of hunger, or simply kill all fireflies.
+  - Might need a way for mushrooms to start again at a remote location (through spores?), since when a fireflys reach a patch it's typically consumed completely.
+
 
 ## TODO
 1. Convert software to store data serially, which is one of the goals of ECS. For example, *all* `components` stored serially, with references to which `entity` they belong. The `systems` will then loop through the `components`, not caring to which `entity` it belongs to.

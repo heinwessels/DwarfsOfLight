@@ -54,7 +54,7 @@ void AISystem::handle_entity_ai(Entity& entity){
             printf("%15s is now fleeing.\n", entity.get_name().c_str());
 #endif
         }
-        else if (team->enemy_attack_close){
+        else if (team && team->enemy_attack_close){
             // We should attack!
             ai.mode = AIComponent::ModeAttack;
 #ifdef DBG_PRINT_BASIC_INFO
